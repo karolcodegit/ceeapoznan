@@ -20,6 +20,7 @@ jobs:
          GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
          GATSBY_AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
          GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
+         GATSBY_SITE_URL: ${{ secrets.GATSBY_SITE_URL }}
     - uses: actions/upload-artifact@v3
       with:
         name: public
