@@ -17,6 +17,7 @@ jobs:
     - run: npm run build  # or gatsby build
       env:
          API_DATO_CMS: ${{ secrets.GATSBY_DATOCMS_API }}
+         GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
     - uses: actions/upload-artifact@v3
       with:
         name: public
