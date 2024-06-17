@@ -39,7 +39,7 @@ jobs:
     - name: Deploy to FTP Server
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: serwer2464533.home.pl
+        server: s24.mydevil.net
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: /public_html/
