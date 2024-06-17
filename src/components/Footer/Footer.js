@@ -117,13 +117,15 @@ const Footer = () => {
                   </li>
                 ))}
                 <li className="py-1">
-                  <Link
-                    to={`/kursy/${slugify(
-                      data.allDatoCmsCourse.nodes[0].nameCourse
-                    )}/rejestracja`}
-                  >
-                    Zapis na kurs
-                  </Link>
+                {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
+  <Link
+    to={`/kursy/${slugify(
+      data.allDatoCmsCourse.nodes[0].nameCourse
+    )}/rejestracja`}
+  >
+    Zapis na kurs
+  </Link>
+)}
                 </li>
               </ul>
             </div>

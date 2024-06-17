@@ -19,7 +19,7 @@ const SideInfoPanel = ({ money, time, available, nameCourse }) => {
           <AcademicCapIcon className="h-8 w-8 mb-2 dark:text-gray-200" aria-hidden="true" />
           <span className="font-normal text-center text-sm dark:text-gray-200">
             Punkty edukacyjne:</span>
-          <span className="font-bold py-2 text-3xl dark:text-gray-50">{time ? `${time}` : 'Nieznana'}</span>
+          <span className="font-bold py-2 text-3xl dark:text-gray-50">{time ? `${time}` : 'Nieznane'}</span>
         </div>
         <div className="p-5 flex flex-col items-center justify-center">
           <span className="font-bold text-darker text-center text-2xl mb-5 bg-gray-100 px-4 py-2 rounded shadow-sm animate-pulse">

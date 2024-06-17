@@ -129,6 +129,7 @@ const Form = ({
                     handleChange={handleChange}
                     formErrors={formErrors}
                     formSubmitted={formSubmitted}
+                    // disabled={disabled}
                   />
                 )}
                 {field.typ === "radio" && (

@@ -25,6 +25,8 @@ const Rejestracja = () => {
   )
 }
 
+
+
 export const Head = () => <Seo title="Rejestracja" />
 
 export default Rejestracja

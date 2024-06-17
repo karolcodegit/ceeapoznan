@@ -19,6 +19,8 @@ const IndexPage = ({ data }) => {
     edge => edge.node.name === "Creativity_and_innovation"
   ).node.childImageSharp.fluid
 
+  // const defaultImage = require('../assets/images/onas3.jpg');
+
   return (
     <>
       <div className="dark:bg-gray-800">
@@ -32,39 +34,46 @@ const IndexPage = ({ data }) => {
               <span className="text-[#88C8EB]">A</span>
             </Title>
             <Paragraph>
-              Ośrodek Poznański CEEA już od niespełna 30 lat organizuje kursy
-              dla lekarzy specjalistów oraz lekarzy rezydentów anestezjologii i
-              intensywnej terapii. Dzięki udziałowi w naszych cyklach kursów
-              mają Państwo możliwość udziału w wykładach prowadzonych przez
-              ekspertów w dziedzinie anestezjologii i intensywnej terapii,
-              aktualizacji wiedzy medycznej w oparciu o Evidence Based Medicine
-              oraz dyskusji w gronie praktyków, w której przeniesiemy wiedzę
-              teoretyczną na realia naszej codziennej pracy, niejednokrotnie
-              obfite w wyzwania organizacyjne.
+              {data.datoCmsMainsite.paragraph ||
+                "Ośrodek Poznański CEEA już od niespełna 30 lat organizuje kursy dla lekarzy specjalistów oraz lekarzy rezydentów anestezjologii i intensywnej terapii. Dzięki udziałowi w naszych cyklach kursów mają Państwo możliwość udziału w wykładach prowadzonych przez ekspertów w dziedzinie anestezjologii i intensywnej terapii, aktualizacji wiedzy medycznej w oparciu o Evidence Based Medicine oraz dyskusji w gronie praktyków, w której przeniesiemy wiedzę teoretyczną na realia naszej codziennej pracy, niejednokrotnie obfite w wyzwania organizacyjne."}
             </Paragraph>
             {/* <Paragraph>
               Nasz kurs jest zaprojektowany tak, aby dostarczyć Ci najbardziej
               aktualnych i istotnych treści w przystępny i angażujący sposób. Z
               nami nauczysz się od najlepszych w branży!
             </Paragraph> */}
-            <Button
-              href={`/kursy/${slugify(
-                data.allDatoCmsCourse.nodes[0].nameCourse
-              )}/rejestracja`}
-            >
-              Zapisz się na kurs
-            </Button>
+            {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
+              <Button
+                href={`/kursy/${slugify(
+                  data.allDatoCmsCourse.nodes[0].nameCourse
+                )}/rejestracja`}
+              >
+                Zapisz się na kurs
+              </Button>
+            )}
           </div>
           <div className="w-full lg:h-500 max-lg:hidden px-8">
-            {data.allDatoCmsCourse.nodes.map(course => (
+            {data.allDatoCmsCourse.nodes.length > 0 ? (
+              data.allDatoCmsCourse.nodes.map(course => (
+                <Img
+                  key={course.id}
+                  fluid={
+                    course.image?.fluid ||
+                    data.defaultImage.childImageSharp.fluid
+                  }
+                  className="rounded-3xl w-full h-full object-cover"
+                  alt={course.nameCourse}
+                  loading="eager"
+                />
+              ))
+            ) : (
               <Img
-                key={course.id}
-                fluid={course.image.fluid}
+                fluid={data.defaultImage.childImageSharp.fluid}
                 className="rounded-3xl w-full h-full object-cover"
-                alt={course.nameCourse}
+                alt="Default"
                 loading="eager"
               />
-            ))}
+            )}
           </div>
         </div>
       </div>
@@ -172,6 +181,16 @@ export const query = graphql`
           }
         }
       }
+    }
+    defaultImage: file(relativePath: { eq: "onas3.jpg" }) {
+      childImageSharp {
+        fluid(maxWidth: 800) {
+          ...GatsbyImageSharpFluid
+        }
+      }
+    }
+    datoCmsMainsite {
+      paragraph
     }
   }
 `

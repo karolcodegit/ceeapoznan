@@ -16,9 +16,20 @@ const FormRegister = () => {
           courseDuration
         }
       }
+      allDatoCmsRegisterform{
+        nodes{
+          positioncheckbox{
+            label
+            price
+            available
+          }
+          dish{
+            dish
+          }
+        }
+      }
     }
   `)
-
   const formRef = useRef(null)
   const [isRegisterForm, setIsRegisterForm] = useState(true)
 
@@ -149,12 +160,10 @@ const FormRegister = () => {
       typ: "radio",
       required: true,
     },
-    
-   
-   
+
     {
-      type: 'invoice',
-      title: 'Dane do faktury',
+      type: "invoice",
+      title: "Dane do faktury",
       fields: [
         {
           name: "invoiceName",
@@ -179,7 +188,7 @@ const FormRegister = () => {
         { name: "invoiceNip", label: "NIP", type: "text", typ: "input" },
       ],
     },
-   
+
     {
       name: "yearSpecialist",
       label: "Rok specjalizacji",
@@ -191,29 +200,30 @@ const FormRegister = () => {
       label: "W przypadku wybrania posiłków:",
       options: [
         "Proszę wybrać dania",
-        "Dania wegetariańskie",
-        "Dania wegańskie",
-        "Dania z mięsem",
+        ...(data.allDatoCmsRegisterform.nodes.length > 0 && data.allDatoCmsRegisterform.nodes[0].dish ? data.allDatoCmsRegisterform.nodes[0].dish.map(dish => dish.dish) : [])
       ],
       typ: "list",
     },
     {
       name: "breakfast",
-      label: "Warsztaty - wentylacja mechaniczna ",
-      price: 100,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
+      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`,
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
     },
     {
       name: "dinner",
-      label: "Obiad w drugim i trzecim dniu kursu ",
-      price: 90,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
+      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`,
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
     },
     {
       name: "super",
-      label: "Kolacja w drugi dzień kursu",
-      price: 200,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
+      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`,
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available 
     },
 
     {
@@ -241,21 +251,24 @@ const FormRegister = () => {
   const oplatyDodatkowe = [
     {
       name: "breakfast",
-      label: "Warsztaty - monitorowanie hemodynamiczne",
-      price: 100,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`),
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
     },
     {
       name: "dinner",
-      label: "Obiad z napojami i deserem w drugi i trzeci dzień kursu",
-      price: 180,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`),
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
     },
     {
       name: "super",
-      label: "Kolacja w drugi dzień kursu",
-      price: 200,
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`),
       typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available
     },
   ]
 
@@ -303,9 +316,11 @@ const FormRegister = () => {
         <Title tag="h1">Formularz rejestracyjny</Title>
         <Paragraph>
           Kurs:{" "}
-          <span className="font-medium">
-            {data.activeCourse.nodes[0].nameCourse}
-          </span>
+          {data.activeCourse.nodes[0]?.nameCourse && (
+            <span className="font-medium">
+              {data.activeCourse.nodes[0].nameCourse}
+            </span>
+          )}
         </Paragraph>
         <Form
           allFields={allFields}
@@ -323,7 +338,11 @@ const FormRegister = () => {
           total={total}
         />
       </div>
-      <SideInfoPanel money={total} time={data.activeCourse.nodes[0].courseDuration} available="dostępne" />
+      <SideInfoPanel
+        money={total}
+        time={data.activeCourse.nodes[0]?.courseDuration && data.activeCourse.nodes[0].courseDuration}
+        available="Niedostępne"
+      />
     </div>
   )
 }

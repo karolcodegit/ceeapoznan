@@ -7,7 +7,7 @@ export const CheckboxOption = ({ field, form, handleChange, formSubmitted, formE
   const validateField = () => {
     return !!form[field.name];
   };
-
+console.log(field);
   useEffect(() => {
     if (formSubmitted) {
       // resetFormState();
@@ -26,6 +26,7 @@ export const CheckboxOption = ({ field, form, handleChange, formSubmitted, formE
           onChange={(e) => handleChange(e, field.typ)}
           className="border rounded-md p-2 mr-3"
           aria-describedby={formErrors[field.name] && !validateField() ? `${field.name}-error` : null}
+          disabled={field.disabled}
         />
         {field.label} ({additionalFee} PLN)
         {formErrors[field.name] && !validateField() ? ( <span className="text-red-500">{formErrors[field.name]}</span>) : null}
