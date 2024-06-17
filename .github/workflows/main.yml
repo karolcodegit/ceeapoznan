@@ -16,7 +16,7 @@ jobs:
     - run: npm install
     - run: npm run build  # or gatsby build
       env:
-          GATSBY_DATOCMS_API: ${{ secrets.API_DATO_CMS }}
+          GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
     - uses: actions/upload-artifact@v3
       with:
         name: public
