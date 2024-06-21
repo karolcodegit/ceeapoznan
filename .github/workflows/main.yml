@@ -16,7 +16,7 @@ jobs:
     - run: npm install
     - run: npm run build  # or gatsby build
       env:
-         API_DATO_CMS: ${{ secrets.GATSBY_DATOCMS_API }}
+         GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
          GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
          GATSBY_AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
          GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
