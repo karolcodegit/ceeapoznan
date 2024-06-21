@@ -55,7 +55,7 @@ module.exports = {
       resolve: `gatsby-source-datocms`,
       options: {
         apiToken: 
-          process.env.API_DATO_CMS,
+          process.env.GATSBY_DATOCMS_API,
       },
     },
     

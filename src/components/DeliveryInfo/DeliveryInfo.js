@@ -65,14 +65,23 @@ const DeliveryInfo = ({ price }) => {
       </div>
 
       <Modal isOpen={isModalOpen} closeModal={closeModal}>
-        <div className="py-2 px-4">
-          <Title tag="h4">Koszt dostawy:</Title>
-          <img alt='Logo inpost' src={logoinpost} className="w-20 mx-auto py-3" />
+        <div className="px-2">
+          {/* <Title tag="h4" className="text-center text-lg font-bold mb-4">
+            Koszt dostawy:
+          </Title> */}
+          <img
+            alt="Logo inpost"
+            src={logoinpost}
+            className="w-20 pt-8 pb-4"
+          />
           {deliveryCost && deliveryCost.length > 0 ? (
             deliveryCost.map((service, index) => (
-              <div key={index} className="mb-5 flex">
-                <div className="flex items-center pr-4">
-                  <img alt='Inpost paczkomat' src={paczkomat} />
+              <div
+                key={index}
+                className="mb-5 flex pb-3 pl-10"
+              >
+                <div className="flex items-center pr-4 mb-2 md:mb-0">
+                  <img alt="Inpost paczkomat" src={paczkomat} />
                 </div>
                 <div>
                   {service.packTypes.map((pack, packIndex) => (
@@ -87,10 +96,10 @@ const DeliveryInfo = ({ price }) => {
           ) : (
             <p className="text-center text-gray-500">Ładowanie danych...</p>
           )}
-          <div className="border border-gray-500 w-full h-[1px]"></div>{" "}
-          <div className="my-5 flex">
-            <div className="flex items-center pr-4">
-              <img alt='Inpost domek' src={domek} />
+          <div className="border border-gray-500 w-full h-[1px] my-4"></div>
+          <div className="my-5 flex pl-10">
+            <div className="flex items-center pr-4 mb-2 md:mb-0">
+              <img alt="Inpost domek" src={domek} />
             </div>
             <div>
               <p className="pl-2 text-gray-500">

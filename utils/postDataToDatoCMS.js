@@ -22,7 +22,7 @@ const postDataToDatoCMS = async (form) => {
         },
         {
           headers: {
-            'Authorization': `Bearer ${process.env.API_DATO_CMS}`, // Zastąp tokenem API DatoCMS
+            'Authorization': `Bearer ${process.env.GATSBY_DATOCMS_API}`, // Zastąp tokenem API DatoCMS
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'X-Api-Version': '3',
