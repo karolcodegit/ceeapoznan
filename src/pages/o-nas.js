@@ -5,7 +5,6 @@ import Paragraph from "../components/Paragraph/Paragraph"
 import Seo from "../components/seo"
 
 const AboutUs = ({ data }) => {
-  console.log(data)
   return (
     <>
       <Paragraph firstLetter>

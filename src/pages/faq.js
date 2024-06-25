@@ -10,15 +10,15 @@ const Faq = ({ data }) => {
   return (
     
     <div className="mx-auto px-4 md:px-0">
-      <div className="gap-8 grid grid-cols-1 md:grid-cols-12 py-24">
-        <div className="md:col-span-5">
+      <div className="gap-8 grid grid-cols-1 lg:grid-cols-12 py-24">
+        <div className="lg:col-span-5">
           <Title tag="h2">Częste pytania</Title>
           <Paragraph>
             Nie możesz znaleźć odpowiedzi, której szukasz? Skontaktuj się z
             naszym działem obsługi klienta.
           </Paragraph>
         </div>
-        <div className="md:col-span-7">
+        <div className="lg:col-span-7">
           <dl>
             {data.allDatoCmsFaq.nodes[0].questionanswer.map((faq, index) => (
               <FaqItem

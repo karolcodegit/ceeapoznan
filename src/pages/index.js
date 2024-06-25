@@ -19,13 +19,11 @@ const IndexPage = ({ data }) => {
     edge => edge.node.name === "Creativity_and_innovation"
   ).node.childImageSharp.fluid
 
-  // const defaultImage = require('../assets/images/onas3.jpg');
-
   return (
     <>
       <div className="dark:bg-gray-800">
-        <div className="mx-auto max-w-6xl bg-white flex max-lg:flex-col px-6 py-36 w-full h-full items-center justify-between gap-x-10 dark:bg-gray-800 ">
-          <div className="max-w-xl">
+        <div className="mx-auto max-w-6xl bg-white grid lg:grid-cols-12 max-lg:grid-cols-1 px-6 py-36 w-full h-full items-center justify-between gap-x-10 dark:bg-gray-800 ">
+          <div className="max-w-xl col-span-6">
             <Title tag="h1" className="text-gray-900 dark:text-white">
               Serdecznie zapraszamy do udziału w kolejnym Kursie
               <span className="text-[#002C7C] pl-3">C</span>
@@ -52,7 +50,7 @@ const IndexPage = ({ data }) => {
               </Button>
             )}
           </div>
-          <div className="w-full lg:h-500 max-lg:hidden px-8">
+          <div className="w-full lg:h-500 max-lg:hidden px-8 col-span-6">
             {data.allDatoCmsCourse.nodes.length > 0 ? (
               data.allDatoCmsCourse.nodes.map(course => (
                 <Img
@@ -79,40 +77,40 @@ const IndexPage = ({ data }) => {
       </div>
 
       <div className="w-full bg-medium flex py-14 dark:bg-gray-900">
-        <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
-          <div className="max-w-xl xl:mr-10 max-xl:mb-7">
-            <Title tag="h3" white>
-              Kształcenie ustawiczne w anestezjologii i intensywnej terapii
-            </Title>
-          </div>
-          <div className="flex text-white">
-            <div className="flex items-center pr-4 ">
-              <div className="bg-darker p-3 rounded-full">
-                <img
-                  className="md:w-10 md:h-10 max-md:w-7 max-md:h-7"
-                  src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/component-114svg_1688468705_33030.svg"
-                  alt=""
-                />
-              </div>
-              <span className="md:px-3 max-md:px-2 max-md:text-sm">
-                Kompleksowe kursy
-              </span>
-            </div>
-            <div className="flex items-center">
-              <div className="bg-darker p-3 rounded-full">
-                <img
-                  className="w-10 h-10 max-md:w-7 max-md:h-7"
-                  src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/vector-2svg_1688468705_13779.svg"
-                  alt=""
-                />
-              </div>
-              <span className="md:px-3 max-md:px-2 max-md:text-sm">
-                Obszerna biblioteka
-              </span>
-            </div>
-          </div>
+  <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
+    <div className="max-w-xl xl:mr-10 max-xl:mb-7">
+      <Title tag="h3" white>
+        Kształcenie ustawiczne w anestezjologii i intensywnej terapii
+      </Title>
+    </div>
+    <div className="flex text-white">
+      <div className="flex items-center pr-4 ">
+        <div className="bg-darker p-3 rounded-full">
+          <img
+            className="md:w-10 md:h-10 max-md:w-7 max-md:h-7 object-cover"
+            src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/component-114svg_1688468705_33030.svg"
+            alt=""
+          />
         </div>
+        <span className="md:px-3 max-md:px-2 max-md:text-sm">
+          Kompleksowe kursy
+        </span>
       </div>
+      <div className="flex items-center">
+        <div className="bg-darker p-3 rounded-full">
+          <img
+            className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover"
+            src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/vector-2svg_1688468705_13779.svg"
+            alt=""
+          />
+        </div>
+        <span className="md:px-3 max-md:px-2 max-md:text-sm">
+          Obszerna biblioteka
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
       <div className="w-full bg-white dark:bg-gray-800 z-0">
         <div className="max-auto flex flex-col items-center px-6 py-32 ">
@@ -123,7 +121,7 @@ const IndexPage = ({ data }) => {
               wyszkolił dziesiątki polskich anestezjologów.
             </p>
           </div>
-          <div className="max-w-6xl py-10 grid grid-flow-row lg:grid-cols-3 max-lg:grid-cols-1 max-lg:w-full gap-x-12 gap-y-8  mt-7 z-0">
+          <div className="max-w-6xl py-10 grid grid-flow-row lg:grid-cols-3 max-lg:grid-cols-1 max-lg:w-full gap-x-12 gap-y-8  mt-7">
             <Box
               image={image1}
               title="Wymiana doświadczeń między praktykami i ekspertami"

@@ -44,10 +44,10 @@ const DeliveryInfo = ({ price }) => {
 
   return (
     <>
-      <div className="mt-10 md:mt-0 bg-gray-100 rounded-md flex flex-col self-start w-full md:w-auto flex-shrink-0 max-w-xs md:max-w-full mx-auto">
+      <div className="mt-10 md:mt-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-100 rounded-md flex flex-col self-start w-full md:w-auto flex-shrink-0 max-w-xs md:max-w-full mx-auto">
         <div className="p-5 md:text-center">
           <span className="font-normal text-sm pr-3">Nasza cena: </span>
-          <span className="font-bold text-3xl text-[#3a506b]">{price} zł</span>
+          <span className="font-bold text-3xl text-[#3a506b] dark:text-[#6b91c0]">{price} zł</span>
         </div>
         <div className="border-t p-5 flex items-center">
           <ClockIcon className="h-6 w-6" aria-hidden="true" />

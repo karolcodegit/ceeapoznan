@@ -35,6 +35,7 @@ module.exports = {
     `gatsby-plugin-layout`,
     'gatsby-plugin-postcss',
     `gatsby-plugin-image`,
+    `gatsby-plugin-smoothscroll`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {

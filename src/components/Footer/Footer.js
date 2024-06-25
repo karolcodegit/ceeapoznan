@@ -1,5 +1,6 @@
 import React from "react"
-import { Link, useStaticQuery, graphql } from "gatsby"
+import { Link, useStaticQuery, graphql, navigate } from "gatsby"
+import scrollTo from "gatsby-plugin-smoothscroll"
 import Logo from "../../assets/images/Logo.png"
 import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
@@ -42,6 +43,15 @@ const Footer = () => {
   `)
   const company = data.datoCmsCompany
 
+  const handleClick = (to, event) => {
+    event.preventDefault()
+    // navigate to the page first
+    navigate(to)
+    // then scroll to the element after a delay
+    setTimeout(() => {
+      scrollTo("#top")
+    }, 100) // adjust delay as needed);
+  }
   return (
     <footer className="min-w-full bg-gradient-to-r from-cyan-600 to-blue-700 dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0">
       <div className="min-w-full md:mx-auto  xl:pt-32 lg:pt-20 max-lg:pt-8 xl:px-20 max-xl:px-5">
@@ -102,7 +112,12 @@ const Footer = () => {
                 <ul className="mt-6">
                   {menuLinks.map(link => (
                     <li key={link.title} className="py-1">
-                      <Link to={link.to}>{link.title}</Link>
+                      <Link
+                        to={link.to}
+                        onClick={event => handleClick(link.to, event)}
+                      >
+                        {link.title}
+                      </Link>{" "}
                     </li>
                   ))}
                 </ul>
@@ -113,19 +128,24 @@ const Footer = () => {
               <ul className="mt-6">
                 {przydatneLinki.map(link => (
                   <li key={link.title} className="py-1">
-                    <Link to={link.to}>{link.title}</Link>
+                    <Link
+                      to={link.to}
+                      onClick={event => handleClick(link.to, event)}
+                    >
+                      {link.title}
+                    </Link>
                   </li>
                 ))}
                 <li className="py-1">
-                {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
-  <Link
-    to={`/kursy/${slugify(
-      data.allDatoCmsCourse.nodes[0].nameCourse
-    )}/rejestracja`}
-  >
-    Zapis na kurs
-  </Link>
-)}
+                  {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
+                    <Link
+                      to={`/kursy/${slugify(
+                        data.allDatoCmsCourse.nodes[0].nameCourse
+                      )}/rejestracja`}
+                    >
+                      Zapis na kurs
+                    </Link>
+                  )}
                 </li>
               </ul>
             </div>

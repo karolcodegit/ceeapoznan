@@ -21,7 +21,7 @@ export const FormField = ({ field, form, handleChange,formSubmitted, formErrors 
         {isTextarea ? (
           <textarea
             name={field.name}
-            className='mt-1 block w-full p-2 border border-gray-300 rounded-md h-52 dark:text-gray-800'
+            className='mt-1 block w-full p-2 border border-gray-300 rounded-md h-52 dark:text-gray-800 dark:bg-gray-100'
             value={form[field.name]}
             onChange={handleChange}
             maxLength={field.maxLength}
@@ -30,7 +30,7 @@ export const FormField = ({ field, form, handleChange,formSubmitted, formErrors 
           <input
             name={field.name}
             type={field.type}
-            className='mt-1 block w-full p-2 border border-gray-300 rounded-md dark:text-gray-800'
+            className='mt-1 block w-full p-2 border border-gray-300 rounded-md dark:text-gray-800 dark:bg-gray-100'
             value={form[field.name]}
             onChange={handleChange}
           />

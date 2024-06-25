@@ -1,9 +1,9 @@
 import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
-import { Link } from "gatsby"
 import { useState } from "react"
+import { useStaticQuery, graphql, Link } from "gatsby"
+import {Squash as Hamburger} from "hamburger-react"
 import { Dialog } from "@headlessui/react"
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
@@ -23,7 +23,13 @@ const Header = () => {
   `)
   const activeCourse = data.activeCourse.nodes[0]
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  const handleClick = () => {
+    if (mobileMenuOpen) {
+      setTimeout(() => setMobileMenuOpen(false), 100); // 500ms delay
+    } else {
+      setMobileMenuOpen(true);
+    }
+  }
   return (
     <header className="relative bg-medium px-10 h-28 shadow-slate-900 shadow-sm dark:bg-slate-800 dark:shadow-slate-700">
       <nav
@@ -44,11 +50,15 @@ const Header = () => {
         <div className="lg:hidden">
           <button
             type="button"
-            className="-m-2.5 rounded-md p-2.5 text-gray-700"
-            onClick={() => setMobileMenuOpen(true)}
+            className="-m-2.5 rounded-md p-2.5 text-gray-50"
+            onClick={handleClick}
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6 dark:text-white" aria-hidden="true" />
+            {/* {mobileMenuOpen ? <Bars3Icon/> : <XMarkIcon/>} */}
+            <Hamburger
+            size={20}
+              toggled={mobileMenuOpen} toggle={setMobileMenuOpen}
+            />
           </button>
         </div>
         {/* Navigation desktop */}
@@ -59,7 +69,7 @@ const Header = () => {
               activeStyle={{ color: "dark", fontWeight: 700 }}
               key={link.title}
               to={link.to}
-              className='px-4 flex items-center relative before:absolute before:content-[""] before:top-0 before:right-0 before:left-0 before:w-full before:h-full before:bg-dark before:skew-x-40 before:opacity-0 hover:before:opacity-100 before:-z-10 hover:text-white delay-50 xl:text-lg md:text-base font-medium drop-shadow-[0_35px_35px_rgba(255,255,255,0.25)] justify-end transition duration-500 ease-in-out transform hover:scale-110'
+              className='px-4 flex items-center relative before:absolute before:content-[""] before:top-0 before:right-0 before:left-0 before:w-full before:h-full before:bg-dark dark:before:bg-slate-900 before:skew-x-40 before:opacity-0 hover:before:opacity-100 before:-z-10 hover:text-white delay-50 xl:text-lg md:text-base font-medium  justify-end transition duration-500 ease-in-out transform hover:scale-110'
             >
               {link.title}
             </Link>
@@ -97,13 +107,13 @@ const Header = () => {
             </Link>
             <button
               type="button"
-              className=" rounded-md p-3.5 text-gray-700 dark:text-white"
-              onClick={() => setMobileMenuOpen(false)}
+              className=" rounded-md pr-4 pt-1 text-gray-200 dark:text-gray-50 text-sm"
+              onClick={handleClick}
             >
               <span className="sr-only ">Close menu</span>
-              <XMarkIcon
-                className="h-6 w-6 dark:text-white"
-                aria-hidden="true"
+              <Hamburger
+              size={20}
+                toggled={mobileMenuOpen} toggle={setMobileMenuOpen}
               />
             </button>
           </div>

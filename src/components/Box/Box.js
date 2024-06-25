@@ -8,7 +8,7 @@ const Box = ({ image, title, description }) => {
     <>
       <div className="h-auto transition duration-500 ease-in-out transform lg:hover:scale-110">
         <div className="max-w-full max-h-full">
-          <div className="h-96 w-full relative">
+          <div className="h-96 w-full relative z-0">
           <Img
               className="rounded-2xl object-cover h-full w-full overflow-clip z-0"
               fluid={image}
