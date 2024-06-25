@@ -7,7 +7,7 @@ import Button from "../components/Button/Button"
 import Box from "../components/Box/Box"
 import Paragraph from "../components/Paragraph/Paragraph"
 import { slugify } from "../../utils/slugify"
-import { AcademicCapIcon,BookOpenIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, BookOpenIcon } from "@heroicons/react/24/outline"
 
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
@@ -78,33 +78,32 @@ const IndexPage = ({ data }) => {
       </div>
 
       <div className="w-full bg-medium flex py-14 dark:bg-gray-900">
-  <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
-    <div className="max-w-xl xl:mr-10 max-xl:mb-7">
-      <Title tag="h3" white>
-        Kształcenie ustawiczne w anestezjologii i intensywnej terapii
-      </Title>
-    </div>
-    <div className="flex text-white">
-      <div className="flex max-sm:flex-col items-center pr-4 ">
-        <div className="bg-darker p-3 rounded-full">
-        <BookOpenIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
-
+        <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
+          <div className="max-w-xl xl:mr-10 max-xl:mb-10">
+            <Title tag="h3" white>
+              Kształcenie ustawiczne w anestezjologii i intensywnej terapii
+            </Title>
+          </div>
+          <div className="flex text-white">
+            <div className="flex max-sm:flex-col items-center pr-4 ">
+              <div className="bg-darker p-3 rounded-full">
+                <BookOpenIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
+              </div>
+              <span className="md:px-3 max-md:px-2 max-md:text-base max-sm:py-3">
+                Kompleksowe kursy
+              </span>
+            </div>
+            <div className="flex items-center max-sm:flex-col">
+              <div className="bg-darker p-3 rounded-full">
+                <AcademicCapIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
+              </div>
+              <span className="md:px-3 max-md:px-2 max-md:text-base max-sm:py-3">
+                Obszerna biblioteka
+              </span>
+            </div>
+          </div>
         </div>
-        <span className="md:px-3 max-md:px-2 max-md:text-sm max-sm:py-3">
-          Kompleksowe kursy
-        </span>
       </div>
-      <div className="flex items-center max-sm:flex-col">
-        <div className="bg-darker p-3 rounded-full">
-        <AcademicCapIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
-        </div>
-        <span className="md:px-3 max-md:px-2 max-md:text-sm max-sm:py-3">
-          Obszerna biblioteka
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
 
       <div className="w-full bg-white dark:bg-gray-800 z-0">
         <div className="max-auto flex flex-col items-center px-6 py-32 ">

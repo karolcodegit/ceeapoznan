@@ -20,7 +20,7 @@ const SlidePanel = ({ isOpen, toggle, darkMode, setDarkMode, setFontSize }) => {
           <div className="flex justify-end">
             <button
               onClick={toggle}
-              className="mb-4 rounded-full bg-gray-700 p-1"
+              className="mb-4 rounded-full bg-gray-100 p-1"
               aria-label="Close panel"
             >
               <XMarkIcon className="h-6 w-6 text-gray-500" />
