@@ -7,6 +7,7 @@ import Button from "../components/Button/Button"
 import Box from "../components/Box/Box"
 import Paragraph from "../components/Paragraph/Paragraph"
 import { slugify } from "../../utils/slugify"
+import { AcademicCapIcon,BookOpenIcon } from '@heroicons/react/24/outline'
 
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
@@ -84,27 +85,20 @@ const IndexPage = ({ data }) => {
       </Title>
     </div>
     <div className="flex text-white">
-      <div className="flex items-center pr-4 ">
+      <div className="flex max-sm:flex-col items-center pr-4 ">
         <div className="bg-darker p-3 rounded-full">
-          <img
-            className="md:w-10 md:h-10 max-md:w-7 max-md:h-7 object-cover"
-            src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/component-114svg_1688468705_33030.svg"
-            alt=""
-          />
+        <BookOpenIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
+
         </div>
-        <span className="md:px-3 max-md:px-2 max-md:text-sm">
+        <span className="md:px-3 max-md:px-2 max-md:text-sm max-sm:py-3">
           Kompleksowe kursy
         </span>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center max-sm:flex-col">
         <div className="bg-darker p-3 rounded-full">
-          <img
-            className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover"
-            src="https://res.cloudinary.com/dbyioi2qq/q_auto/v1688468817/static/vector-2svg_1688468705_13779.svg"
-            alt=""
-          />
+        <AcademicCapIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
         </div>
-        <span className="md:px-3 max-md:px-2 max-md:text-sm">
+        <span className="md:px-3 max-md:px-2 max-md:text-sm max-sm:py-3">
           Obszerna biblioteka
         </span>
       </div>

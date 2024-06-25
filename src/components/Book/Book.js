@@ -14,7 +14,7 @@ const Book = ({
   available,
 }) => (
   <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row py-20 border-b last-of-type:border-none">
-    <div className="flex flex-col lg:flex-row max-w-4xl mx-auto md:mx-0 flex-1">
+    <div className="flex flex-col lg:flex-row max-w-4xl  md:mx-0 flex-1">
       <div className="mx-auto md:mx-0 mb-10 md:mb-0">
         <img
           className="flex-shrink object-cover lg:w-96 max-lg:w-48 h-auto"
