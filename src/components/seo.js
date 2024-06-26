@@ -5,7 +5,6 @@ function Seo({
   description,
   title,
   children,
-  canonicalUrl,
   favicon,
   twitterImage,
 }) {
@@ -61,7 +60,7 @@ function Seo({
     <>
       <title>{defaultTitle ? `${title} | ${defaultTitle}` : title}</title>
       <meta name="author" content={site.siteMetadata.author} />
-      <link rel="canonical" href={canonicalUrl} />
+      <link rel="canonical" href="http://www.ceea.org.pl/" />
       <link rel="icon" href={favicon} />
       <meta httpEquiv="content-language" content="PL-pl" />
       <meta name="robots" content="index,follow" />
