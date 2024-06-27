@@ -49,8 +49,9 @@ const Header = () => {
         </div>
         <div className="lg:hidden">
           <button
+            aria-label="Open menu"
             type="button"
-            className="-m-2.5 rounded-md p-2.5 text-gray-50"
+            className="rounded-md py-2.5 text-gray-50"
             onClick={handleClick}
           >
             <span className="sr-only">Open main menu</span>
@@ -97,7 +98,7 @@ const Header = () => {
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-gradient-to-r text-white from-cyan-500 to-dark bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:from-gray-700 dark:to-gray-900">
           <div className="flex items-center justify-between relative">
-            <Link to="/" className=" -m-1.5 p-1.5">
+            <Link to="/" className="p-1.5">
               <span className="sr-only">CEEA - Ośrodek Poznański</span>
               <img
                 className="h-8 w-auto mr-5 max-sm:hidden"
@@ -106,8 +107,9 @@ const Header = () => {
               />
             </Link>
             <button
+              aria-label="Close menu"
               type="button"
-              className=" rounded-md pr-4 pt-1 text-gray-200 dark:text-gray-50 text-sm"
+              className=" rounded-md pr-4 pt-2 text-gray-200 dark:text-gray-50 text-sm"
               onClick={handleClick}
             >
               <span className="sr-only ">Close menu</span>

@@ -80,7 +80,7 @@ const IndexPage = ({ data }) => {
       <div className="w-full bg-medium flex py-14 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
           <div className="max-w-xl xl:mr-10 max-xl:mb-10">
-            <Title tag="h3" white>
+            <Title tag="h2" white>
               Kształcenie ustawiczne w anestezjologii i intensywnej terapii
             </Title>
           </div>

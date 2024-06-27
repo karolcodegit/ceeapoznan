@@ -15,6 +15,7 @@ function Seo({
           siteMetadata {
             title
             author
+            siteUrl
           }
         }
         datoCmsSite {
