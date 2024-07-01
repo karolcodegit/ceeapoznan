@@ -1,13 +1,9 @@
-import * as React from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react';
+import { useStaticQuery, graphql } from 'gatsby';
+import { Helmet } from 'react-helmet';
+import { useLocation } from '@reach/router';
 
-function Seo({
-  description,
-  title,
-  children,
-  favicon,
-  twitterImage,
-}) {
+function Seo({ description, title, children, favicon, twitterImage }) {
   const { site, datoCmsSite } = useStaticQuery(
     graphql`
       query {
@@ -16,16 +12,14 @@ function Seo({
             title
             author
             siteUrl
+            description
           }
         }
         datoCmsSite {
-          name
-          noIndex
           globalSeo {
             siteName
             titleSuffix
             twitterAccount
-            facebookPageUrl
             fallbackSeo {
               title
               description
@@ -40,48 +34,41 @@ function Seo({
         }
       }
     `
-  )
+  );
+
+  const location = useLocation();
+
   const metaDescription =
     description ||
     site.siteMetadata.description ||
-    datoCmsSite.globalSeo.fallbackSeo.description
+    datoCmsSite.globalSeo.fallbackSeo.description;
   const defaultTitle =
-    site.siteMetadata?.title || datoCmsSite.globalSeo.fallbackSeo.title
-  const twitterAccount = datoCmsSite.globalSeo.twitterAccount
-  // const ogImage = ogImage || datoCmsSite.globalSeo.fallbackSeo.image.fluid.tracedSVG
+    site.siteMetadata?.title || datoCmsSite.globalSeo.fallbackSeo.title;
+  const twitterAccount = datoCmsSite.globalSeo.twitterAccount;
   const twitterImageUrl =
-    twitterImage || datoCmsSite.globalSeo.fallbackSeo.image.fluid.tracedSVG
+    twitterImage || datoCmsSite.globalSeo.fallbackSeo.image.fluid.tracedSVG;
+  const canonicalUrl = `${site.siteMetadata.siteUrl}${location.pathname}`;
 
-  // const titleContext = useContext(TitleContext);
-
-  // useEffect(() => {
-  //   titleContext.setTitle(title);
-  // }, [title]);
   return (
-    <>
+    <Helmet>
       <title>{defaultTitle ? `${title} | ${defaultTitle}` : title}</title>
       <meta name="author" content={site.siteMetadata.author} />
-      <link rel="canonical" href="http://www.ceea.org.pl/" />
+      <link rel="canonical" href={canonicalUrl} />
       <link rel="icon" href={favicon} />
       <meta httpEquiv="content-language" content="PL-pl" />
       <meta name="robots" content="index,follow" />
       <meta name="description" content={metaDescription} />
       <meta property="og:title" content={title} />
-      <meta
-        property="og:description"
-        content={metaDescription}
-        data-gatsby-head="true"
-      />
+      <meta property="og:description" content={metaDescription} />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:creator" content={twitterAccount} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={metaDescription} />
-      {/* <meta property="og:image" content={ogImage} /> */}
       <meta name="twitter:image" content={twitterImageUrl} />
       {children}
-    </>
-  )
+    </Helmet>
+  );
 }
 
-export default Seo
+export default Seo;

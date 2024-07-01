@@ -1,5 +1,18 @@
 RewriteEngine On
+
+# Przekierowanie wszystkich nieistniejących plików i katalogów do 404.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-l
-RewriteRule ^(.*)$ /404.html
+RewriteRule ^(.*)$ /404.html [L]
+
+# Przekierowania 301
+Redirect 301 /kurs-nr-6-2024/ http://www.ceea.org.pl/kursy/medycyna_okoooperacyjna/
+Redirect 301 /kursy-ceea.html http://www.ceea.org.pl/kursy/
+Redirect 301 /kurs-nr-5/ http://www.ceea.org.pl/kursy/neurologia_znieczulenie_regionalne_i_terapia_blu/
+Redirect 301 /kurs-nr-5-2023/ http://www.ceea.org.pl/kursy/neurologia_znieczulenie_regionalne_i_terapia_blu/
+Redirect 301 /kurs-nr-1-2024/ http://www.ceea.org.pl/kursy/klatka_piersiowa_i_oddychanie_/
+Redirect 301 /contact/ http://www.ceea.org.pl/kontakt/
+
+# Przekierowanie URL zawierających parametr 'from'
+RewriteCond %{QUERY_STRING} from= [NC]
+RewriteRule ^(.*)$ / [R=301,L]
