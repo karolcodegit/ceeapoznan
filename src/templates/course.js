@@ -28,7 +28,7 @@ const Course = ({ data }) => {
         <section className="pt-20">
           <div className="py-8">
             <Title tag="h4" className="text-2xl font-semibold text-gray-800">
-              Program ramowy kursu
+              Program kursu
             </Title>
             <Line />
           </div>

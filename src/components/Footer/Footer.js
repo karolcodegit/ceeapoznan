@@ -54,7 +54,7 @@ const Footer = () => {
   }
   return (
     <footer className="min-w-full bg-gradient-to-r from-cyan-600 to-blue-700 dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0">
-      <div className="min-w-full md:mx-auto  xl:pt-32 lg:pt-20 max-lg:pt-8 xl:px-20 max-xl:px-5">
+      <div className="min-w-full md:mx-auto xl:pt-32 lg:pt-20 max-lg:pt-8 xl:px-20 max-xl:px-5">
         <div className="grid grid-cols-2 max-xl:grid-cols-1 justify-between md:gap-12 max-md:gap-0">
           <div className="max-w-md mb-10 md:mb-0">
             <div className="flex items-center">

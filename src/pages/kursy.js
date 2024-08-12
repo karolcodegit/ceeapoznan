@@ -37,7 +37,7 @@ const Courses = ({ data }) => {
         {nodes.map((course, index) => (
           <div
             key={course.id}
-            className="relative bg-white rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform hover:scale-110"
+            className="relative bg-white rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform lg:hover:scale-110"
             style={{
               backgroundImage: `url(${course.image.fluid.src})`,
               backgroundSize: "cover",

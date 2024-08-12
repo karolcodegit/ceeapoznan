@@ -12,7 +12,7 @@ import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 const courseDetails = ({ data }) => {
   const { datoCmsCourse: course } = data
   return (
-    <div className="px-5 py-36 max-w-6xl mx-auto lg:flex-row items-center justify-between">
+    <div className="px-5 py-12 max-w-6xl mx-auto lg:flex-row items-center justify-between">
       <div className="max-w-full ">
         <div className="border-b">
           <section className="col-span-6">
@@ -22,7 +22,7 @@ const courseDetails = ({ data }) => {
             </div>
             <div>
               <Img
-                className="float-right w-full lg:w-6/12 rounded-lg shadow-lg mx-5 my-4"
+                className="float-right w-full lg:w-6/12 rounded-lg shadow-lg lg:mx-5 lg:my-4 max-lg:my-8"
                 fluid={
                   data.datoCmsCourse &&
                   data.datoCmsCourse.detailedInformationAboutTheCourse &&
@@ -59,7 +59,7 @@ const courseDetails = ({ data }) => {
                 ) prosimy o kontakt z:
               </Paragraph>
               <Paragraph margin>
-                <div className="flex">
+                <div className="flex my-2">
                   <EnvelopeOpenIcon className="w-8"></EnvelopeOpenIcon>
                   <span className="pl-4">
                     {course.detailedInformationAboutTheCourse &&
@@ -70,7 +70,7 @@ const courseDetails = ({ data }) => {
                 </div>
               </Paragraph>
               <Paragraph margin>
-                <div className="flex">
+                <div className="flex my-2">
                   <PhoneIcon className="w-8"></PhoneIcon>
                   <span className="pl-4">
                     {course.detailedInformationAboutTheCourse &&
@@ -121,7 +121,7 @@ const courseDetails = ({ data }) => {
               </StyledMarkdown>
             </div>
             <div className="py-12">
-              <div className="flex flex-row items-start gap-8">
+              <div className="flex lg:flex-row max-lg:flex-col items-start gap-8">
                 {data.datoCmsCourse &&
                   data.datoCmsCourse.detailedInformationAboutTheHotel &&
                   data.datoCmsCourse.detailedInformationAboutTheHotel
@@ -129,7 +129,7 @@ const courseDetails = ({ data }) => {
                   data.datoCmsCourse.detailedInformationAboutTheHotel
                     .pictureHotel.fluid && (
                     <Img
-                      className="w-full lg:w-6/12 pr-5 rounded-lg shadow-lg my-4"
+                      className="float-left w-full rounded-lg shadow-lg lg:mx-5 "
                       fluid={
                         data.datoCmsCourse.detailedInformationAboutTheHotel
                           .pictureHotel.fluid
@@ -137,7 +137,7 @@ const courseDetails = ({ data }) => {
                       alt="Hotel Ilonn"
                     />
                   )}
-                <Paragraph className="w-full lg:w-6/12">
+                <Paragraph className="w-full">
                   <div className="py-3">Wpłaty prosimy dokonywać na konto:</div>
                   <div>
                     Europejska Fundacja ds. Szkolenia w Anestezjologii i

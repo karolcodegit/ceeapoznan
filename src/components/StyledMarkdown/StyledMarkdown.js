@@ -7,7 +7,7 @@ const markdownStyles = css`
   ol > li {
     list-style: decimal;
     margin-left:2rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1.5;
     margin-bottom: 0.5rem;
     color: ${({ theme }) => theme.mode === 'dark' ? '#d1d5db' : 'black'};
@@ -16,7 +16,7 @@ const markdownStyles = css`
     ul > li {
         list-style: disc;
         margin-left:2rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
         line-height: 1.5;
         margin-bottom: 0.5rem;
         color: ${({ theme }) => theme.mode === 'dark' ? '#d1d5db' : 'black'};
@@ -35,7 +35,7 @@ const MarkdownStyles = styled.div`
 const StyledMarkdown = ({ children }) => (
   
   <MarkdownStyles>
-    <Markdown className="dark:text-gray-200">{children}</Markdown>
+    <Markdown className="dark:text-gray-200 ">{children}</Markdown>
   </MarkdownStyles>
 );
 
