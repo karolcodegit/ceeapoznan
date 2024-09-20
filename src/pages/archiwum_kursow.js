@@ -10,11 +10,15 @@ const ArchiwumKursow = ({ data }) => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const handleResize = () => setWindowWidth(window.innerWidth)
-      window.addEventListener("resize", handleResize)
-      return () => window.removeEventListener("resize", handleResize)
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+
+      // Ustawienie początkowej wartości
+      setWindowWidth(window.innerWidth);
+
+      return () => window.removeEventListener("resize", handleResize);
     }
-  }, [])
+  }, []);
 
   if (!data) {
     return <div>Loading...</div>
@@ -26,7 +30,7 @@ const ArchiwumKursow = ({ data }) => {
   return (
     <div>
       <div
-    className="grid sm:grid-cols-2 md:grid-cols-[3] gap-4 py-24"
+    className="grid sm:grid-cols-2 md:grid-cols-[3] gap-4 py-24 relative"
     style={{
       gridTemplateColumns: `${
         windowWidth < 640
@@ -38,7 +42,7 @@ const ArchiwumKursow = ({ data }) => {
         {nodes.map((course, index) => (
           <div
             key={course.id}
-            className="relative bg-white rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform hover:scale-110"
+            className="relative bg-white rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform lg:hover:scale-110 hover:z-10 z-0"
             style={{
               backgroundImage: `url(${course.image.fluid.src})`,
               backgroundSize: "cover",
