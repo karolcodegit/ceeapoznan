@@ -57,11 +57,11 @@ const Course = ({ data }) => {
                       return (
                         <li
                           key={eventIndex}
-                          className="py-3 text-gray-600 dark:text-gray-200"
+                          className="py-3 text-gray-600 dark:text-gray-200 text-sm md:text-base"
                         >
                           {isFacebookLink ? (
                             <span className="flex items-center">
-                              <FaFacebook className="inline-block mr-2 text-2xl" />
+                              <FaFacebook className="inline-block mr-2 text-xl md:text-2xl" />
                               <StyledMarkdown>{event.event}</StyledMarkdown>
                             </span>
                           ) : (
