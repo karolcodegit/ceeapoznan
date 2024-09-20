@@ -1,8 +1,8 @@
 import React from "react"
 import { css } from "@emotion/react"
 import styled from "@emotion/styled"
-
 import Markdown from "react-markdown"
+import rehypeRaw from "rehype-raw";
 
 const markdownStyles = css`
   ol > li {
@@ -40,7 +40,19 @@ const MarkdownStyles = styled.div`
 
 const StyledMarkdown = ({ children }) => (
   <MarkdownStyles>
-    <Markdown className="dark:text-gray-200 ">{children}</Markdown>
+    <Markdown
+      className="dark:text-gray-200"
+      rehypePlugins={[rehypeRaw]}
+      components={{
+        a: ({ node, ...props }) => (
+          <a {...props} target="_blank" rel="noopener noreferrer">
+            {props.children}
+          </a>
+        ),
+      }}
+    >
+      {children}
+    </Markdown>
   </MarkdownStyles>
 )
 
