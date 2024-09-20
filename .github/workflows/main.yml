@@ -3,7 +3,7 @@ name: Gatsby Publish and Deploy
 on:
   repository_dispatch:
     types: [build_and_deploy]
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '20.x'
-
+    
     # Clear cache step
     - name: Clear cache
       uses: actions/cache@v4
@@ -24,20 +24,15 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    
-    
-    # Update dependencies
-    - name: Update dependencies
-      run: npm update
-      
+
     - run: npm install
     - run: npm run build  # or gatsby build
       env:
-         GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
-         GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
-         GATSBY_AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
-         GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
-         GATSBY_SITE_URL: ${{ secrets.GATSBY_SITE_URL }}
+        GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
+        GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
+        GATSBY_AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
+        GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
+        GATSBY_SITE_URL: ${{ secrets.GATSBY_SITE_URL }}
     - uses: actions/upload-artifact@v3
       with:
         name: public
