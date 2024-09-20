@@ -16,7 +16,12 @@ body {
   background-color: #fff;
   font-family: 'Montserrat', sans-serif;
 }
-
+ul li span a{
+  color: #4267B2;
+}
+.dark ul li span a{
+  color: #fff;
+}
 .dark body {
   background-color: #2d3748;
 }
@@ -56,3 +61,4 @@ body {
     transform: translateX(100%);
     transition: transform 300ms;
   }
+  

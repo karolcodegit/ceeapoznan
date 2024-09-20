@@ -41,8 +41,8 @@ const MainLayout = ({ children }) => {
   }, [darkMode])
 
   const theme = {
-    mode: darkMode ? "dark" : "light",
-  }
+    mode: 'dark', // or 'light'
+  };
 
   return (
     <>
@@ -51,7 +51,6 @@ const MainLayout = ({ children }) => {
           <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
             <NotificationProvider>
               <Header />
-              
               <div className="flex flex-col items-end justify-end relative">
                 <button
                   onClick={togglePanel}
