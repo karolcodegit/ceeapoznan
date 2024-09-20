@@ -60,10 +60,15 @@ const Course = ({ data }) => {
                           className="py-3 text-gray-600 dark:text-gray-200 text-sm md:text-base"
                         >
                           {isFacebookLink ? (
-                            <span className="flex items-center">
-                              <FaFacebook className="inline-block mr-2 text-xl md:text-2xl" />
+                            <div className="flex flex-col md:flex-row items-start md:items-center">
+                              <div className="flex items-center mb-2 md:mb-0">
+                                <FaFacebook className="text-xl md:text-2xl mr-2" />
+                                <span className="font-bold md:hidden">
+                                  Facebook link:
+                                </span>
+                              </div>
                               <StyledMarkdown>{event.event}</StyledMarkdown>
-                            </span>
+                            </div>
                           ) : (
                             <StyledMarkdown>{event.event}</StyledMarkdown>
                           )}
