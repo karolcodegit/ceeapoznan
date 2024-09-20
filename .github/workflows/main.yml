@@ -24,7 +24,12 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-        
+    
+    
+    # Update dependencies
+    - name: Update dependencies
+      run: npm update
+      
     - run: npm install
     - run: npm run build  # or gatsby build
       env:
