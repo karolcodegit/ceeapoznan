@@ -204,6 +204,7 @@ const FormRegister = () => {
       ],
       typ: "list",
     },
+    
     {
       name: "breakfast",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
@@ -247,30 +248,15 @@ const FormRegister = () => {
     },
   ]
 
-  const defaultPrice = 1500
-  const oplatyDodatkowe = [
-    {
-      name: "breakfast",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
-    },
-    {
-      name: "dinner",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
-    },
-    {
-      name: "super",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available
-    },
-  ]
+  const defaultPrice = 1600
+  const oplatyDodatkowe = data.allDatoCmsRegisterform.nodes[0].positioncheckbox.map(option => ({
+    name: option.label.toLowerCase(), // assuming name is derived from label
+    label: option.label,
+    price: parseFloat(option.price),
+    typ: "checkbox",
+    disabled: !option.available
+  }));
+
 
   const emailjsConfig = {
     serviceId: "service_r6jzpbd",
