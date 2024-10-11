@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
 export const CheckboxOption = ({ field, form, handleChange, formSubmitted, formErrors }) => {
-  const additionalFee = field.name === 'breakfast' ? 100 : (field.name === 'dinner' ? 180 : (field.name === 'super' ? 200 : 0));
+  
+  const additionalFee = field.name === 'breakfast' ? (field.price) : (field.name === 'dinner' ? (field.price) : (field.name === 'super' ? (field.price) : 0));
 // eslint-disable-next-line no-unused-vars
   const [fieldValue, setFieldValue] = useState('');
   const validateField = () => {
     return !!form[field.name];
   };
-console.log(field);
   useEffect(() => {
     if (formSubmitted) {
       // resetFormState();

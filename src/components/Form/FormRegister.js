@@ -14,6 +14,7 @@ const FormRegister = () => {
           id
           nameCourse
           courseDuration
+          courseCost
         }
       }
       allDatoCmsRegisterform{
@@ -30,6 +31,8 @@ const FormRegister = () => {
       }
     }
   `)
+  const activeCourse = data.activeCourse.nodes[0];
+  const courseCost = activeCourse ? activeCourse.courseCost : 0;
   const formRef = useRef(null)
   const [isRegisterForm, setIsRegisterForm] = useState(true)
 
@@ -248,15 +251,30 @@ const FormRegister = () => {
     },
   ]
 
-  const defaultPrice = 1600
-  const oplatyDodatkowe = data.allDatoCmsRegisterform.nodes[0].positioncheckbox.map(option => ({
-    name: option.label.toLowerCase(), // assuming name is derived from label
-    label: option.label,
-    price: parseFloat(option.price),
-    typ: "checkbox",
-    disabled: !option.available
-  }));
-
+  const defaultPrice = 1500
+  const oplatyDodatkowe = [
+    {
+      name: "breakfast",
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`),
+      typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
+    },
+    {
+      name: "dinner",
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`),
+      typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
+    },
+    {
+      name: "super",
+      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
+      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`),
+      typ: "checkbox",
+      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available
+    },
+  ]
 
   const emailjsConfig = {
     serviceId: "service_r6jzpbd",
@@ -268,9 +286,9 @@ const FormRegister = () => {
   const apiEndpoint =
     "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sendgrid"
 
-  const total = oplatyDodatkowe.reduce((sum, item) => {
-    return form[item.name] ? sum + item.price : sum
-  }, defaultPrice)
+    const total = oplatyDodatkowe.reduce((sum, item) => {
+      return form[item.name] ? sum + item.price : sum;
+    }, courseCost);
 
   const handleChange = (e, type) => {
     const { name, checked, value } = e.target
@@ -279,22 +297,23 @@ const FormRegister = () => {
       const updatedForm = { ...prev }
 
       if (type === "checkbox") {
-        updatedForm[name] = checked
+        updatedForm[name] = checked;
       } else if (type === "radio") {
-        updatedForm[name] = value
-
-        const brakfast2 = oplatyDodatkowe.reduce(
-          (sum, item) => (updatedForm[item.name] ? sum + item.price : sum),
-          defaultPrice
-        )
-        updatedForm.total = brakfast2
+        updatedForm[name] = value;
       } else {
-        updatedForm[name] = value
+        updatedForm[name] = value;
       }
-
-      return updatedForm
-    })
-  }
+  
+      // Przeliczanie total po każdej zmianie
+      const newTotal = oplatyDodatkowe.reduce(
+        (sum, item) => (updatedForm[item.name] ? sum + item.price : sum),
+        courseCost
+      );
+      updatedForm.total = newTotal;
+  
+      return updatedForm;
+    });
+  };
 
   return (
     <div className=" py-20 max-w-6xl max-md:mx-auto gap-32 flex flex-col xl:flex-row justify-between">
