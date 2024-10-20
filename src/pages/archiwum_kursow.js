@@ -78,7 +78,7 @@ const ArchiwumKursow = ({ data }) => {
                           : "bg-red-100 dark:bg-red-600 text-red-800 dark:text-red-200"
                       }`}
                     >
-                      {course.available ? "Dostępne" : "Nieaktywny"}
+                      {course.available ? "Dostępne" : "Niedostępne"}
                     </span>
                   </div>
                 </div>
