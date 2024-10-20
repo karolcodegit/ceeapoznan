@@ -6,6 +6,7 @@ import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
 import LogoCompany from "../../assets/images/LogoWhiteCompany.png"
 import { slugify } from "../../../utils/slugify"
+import { getYearFromDate } from "../../../utils/getYearFromDate"
 
 const Footer = () => {
   const data = useStaticQuery(graphql`
@@ -139,7 +140,9 @@ const Footer = () => {
                 <li className="py-1">
                   {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
                     <Link
-                      to={`/kursy/${slugify(
+                      to={`/kursy/${getYearFromDate(
+                        data.allDatoCmsCourse.nodes[0].date
+                      )}/${slugify(
                         data.allDatoCmsCourse.nodes[0].nameCourse
                       )}/rejestracja`}
                     >

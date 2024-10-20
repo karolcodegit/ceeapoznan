@@ -9,6 +9,7 @@ import { MarkdownText } from "../../utils/markdownText"
 import { slugify } from "../../utils/slugify"
 import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 import { FaFacebook } from "react-icons/fa"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const Course = ({ data }) => {
   const { datoCmsCourse: course } = data
@@ -39,52 +40,54 @@ const Course = ({ data }) => {
                 Plan w trakcie tworzenia
               </Paragraph>
             ) : (
-              course.daycourse.map((day, index) => (
-                <div key={index} className="my-8 space-y-8">
-                  <Title
-                    tag="h4"
-                    className="text-xl font-semibold text-gray-700 dark:text-gray-100"
-                  >
-                    Dzień {index + 1}
-                  </Title>
-                  <span className="text-gray-500 dark:text-gray-200 font-bold">
-                    {day.date}
-                  </span>
-                  <ul className="space-y-2">
-                    {day.event.map((event, eventIndex) => {
-                      const isFacebookLink =
-                        event.event.includes("facebook.com")
-                      return (
-                        <li
-                          key={eventIndex}
-                          className="py-3 text-gray-600 dark:text-gray-200 text-sm md:text-base"
-                        >
-                          {isFacebookLink ? (
-                            <div className="flex flex-col md:flex-row items-start md:items-center">
-                              <div className="flex items-center mb-2 md:mb-0">
-                                <FaFacebook className="text-xl md:text-2xl mr-2" />
-                                <span className="font-bold md:hidden">
-                                  Facebook link:
-                                </span>
+              course.daycourse.map((day, index) => {
+                return (
+                  <div key={index} className="my-8 space-y-8">
+                    <Title
+                      tag="h4"
+                      
+                    >
+                      Dzień {index + 1}
+                    </Title>
+                    <span className="text-gray-500 dark:text-gray-200 font-bold">
+                      {day.date}
+                    </span>
+                    <ul className="space-y-2">
+                      {day.event.map((event, eventIndex) => {
+                        const isFacebookLink =
+                          event.event.includes("facebook.com")
+                        return (
+                          <li
+                            key={eventIndex}
+                            className="py-3 text-gray-600 dark:text-gray-200 text-sm md:text-base"
+                          >
+                            {isFacebookLink ? (
+                              <div className="flex flex-col md:flex-row items-start md:items-center">
+                                <div className="flex items-center mb-2 md:mb-0">
+                                  <FaFacebook className="text-xl md:text-2xl mr-2" />
+                                  <span className="font-bold md:hidden">
+                                    Facebook link:
+                                  </span>
+                                </div>
+                                <StyledMarkdown>{event.event}</StyledMarkdown>
                               </div>
+                            ) : (
                               <StyledMarkdown>{event.event}</StyledMarkdown>
-                            </div>
-                          ) : (
-                            <StyledMarkdown>{event.event}</StyledMarkdown>
-                          )}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              ))
+                            )}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                )
+              })
             )}
           </div>
         </section>
         {(course.detailedInformationAboutTheCourse ||
           course.detailedInformationAboutTheHotel) && (
           <div className="flex justify-start mt-8">
-            <Button href={`/kursy/${slugify(course.nameCourse)}/szczegoly`}>
+            <Button href={`/kursy/${getYearFromDate(course.date)}/${slugify(course.nameCourse)}/szczegoly`}>
               Szczegółowe informacje o kursie
             </Button>
           </div>

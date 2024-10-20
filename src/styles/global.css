@@ -19,6 +19,17 @@ body {
 ul li span a{
   color: #4267B2;
 }
+.custom-image {
+  display: flex;
+  justify-content: center; /* Wyśrodkowanie obrazów */
+  align-items: center;
+  flex-direction: column; /* Ustawienie obrazów jeden pod drugim */
+  margin: 20px 0; /* Odstępy między sekcjami */
+  max-width: 100%; /* Obrazy będą skalowane do szerokości kontenera */
+  height: auto; /* Proporcje obrazu zostaną zachowane */
+  max-height: 150px; /* Opcjonalnie: maksymalna wysokość, aby loga nie były za duże */
+  display: block;
+}
 .dark ul li span a{
   color: #fff;
 }

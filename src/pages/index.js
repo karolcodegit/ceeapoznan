@@ -8,6 +8,7 @@ import Box from "../components/Box/Box"
 import Paragraph from "../components/Paragraph/Paragraph"
 import { slugify } from "../../utils/slugify"
 import { AcademicCapIcon, BookOpenIcon } from "@heroicons/react/24/outline"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
@@ -43,7 +44,7 @@ const IndexPage = ({ data }) => {
             </Paragraph> */}
             {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
               <Button
-                href={`/kursy/${slugify(
+                href={`/kursy/${getYearFromDate(data.allDatoCmsCourse.nodes[0].date)}/${slugify(
                   data.allDatoCmsCourse.nodes[0].nameCourse
                 )}/rejestracja`}
               >

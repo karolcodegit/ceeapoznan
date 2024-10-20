@@ -24,6 +24,7 @@ const Form = ({
   saveToAirtable,
   successMessage, // Dodaj to
   apiEndpoint, // i to
+  pattern,
   total,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -102,6 +103,7 @@ const Form = ({
                     handleChange={handleChange}
                     formErrors={formErrors}
                     formSubmitted={formSubmitted}
+                    pattern={pattern}
                   />
                 )}
                 {field.type === "invoice" && (

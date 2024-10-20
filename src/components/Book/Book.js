@@ -54,8 +54,8 @@ const Book = ({
             <span className="font-bold">{covertype}</span>
           </div>
           <div className="py-1">
-            <span className="font-normal text-sm mr-3">EAN:</span>
-            <span className="font-bold">{ean}</span>
+            {/* <span className="font-normal text-sm mr-3">EAN:</span>
+            <span className="font-bold">{ean}</span> */}
           </div>
         </div>
       </div>

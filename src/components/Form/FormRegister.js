@@ -44,6 +44,7 @@ const FormRegister = () => {
     zipCode: "",
     city: "",
     phone: "",
+    birthday: "",
     email: "",
     profession: "",
     profesionNumber: "",
@@ -57,9 +58,9 @@ const FormRegister = () => {
     invoiceZipCode: "",
     invoiceCity: "",
     invoiceNip: "",
-    breakfast: false,
-    dinner: false,
-    super: false,
+    option1: false,
+    option2: false,
+    option3: false,
     dishes: "Proszę wybrać dania",
     wyrazamZgode: false,
     total: 0,
@@ -114,6 +115,13 @@ const FormRegister = () => {
       name: "phone",
       label: "Numer telefonu",
       type: "text",
+      typ: "input",
+      required: true,
+    },
+    {
+      name: "birthday",
+      label: "Data urodzenia",
+      type: "date",
       typ: "input",
       required: true,
     },
@@ -209,21 +217,21 @@ const FormRegister = () => {
     },
     
     {
-      name: "breakfast",
+      name: "option1",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
       price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`,
       typ: "checkbox",
       disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
     },
     {
-      name: "dinner",
+      name: "option2",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
       price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`,
       typ: "checkbox",
       disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
     },
     {
-      name: "super",
+      name: "option3",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
       price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`,
       typ: "checkbox",
@@ -254,21 +262,21 @@ const FormRegister = () => {
   const defaultPrice = 1500
   const oplatyDodatkowe = [
     {
-      name: "breakfast",
+      name: "option1",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
       price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`),
       typ: "checkbox",
       disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
     },
     {
-      name: "dinner",
+      name: "option2",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
       price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`),
       typ: "checkbox",
       disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
     },
     {
-      name: "super",
+      name: "option3",
       label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
       price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`),
       typ: "checkbox",
@@ -318,15 +326,15 @@ const FormRegister = () => {
   return (
     <div className=" py-20 max-w-6xl max-md:mx-auto gap-32 flex flex-col xl:flex-row justify-between">
       <div className="max-w-3xl max-xl:mx-auto md:w-3/4">
-        <Title tag="h1">Formularz rejestracyjny</Title>
-        <Paragraph>
+        <Title padding tag="h1">Formularz rejestracyjny</Title>
+        <Title padding tag='h5'>
           Kurs:{" "}
           {data.activeCourse.nodes[0]?.nameCourse && (
             <span className="font-medium">
               {data.activeCourse.nodes[0].nameCourse}
             </span>
           )}
-        </Paragraph>
+        </Title>
         <Form
           allFields={allFields}
           buttonText="Wyślij zgłoszenie"

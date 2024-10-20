@@ -1,7 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import { useStaticQuery, graphql, Link } from "gatsby"
-import {Squash as Hamburger} from "hamburger-react"
+import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
 // import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
@@ -9,6 +9,7 @@ import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
 import RightArrow from "../RightArrow"
 import { slugify } from "../../../utils/slugify"
+import { getYearFromDate } from "../../../utils/getYearFromDate"
 
 const Header = () => {
   const data = useStaticQuery(graphql`
@@ -17,6 +18,7 @@ const Header = () => {
         nodes {
           id
           nameCourse
+          date
         }
       }
     }
@@ -25,11 +27,12 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const handleClick = () => {
     if (mobileMenuOpen) {
-      setTimeout(() => setMobileMenuOpen(false), 100); // 500ms delay
+      setTimeout(() => setMobileMenuOpen(false), 100) // 500ms delay
     } else {
-      setMobileMenuOpen(true);
+      setMobileMenuOpen(true)
     }
   }
+
   return (
     <header className="relative bg-medium px-10 h-28 shadow-slate-900 shadow-sm dark:bg-slate-800 dark:shadow-slate-700">
       <nav
@@ -57,8 +60,9 @@ const Header = () => {
             <span className="sr-only">Open main menu</span>
             {/* {mobileMenuOpen ? <Bars3Icon/> : <XMarkIcon/>} */}
             <Hamburger
-            size={20}
-              toggled={mobileMenuOpen} toggle={setMobileMenuOpen}
+              size={20}
+              toggled={mobileMenuOpen}
+              toggle={setMobileMenuOpen}
             />
           </button>
         </div>
@@ -79,7 +83,9 @@ const Header = () => {
         {activeCourse && (
           <div className="hidden 2xl:flex justify-end relative">
             <Button
-              href={`/kursy/${slugify(activeCourse.nameCourse)}/rejestracja`}
+              href={`/kursy/${getYearFromDate(activeCourse.date)}/${slugify(
+                activeCourse.nameCourse
+              )}/rejestracja`}
             >
               <RightArrow />
               Zapisz się na kurs
@@ -114,8 +120,9 @@ const Header = () => {
             >
               <span className="sr-only ">Close menu</span>
               <Hamburger
-              size={20}
-                toggled={mobileMenuOpen} toggle={setMobileMenuOpen}
+                size={20}
+                toggled={mobileMenuOpen}
+                toggle={setMobileMenuOpen}
               />
             </button>
           </div>
@@ -136,7 +143,7 @@ const Header = () => {
               <div className="py-6">
                 {activeCourse && (
                   <Link
-                    to={`/kursy/${slugify(
+                    to={`/kursy/${getYearFromDate(activeCourse.date)}/${slugify(
                       activeCourse.nameCourse
                     )}/rejestracja`}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white"

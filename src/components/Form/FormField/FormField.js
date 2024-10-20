@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export const FormField = ({ field, form, handleChange,formSubmitted, formErrors }) => {
+export const FormField = ({ field, form, handleChange,formSubmitted, formErrors, pattern }) => {
   // eslint-disable-next-line no-unused-vars
   const [fieldValue, setFieldValue] = useState('');
   const isTextarea = field.type === 'textarea';
@@ -33,6 +33,8 @@ export const FormField = ({ field, form, handleChange,formSubmitted, formErrors 
             className='mt-1 block w-full p-2 border border-gray-300 rounded-md dark:text-gray-800 dark:bg-gray-100'
             value={form[field.name]}
             onChange={handleChange}
+            pattern={pattern}
+            
           />
         )}
       </label>

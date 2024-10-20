@@ -31,9 +31,10 @@ export function saveToAirtable(initialFormState) {
         'InvoiceNip': initialFormState.invoiceNip,
         'YearSpecialist': initialFormState.yearSpecialist,
         'Dishes': initialFormState.dishes,
-        'Breakfast': initialFormState.breakfast === true ? true : false,
-        'Dinner': initialFormState.dinner === true ? true : false,
-        'Super': initialFormState.super === true ? true : false,
+        'Birthday': initialFormState.birthday,
+        'Option1': initialFormState.option1 === true ? true : false,
+        'Option2': initialFormState.option2 === true ? true : false,
+        'Option3': initialFormState.option3 === true ? true : false,
         'Agree':initialFormState.wyrazamZgode === 'on'
         
         }
