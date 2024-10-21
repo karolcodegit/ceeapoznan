@@ -52,7 +52,6 @@ export const query = graphql`
         publisher
         editor
         year
-        ean
         covertype
         available
         image {

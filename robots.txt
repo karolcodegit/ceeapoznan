@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /kurs-nr-6-2024/
-Disallow: /kurs-nr-1-2024
+Disallow: /kurs-nr-1-2024/
 Disallow: /?from=xiaodiaomao.com
 Disallow: /?from=www.xiaodiaomao.com
 Disallow: /?from=192.168.1.19:9090

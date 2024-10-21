@@ -205,9 +205,9 @@ const Footer = () => {
           </div>
           <div className="mb-4">
             <span>Konto bankowe: {company.bankAccountName}</span>
-            <span className="px-1">|</span>
+            <span className="px-1 max-sm:hidden">|</span>
             <CopyToClipboardWithNotification text={company.bankAccount}>
-              <span className="font-bold cursor-pointer">
+              <span className="font-bold cursor-pointer max-sm:block">
                 {company.bankAccount}
               </span>
             </CopyToClipboardWithNotification>
