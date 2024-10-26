@@ -55,7 +55,7 @@ const Footer = () => {
   }
   return (
     <footer className="min-w-full bg-gradient-to-r from-cyan-600 to-blue-700 dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0">
-      <div className="min-w-full md:mx-auto xl:pt-32 lg:pt-20 max-lg:pt-8 xl:px-20 max-xl:px-5">
+      <div className="min-w-full md:mx-auto lg:pt-20 max-lg:pt-16 xl:px-20 max-xl:px-5">
         <div className="grid grid-cols-2 max-xl:grid-cols-1 justify-between md:gap-12 max-md:gap-0">
           <div className="max-w-md mb-10 md:mb-0">
             <div className="flex items-center">
@@ -163,17 +163,14 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex xl:justify-between flex-row max-xl:flex-col py-6 mt-24 border-t border-slate-50 text-xs mx-auto">
+        <div className="flex md:justify-between flex-row max-lg:flex-col py-6 gap-4 mt-16 border-t border-slate-50 text-xs mx-auto">
           <div className="flex-col">
-            <div className="flex justify-between">
+            <div className="flex">
               <div>
                 <div className="mb-4 flex items-center">
                   <span>
                     © {new Date().getFullYear()} CEEA. Wszelkie prawa
                     zastrzeżone.
-                  </span>
-                  <span className="xl:flex hidden ml-2">
-                    Projekt i wykonanie:
                   </span>
                 </div>
                 <div className="mb-4">
@@ -183,23 +180,17 @@ const Footer = () => {
                     <Link to="/polityka-prywatnosci">Polityka prywatności</Link>
                   </span>
                 </div>
+                <span className="flex items-center">
+                  Projekt i wykonanie:
+                  <img
+                    alt="Karol Znojkiewicz"
+                    className="h-7 ml-2"
+                    src={LogoCompany}
+                  />
+                </span>
               </div>
               <div>
-                <div className="flex flex-col items-center">
-                  <span className="xl:hidden flex">Projekt i wykonanie:</span>
-                  <a
-                    href="https://karolznojkiewicz.pl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Karol Znojkiewicz"
-                  >
-                    <img
-                      alt="Karol Znojkiewicz"
-                      className="h-7 xl:ml-4"
-                      src={LogoCompany}
-                    />
-                  </a>
-                </div>
+                
               </div>
             </div>
           </div>

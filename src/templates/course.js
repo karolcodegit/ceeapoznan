@@ -13,6 +13,8 @@ import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const Course = ({ data }) => {
   const { datoCmsCourse: course } = data
+  console.log(course.date);
+  
   return (
     <div className="py-20 max-w-6xl max-md:mx-auto gap-32 flex flex-col xl:flex-row justify-between">
       <div className=" max-w-2xl">
@@ -98,6 +100,7 @@ const Course = ({ data }) => {
         time={course.courseDuration}
         available={course.available}
         nameCourse={course.nameCourse}
+        date={course.date}
       />
     </div>
   )

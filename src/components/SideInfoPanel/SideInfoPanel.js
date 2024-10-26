@@ -6,8 +6,10 @@ import {
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline"
 import { slugify } from "../../../utils/slugify"
+import { getYearFromDate } from "../../../utils/getYearFromDate"
 
-const SideInfoPanel = ({ money, time, available, nameCourse }) => {
+const SideInfoPanel = ({ money, time, available, nameCourse, date }) => {
+
   const location = useLocation()
   const rejestraction = location.pathname.includes("/rejestracja")
   return (
@@ -48,7 +50,7 @@ const SideInfoPanel = ({ money, time, available, nameCourse }) => {
             Zapisy {available ? "dostępne" : "niedostępne"}
           </span>
           {available && !rejestraction && (
-            <Button href={`/kursy/${slugify(nameCourse)}/rejestracja`}>
+            <Button href={`/kursy/${getYearFromDate(date)}/${slugify(nameCourse)}/rejestracja`}>
               Zapisz się na kurs
             </Button>
           )}
