@@ -44,7 +44,6 @@ const Form = ({
     setFormErrors(errors)
 
     form.total = total
-    console.log(total)
 
     if (Object.keys(errors).length > 0) {
       showNotification("Formularz nie został prawidłowo wypełniony")

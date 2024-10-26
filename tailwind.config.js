@@ -4,6 +4,9 @@ module.exports = {
   darkMode: 'selector',
   theme: {
     extend: {
+      lineHeight: {
+        'big': '5rem',
+      },
       backgroundImage: {
         'input-bg': "url('/src/assets/images/other/input.svg')",
       },

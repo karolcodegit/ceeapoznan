@@ -2,7 +2,7 @@ import axios from "axios";
 
 const postDataToDatoCMS = async (form) => {
     try {
-        console.log('Przed zapytaniem do DatoCMS:', form);
+        
 
       const response = await axios.post(
         'https://graphql.datocms.com/',
@@ -29,7 +29,7 @@ const postDataToDatoCMS = async (form) => {
           },
         }
       );
-      console.log('Odpowiedź z DatoCMS:', response);
+      
   
       // Sprawdź, czy odpowiedź zawiera oczekiwane pole
       const createdRecord = response.data.data && response.data.data.createRegisterForm;

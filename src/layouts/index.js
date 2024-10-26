@@ -9,36 +9,40 @@ import SlidePanel from "../components/SlidePanel/SlidePanel"
 import { Bars4Icon } from "@heroicons/react/24/solid"
 import { FontSizeContext } from "../context/fontSizeContext"
 import TitleContext from "../context/TitleContext"
+import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
 
 const MainLayout = ({ children }) => {
-  const [title, setTitle] = React.useState("")
-  const location = useLocation()
-  const isHomePage = location.pathname === "/"
-  const [isPanelOpen, setPanelOpen] = useState(false)
+  const [title, setTitle] = useState('');
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+  const currentPath = location.pathname;
+  const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
+  const is404Page = !allLinks.some(link => link.to === currentPath);
+  const [isPanelOpen, setPanelOpen] = useState(false);
+  
   const togglePanel = () => {
-    setPanelOpen(!isPanelOpen)
-  }
-  const [darkMode, setDarkMode] = useState(false)
-  const [fontSize, setFontSize] = useState("text-base")
+    setPanelOpen(!isPanelOpen);
+  };
+  const [darkMode, setDarkMode] = useState(false);
+  const [fontSize, setFontSize] = useState('text-base');
 
   useEffect(() => {
-    const isDarkMode = localStorage.getItem("darkMode") === "true"
-    setDarkMode(isDarkMode)
-  }, [])
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(isDarkMode);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
 
   useEffect(() => {
-    
-    localStorage.setItem("darkMode", darkMode)
+    localStorage.setItem('darkMode', darkMode);
     if (darkMode) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove('dark');
     }
-  }, [darkMode])
+  }, [darkMode]);
 
   const theme = {
     mode: 'dark', // or 'light'
@@ -68,14 +72,13 @@ const MainLayout = ({ children }) => {
                 />
               </div>
               <div
-              id="top"
-                className={` ${
-                  isHomePage
-                    ? ""
-                    : "max-w-6xl py-32 mx-auto px-4 sm:px-6 lg:px-8"
+                id="top"
+                className={`${
+                  isHomePage ? '' : 'max-w-6xl py-32 mx-auto px-4 sm:px-6 lg:px-8'
                 }`}
               >
-                {!isHomePage && <TopHeader />}
+                {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
+                {!isHomePage && !is404Page && <TopHeader />} 
                 {children}
               </div>
               <Footer />
@@ -84,7 +87,7 @@ const MainLayout = ({ children }) => {
         </TitleContext.Provider>
       </ThemeProvider>
     </>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;
