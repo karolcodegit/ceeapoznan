@@ -8,7 +8,7 @@ const NotFoundPage = () => (
     <div class="text-center flex max-lg:flex-col justify-between items-center">
       <div>
         <h1 class="leading-big text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 mb-6  dark:text-gray-300">
-          Strona nie instnieje
+          Strona nie istnieje
         </h1>
 
         <p class="text-lg text-gray-700 mb-8">

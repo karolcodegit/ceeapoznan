@@ -1,10 +1,10 @@
 import React from "react"
 import { Link, useStaticQuery, graphql, navigate } from "gatsby"
+import { StaticImage } from "gatsby-plugin-image";  
 import scrollTo from "gatsby-plugin-smoothscroll"
 import Logo from "../../assets/images/Logo.png"
 import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
-import LogoCompany from "../../assets/images/LogoWhiteCompany.png"
 import { slugify } from "../../../utils/slugify"
 import { getYearFromDate } from "../../../utils/getYearFromDate"
 
@@ -182,11 +182,14 @@ const Footer = () => {
                 </div>
                 <span className="flex items-center">
                   Projekt i wykonanie:
-                  <img
-                    alt="Karol Znojkiewicz"
-                    className="h-7 ml-2"
-                    src={LogoCompany}
-                  />
+                  <a href="https://karolznojkiewicz.pl" target="_blank" rel="noopener noreferrer">
+                    <StaticImage
+                      alt="Karol Znojkiewicz"
+                      width={36}
+                      className="ml-2"
+                      src="../../assets/images/LogoWhiteCompany.png"
+                    />
+                  </a>
                 </span>
               </div>
               <div>

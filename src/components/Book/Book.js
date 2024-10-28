@@ -1,5 +1,4 @@
 import React from "react"
-import { StaticImage } from "gatsby-plugin-image";
 import Title from "../Title/Title"
 import DeliveryInfo from "../DeliveryInfo/DeliveryInfo"
 
@@ -18,13 +17,6 @@ const Book = ({
   <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row py-20 border-b last-of-type:border-none">
     <div className="flex flex-col lg:flex-row max-w-4xl  md:mx-0 flex-1">
       <div className="mx-auto md:mx-0 mb-10 md:mb-0">
-      <StaticImage
-          className="flex-shrink object-cover lg:w-96 max-lg:w-48 h-auto"
-          src={image.fluid.src} // Używaj bezpośrednich ścieżek do lokalnych obrazów
-          alt={title}
-          layout="constrained"
-          placeholder="blurred"
-        />
         <img
           className="flex-shrink object-cover lg:w-96 max-lg:w-48 h-auto"
           src={image.fluid.src}
