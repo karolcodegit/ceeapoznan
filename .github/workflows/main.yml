@@ -34,7 +34,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-modules-
 
-    - run: npm install --production
+    - run: npm install
     - run: npm run build  # or gatsby build
       env:
         GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
