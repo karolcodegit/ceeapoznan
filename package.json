@@ -52,9 +52,10 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
     "prettier": "^2.8.8",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.14"
   },
   "keywords": [
     "gatsby"
