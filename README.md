@@ -8,7 +8,7 @@ Strona internetowa **CEEA** to platforma edukacyjna dedykowana wspieraniu i prom
 - Przeglądanie zasobów edukacyjnych.
 - Zakup publikacji naukowych.
 - Śledzenie nadchodzących wydarzeń i warsztatów.
-- Kontakt z organizacją oraz składanie zamówień online.
+- Kontakt z organizacją oraz zapisywanie się na kurs poprzez formularz.
 
 Strona jest zaprojektowana w sposób responsywny, aby działać płynnie na różnych urządzeniach (komputery, tablety, smartfony).
 
@@ -33,7 +33,7 @@ Projekt został zrealizowany przy użyciu następujących technologii:
 ### **1. Podstawowe funkcje**
 - **Strona główna**: Informacje o misji CEEA oraz aktualności.
 - **Książki i publikacje**: Możliwość przeglądania i zamawiania publikacji naukowych.
-- **Formularz zamówienia**: Użytkownicy mogą składać zamówienia online z opcją wyboru dostawy.
+- **Formularz**: Użytkownicy mogą zapisywać się na kurs.
 - **Kontakt**: Sekcja umożliwiająca kontakt z organizacją.
 
 ### **2. Responsywność**
