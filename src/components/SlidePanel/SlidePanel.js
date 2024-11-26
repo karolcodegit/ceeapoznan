@@ -46,33 +46,7 @@ const SlidePanel = ({ isOpen, toggle, darkMode, setDarkMode, setFontSize }) => {
                 handleDiameter={20}
               />
             </div>
-            {/* <div className="flex flex-col space-y-2 py-2">
-              <span>Zmiana rozmiaru czcionki</span>
-              <div className="flex gap-2 items-end pl-4">
-                <FontAwesomeIcon
-                  icon={faA}
-                  className="text-2xl cursor-pointer"
-                  onClick={() => setFontSize("text-2xl")}
-                />
-                <FontAwesomeIcon
-                  icon={faA}
-                  className="text-lg cursor-pointer"
-                  onClick={() => setFontSize("text-lg")}
-                />
-                <FontAwesomeIcon
-                  icon={faA}
-                  className="text-xs cursor-pointer"
-                  onClick={() => setFontSize("text-xs")}
-                />
-              </div>
-            </div> */}
-            {/* <div className="flex flex-col space-y-2  py-4">
-              <span>Zmiana języka</span>
-              <select className="mt-2 p-2 border rounded">
-                <option value="pl">Polski</option>
-                <option value="en">English</option>
-              </select>
-            </div> */}
+            
           </div>
         </div>
       </div>

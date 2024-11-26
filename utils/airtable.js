@@ -4,39 +4,40 @@ import Airtable from 'airtable';
 const base = new Airtable({apiKey: process.env.GATSBY_AIRTABLE_ACCESS_TOKEN}).base(process.env.GATSBY_AIRTABLE_BASE_ID);
 const table = base(process.env.GATSBY_AIRTABLE_TABLE_NAME);
 
-export function saveToAirtable(initialFormState) {
+export function saveToAirtable(enrichedForm) {
   return new Promise((resolve, reject) => {
-
+    console.log('Enriched form data before Airtable save:', enrichedForm);
     table.create([
       {
         "fields": {
-        "Name": initialFormState.firstName,
-        'Surname': initialFormState.surName,
-        'Street': initialFormState.street,
-        'NumberHome': initialFormState.numberHome,
-        'ZipCode': initialFormState.zipCode,
-        'City': initialFormState.city,
-        'Phone': initialFormState.phone,
-        'Mail': initialFormState.email,
-        'Profession': initialFormState.profession,
-        'NPWZ': initialFormState.profesionNumber,
-        'Specialist': initialFormState.specjalist == 'tak' ? true : false,
-        'SpecialistAnestezjologii': initialFormState.specialist2 == 'tak' ? true : false,
-        'LastCourse': initialFormState.lastcourse == 'tak' ? true : false,
-        'InvoiceName': initialFormState.invoiceName,
-        'InvoiceStreet': initialFormState.invoiceStreet,
-        'InvoiceNumberHome': initialFormState.invoiceNumberHome,
-        'InvoiceZipCode': initialFormState.invoiceZipCode,
-        'InvoiceCity': initialFormState.invoiceCity,
-        'InvoiceNip': initialFormState.invoiceNip,
-        'YearSpecialist': initialFormState.yearSpecialist,
-        'Dishes': initialFormState.dishes,
-        'Birthday': initialFormState.birthday,
-        'Option1': initialFormState.option1 === true ? true : false,
-        'Option2': initialFormState.option2 === true ? true : false,
-        'Option3': initialFormState.option3 === true ? true : false,
-        'Agree':initialFormState.wyrazamZgode === 'on'
-        
+        "Name": enrichedForm.firstName,
+        'Surname': enrichedForm.surName,
+        'Street': enrichedForm.street,
+        'NumberHome': enrichedForm.numberHome,
+        'ZipCode': enrichedForm.zipCode,
+        'City': enrichedForm.city,
+        'Phone': enrichedForm.phone,
+        'Mail': enrichedForm.email,
+        'Profession': enrichedForm.profession,
+        'NPWZ': enrichedForm.profesionNumber,
+        'Specialist': enrichedForm.specjalist == 'tak' ? true : false,
+        'SpecialistAnestezjologii': enrichedForm.specialist2 == 'tak' ? true : false,
+        'LastCourse': enrichedForm.lastcourse == 'tak' ? true : false,
+        'InvoiceName': enrichedForm.invoiceName,
+        'InvoiceStreet': enrichedForm.invoiceStreet,
+        'InvoiceNumberHome': enrichedForm.invoiceNumberHome,
+        'InvoiceZipCode': enrichedForm.invoiceZipCode,
+        'InvoiceCity': enrichedForm.invoiceCity,
+        'InvoiceNip': enrichedForm.invoiceNip,
+        'YearSpecialist': enrichedForm.yearSpecialist,
+        'Dishes': enrichedForm.dishes,
+        'Birthday': enrichedForm.birthday,
+        'Option1': enrichedForm.option1 === true ? true : false,
+        'Option2': enrichedForm.option2 === true ? true : false,
+        'Option3': enrichedForm.option3 === true ? true : false,
+        'Agree':enrichedForm.wyrazamZgode === 'on',
+        'CourseTitle': enrichedForm.courseTitle,
+        'Total': enrichedForm.total
         }
       },
     ], function(err, records) {

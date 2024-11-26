@@ -1,47 +1,66 @@
 import React, { useEffect, useState } from 'react'
 
-export const FormField = ({ field, form, handleChange,formSubmitted, formErrors, pattern }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [fieldValue, setFieldValue] = useState('');
-  const isTextarea = field.type === 'textarea';
+export const FormField = ({
+  field,
+  form,
+  handleChange,
+  formSubmitted,
+  formErrors,
+  pattern,
+}) => {
+  const [fieldValue, setFieldValue] = useState(form[field.name] || ''); // Synchronizowanie wartości z formularzem
+
+  // Synchronizacja lokalnego stanu z globalnym stanem `form`
+  useEffect(() => {
+    setFieldValue(form[field.name] || '');
+  }, [form[field.name]]);
+
+  // Funkcja walidacji
   const validateField = () => {
-    return !!form[field.name];
+    return form[field.name] !== '' && form[field.name] !== undefined;
   };
 
-  useEffect(() => {
-    if (formSubmitted) {
-      // resetFormState();
-      setFieldValue('');
-    }
-  }, [formSubmitted]);
+  // Funkcja obsługująca zmianę wartości pola
+  const handleFieldChange = (e) => {
+    setFieldValue(e.target.value);
+    handleChange(e); // Przekazujemy zmiany do głównego formularza
+  };
+
   return (
-    <div>
-      <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 dark:text-gray-100">
-        {field.label} {field.required && formSubmitted && !form[field.name] && <span className="text-red-500">*</span>}
-        {isTextarea ? (
-          <textarea
-            name={field.name}
-            className='mt-1 block w-full p-2 border border-gray-300 rounded-md h-52 dark:text-gray-800 dark:bg-gray-100'
-            value={form[field.name]}
-            onChange={handleChange}
-            maxLength={field.maxLength}
-          />
-        ) : (
-          <input
-            name={field.name}
-            type={field.type}
-            className='mt-1 block w-full p-2 border border-gray-300 rounded-md dark:text-gray-800 dark:bg-gray-100'
-            value={form[field.name]}
-            onChange={handleChange}
-            pattern={pattern}
-            
-          />
+    <div className="space-y-4">
+      <label
+        htmlFor={field.name}
+        className="block text-sm font-medium text-gray-700 dark:text-gray-200"
+      >
+        {field.label}
+        {field.required && formSubmitted && !validateField() && (
+          <span className="text-red-500">*</span>
         )}
       </label>
-      {formErrors[field.name] && !validateField() ? (
-        <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>
-      ) : null}
 
+      {field.type === 'textarea' ? (
+        <textarea
+          id={field.name}
+          name={field.name}
+          className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+          value={fieldValue}
+          onChange={handleFieldChange}
+        />
+      ) : (
+        <input
+          id={field.name}
+          name={field.name}
+          type={field.type}
+          className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
+          value={fieldValue}
+          onChange={handleFieldChange}
+          pattern={pattern}
+        />
+      )}
+
+      {formErrors?.[field.name] && !validateField() && (
+        <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>
+      )}
     </div>
   );
 };

@@ -12,9 +12,9 @@ const Input = ({tag, name, maxLength = 150, label, ...props}) => {
               placeholder=" "
               className={Tag !== 'textarea' ? 
                   'text-gray-900 border rounded-md border-gray-400 leading-3 text-sm ring-inset shadow-black  ring-offset-0 drop-shadow py-2 px-4' 
-                  : 
+                  :
                   'text-gray-900 border rounded-md border-gray-400 leading-3 text-sm ring-inset shadow-black ring-offset-0 drop-shadow py-2 px-4 h-52 '} 
-              {...props}        
+              {...props}
           />
       </>
     )

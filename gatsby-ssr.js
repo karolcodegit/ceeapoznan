@@ -1,12 +1,18 @@
-/**
- * Implement Gatsby's SSR (Server Side Rendering) APIs in this file.
- *
- * See: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/
- */
+import React from "react";
 
-/**
- * @type {import('gatsby').GatsbySSR['onRenderBody']}
- */
-exports.onRenderBody = ({ setHtmlAttributes }) => {
-  setHtmlAttributes({ lang: `pl` })
-}
+export const onRenderBody = ({ setHtmlAttributes, setHeadComponents }) => {
+  setHtmlAttributes({ lang: `pl` });
+
+  setHeadComponents([
+    <link
+      key="inpost-geowidget-css"
+      rel="stylesheet"
+      href="https://geowidget.inpost.pl/inpost-geowidget.css"
+    />,
+    <script
+      key="inpost-geowidget-js"
+      src="https://geowidget.inpost.pl/inpost-geowidget.js"
+      defer
+    />,
+  ]);
+};

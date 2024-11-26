@@ -1,14 +1,8 @@
 import axios from "axios"
-import emailjs from "emailjs-com"
 
-const sendEmail = async (formElement, emailjsConfig) => {
+const sendEmail = async (formElement) => {
   try {
-    const result = await emailjs.sendForm(
-      emailjsConfig.serviceId,
-      emailjsConfig.templateId,
-      formElement.current,
-      emailjsConfig.userId
-    )
+  
   } catch (e) {
     console.error("Error sending email:", e)
     throw e.message
@@ -16,14 +10,32 @@ const sendEmail = async (formElement, emailjsConfig) => {
 }
 
 function validateEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
+}
+
+const getDynamicFields = form => {
+  const dynamicFields = []
+  if (form?.delivery === "Adres dostawy") {
+    dynamicFields.push(
+      { name: "streetDelivery", required: true },
+      { name: "cityDelivery", required: true },
+      { name: "postcodeDelivery", required: true }
+    )
+  }
+  return dynamicFields
 }
 
 export const validateForm = (form, allFields) => {
   const errors = {}
 
-  allFields.forEach(field => {
+  const fieldsToValidate = [
+    ...(Array.isArray(allFields) ? allFields : []),
+    ...(Array.isArray(getDynamicFields(form)) ? getDynamicFields(form) : []),
+  ]
+
+  fieldsToValidate.forEach(field => {
     const fieldValue = form[field.name]
     const isRequiredAndEmpty =
       field.required && (!fieldValue || fieldValue.trim() === "")
@@ -31,10 +43,23 @@ export const validateForm = (form, allFields) => {
       errors[field.name] = "To pole jest wymagane"
     }
 
-    if (field.name === 'email' && fieldValue && !validateEmail(fieldValue)) {
-      errors[field.name] = 'Nieprawidłowy adres e-mail'
+    if (field.name === "email" && fieldValue && !validateEmail(fieldValue)) {
+      errors[field.name] = "Nieprawidłowy adres e-mail"
     }
   })
+
+  // Walidacja dodatkowa dla adresu dostawy
+  if (form.delivery === "Adres dostawy") {
+    if (!form.streetDelivery || form.streetDelivery.trim() === "") {
+      errors.street = "Ulica jest wymagana"
+    }
+    if (!form.cityDelivery || form.cityDelivery.trim() === "") {
+      errors.city = "Miasto jest wymagane"
+    }
+    if (!form.postcodeDelivery || form.postcodeDelivery.trim() === "") {
+      errors.postcode = "Kod pocztowy jest wymagany"
+    }
+  }
 
   return errors
 }
@@ -43,52 +68,77 @@ export const handleFormSubmit = async (
   event,
   formRef,
   form,
-  emailjsConfig,
+  // emailjsConfig,
   showNotification,
   allFields,
   successMessage,
   apiEndpoint,
+  book,
+  setForm,
 ) => {
-  event.preventDefault();
+  event.preventDefault()
+
   try {
     if (!formRef) {
       console.error("Form reference is not available.")
       return
     }
+
     const errors = validateForm(form, allFields)
-    
 
     if (Object.keys(errors).length > 0) {
-      if (errors.email) {
-        showNotification(`Nieprawidłowy adres e-mail`, "error")
-      }
       showNotification(
-        `Nie wszystkie pola zostały prawidłowo wypełnione`,
+        "Nie wszystkie pola zostały prawidłowo wypełnione",
         "error"
       )
-        return
-    }else{
-      const response = await axios.post(apiEndpoint, form);
+      return
+    }
 
-      if (response.status === 200) {
-        showNotification(successMessage, "success")
-        await sendEmail(formRef, emailjsConfig)
-      } else {
-        throw new Error("Formularz nie został wysłany");
-      }
+    const imageUrl = book?.image?.gatsbyImageData?.images?.fallback?.src || ""
+
+    // Przygotowanie danych
+    const formWithAdditionalData = {
+      ...form,
+      setForm,
+      quantity: form.quantity,
+      title: book?.title || "Domyślny tytuł",
+      book_image: imageUrl,
+      orderNumber: form.orderNumber,
+      parcelLocker:
+        form.delivery === "Paczkomat"
+          ? form.parcelLocker
+          : {
+              name: "",
+              address: {
+                city: "",
+                province: "",
+                post_code: "",
+                street: "",
+                building_number: "",
+                flat_number: "",
+              },
+            },
+      streetDelivery: form.delivery === "Adres dostawy" ? form.streetDelivery : "",
+      cityDelivery: form.delivery === "Adres dostawy" ? form.cityDelivery : "",
+      postcodeDelivery: form.delivery === "Adres dostawy" ? form.postcodeDelivery : "",
     }
-   
-  } catch (err) {
-    console.error(err)
-    // Obsługa błędów, check for transient error
-    if (err && err.text && err.text.includes("TransientError")) {
-      // showNotification('Wystąpił tymczasowy problem. Spróbuj ponownie później.', 'error');
+    // Wysyłanie danych
+    const response = await axios.post(apiEndpoint, formWithAdditionalData)
+
+    // console.log('Wysyłane dane:', formWithAdditionalData);
+    
+
+    if (response.status === 200) {
+      showNotification(successMessage, "success")
+      await sendEmail(formRef)
     } else {
-      // showNotification(
-      //   `Wiadomość nie została wysłana. Błąd: ${
-      //     (err.message, "error")
-      //   }`
-      // )
+      console.error("Błąd API:", response)
+      throw new Error("Formularz nie został wysłany")
     }
+    // Zwracanie przetworzonych danych
+    return formWithAdditionalData
+  } catch (err) {
+    console.error("Error during form submission:", err)
+    showNotification("Nie udało się wysłać formularza.", "error")
   }
 }

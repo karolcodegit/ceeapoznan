@@ -26,22 +26,17 @@ const IndexPage = ({ data }) => {
       <div className="dark:bg-gray-800">
         <div className="mx-auto max-w-6xl bg-white grid lg:grid-cols-12 max-lg:grid-cols-1 px-6 py-36 w-full h-full items-center justify-between gap-x-10 dark:bg-gray-800 ">
           <div className="max-w-xl col-span-6">
-            <Title tag="h1" className="text-gray-900 dark:text-white">
-              Serdecznie zapraszamy do udziału w kolejnym Kursie
-              <span className="text-[#002C7C] pl-3">C</span>
-              <span className="text-[#016ABA]">E</span>
-              <span className="text-[#47AEE6]">E</span>
-              <span className="text-[#88C8EB]">A</span>
+            <Title tag="h1">
+              Serdecznie zapraszamy do udziału w kolejnym kursie
+              <span className="text-[#002C7C] pl-3 font-bold">C</span>
+              <span className="text-[#016ABA] font-bold">E</span>
+              <span className="text-[#47AEE6] font-bold">E</span>
+              <span className="text-[#88C8EB] font-bold">A</span>
             </Title>
             <Paragraph>
               {data.datoCmsMainsite.paragraph ||
                 "Ośrodek Poznański CEEA już od niespełna 30 lat organizuje kursy dla lekarzy specjalistów oraz lekarzy rezydentów anestezjologii i intensywnej terapii. Dzięki udziałowi w naszych cyklach kursów mają Państwo możliwość udziału w wykładach prowadzonych przez ekspertów w dziedzinie anestezjologii i intensywnej terapii, aktualizacji wiedzy medycznej w oparciu o Evidence Based Medicine oraz dyskusji w gronie praktyków, w której przeniesiemy wiedzę teoretyczną na realia naszej codziennej pracy, niejednokrotnie obfite w wyzwania organizacyjne."}
             </Paragraph>
-            {/* <Paragraph>
-              Nasz kurs jest zaprojektowany tak, aby dostarczyć Ci najbardziej
-              aktualnych i istotnych treści w przystępny i angażujący sposób. Z
-              nami nauczysz się od najlepszych w branży!
-            </Paragraph> */}
             {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
               <Button
                 href={`/kursy/${getYearFromDate(data.allDatoCmsCourse.nodes[0].date)}/${slugify(
@@ -78,7 +73,7 @@ const IndexPage = ({ data }) => {
         </div>
       </div>
 
-      <div className="w-full bg-medium flex py-14 dark:bg-gray-900">
+      <div className="w-full bg-vividTurquoise flex py-14 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
           <div className="max-w-xl xl:mr-10 max-xl:mb-10">
             <Title tag="h2" white>
@@ -108,14 +103,14 @@ const IndexPage = ({ data }) => {
 
       <div className="w-full bg-white dark:bg-gray-800 z-0">
         <div className="max-auto flex flex-col items-center px-6 py-32 ">
-          <div className="text-center">
-            <Title tag="h2">Dlaczego warto wziąć udział w kursach CEEA?</Title>
-            <p className="text-sm text-gray-500 mt-4">
+          <div className="text-center grid gap-4">
+            <Title tag="h2" className="text-darkBlueGreen">Dlaczego warto wziąć udział w kursach CEEA?</Title>
+            <span className="text-darkBlueGreen">
               Jesteśmy pierwszym w Polsce ośrodkiem CEEA, który od 1995 roku
               wyszkolił dziesiątki polskich anestezjologów.
-            </p>
+            </span>
           </div>
-          <div className="max-w-6xl py-10 grid grid-flow-row lg:grid-cols-3 max-lg:grid-cols-1 max-lg:w-full gap-x-12 gap-y-8  mt-7">
+          <div className="max-w-6xl py-10 grid grid-flow-row lg:grid-cols-3 max-lg:grid-cols-1 max-lg:w-full gap-x-12 gap-y-8  mt-10">
             <Box
               image={image1}
               title="Wymiana doświadczeń między praktykami i ekspertami"

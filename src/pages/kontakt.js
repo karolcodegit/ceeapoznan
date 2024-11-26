@@ -24,7 +24,7 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
     <>
       
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20 mx-auto py-24 border-b ">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-20 mx-auto py-24 border-b ">
         <div className="flex flex-col gap-4">
           <Title tag="h2">Skontaktuj się z nami</Title>
           <span className="text-sm font-normal dark:text-gray-300">
@@ -45,13 +45,12 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mx-auto py-20 px-4 border-b">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 mx-auto py-20 px-4 border-b">
         <div className="">
           <Title tag="h2">{nameCompany}</Title>
         </div>
         <div className="grid md:grid-cols-2 gap-8 col-span-2 items-start">
           <ContactBox
-             
               place={`ul.${street} ${numberHome}`}
               place2={`${zipCode} ${city}`}
               email={mail}
@@ -72,14 +71,7 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
         </div>
       </div>
 
-      {/* <div className=" grid lg:grid-cols-2 max-lg:grid-cols-1 gap-x-20 gap-y-10 mx-auto py-10 px-4 items-center">
-          <div className="flex-1">
-            <ContactForm />
-          </div>
-          <div className="flex-1 max-lg:hidden"> */}
       {/* <GoogleMaps companyData={datoCmsCompany} /> */}
-      {/* </div>
-        </div> */}
     </>
   )
 }

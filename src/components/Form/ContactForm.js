@@ -30,11 +30,11 @@ const ContactForm = () => {
   };
 
     // Define configEmail outside of handleSubmit
-    const emailjsConfig = {
-        serviceId: "service_r6jzpbd",
-        templateId: "template_d0033vp",
-        userId: "sUtJzifkBSdcRbC_M",
-    }
+    // const emailjsConfig = {
+    //     serviceId: "service_r6jzpbd",
+    //     templateId: "template_d0033vp",
+    //     userId: "sUtJzifkBSdcRbC_M",
+    // }
     
     const successMessage = "Wiadomość została pomyślnie wysłana!";
     const apiEndpoint = "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sendgrid-contact";
@@ -52,10 +52,10 @@ const ContactForm = () => {
             setForm={setForm}
             initialFormState={initialFormState}
             formRef={formRef}
-            emailjsConfig={emailjsConfig}
+            // emailjsConfig={emailjsConfig}
             maxLength={2000}
-            successMessage={successMessage} // Przekazanie successMessage jako prop
-            apiEndpoint={apiEndpoint} // Przekazanie apiEndpoint jako prop
+            successMessage={successMessage}
+            apiEndpoint={apiEndpoint}
           />
         </div>
       </div>

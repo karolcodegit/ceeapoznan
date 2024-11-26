@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Title from "../Title/Title"
 import SideInfoPanel from "../SideInfoPanel/SideInfoPanel"
 import Form from "./Form"
 import { saveToAirtable } from "../../../utils/airtable"
-import Paragraph from "../Paragraph/Paragraph"
 
 const FormRegister = () => {
   const data = useStaticQuery(graphql`
@@ -63,10 +62,10 @@ const FormRegister = () => {
     option3: false,
     dishes: "Proszę wybrać dania",
     wyrazamZgode: false,
-    total: 0,
+    courseTitle: data.activeCourse.nodes[0]?.nameCourse || '',
   }
 
-  const [form, setForm] = useState({ initialFormState })
+  const [form, setForm] = useState(initialFormState)
 
   const allFields = [
     {
@@ -258,8 +257,6 @@ const FormRegister = () => {
       ],
     },
   ]
-
-  const defaultPrice = 1500
   const oplatyDodatkowe = [
     {
       name: "option1",
@@ -284,11 +281,11 @@ const FormRegister = () => {
     },
   ]
 
-  const emailjsConfig = {
-    serviceId: "service_r6jzpbd",
-    templateId: "template_1mhvytc",
-    userId: "sUtJzifkBSdcRbC_M",
-  }
+  // const emailjsConfig = {
+  //   serviceId: "service_r6jzpbd",
+  //   templateId: "template_1mhvytc",
+  //   userId: "sUtJzifkBSdcRbC_M",
+  // }
 
   const successMessage = "Zapisano na kurs!"
   const apiEndpoint =
@@ -298,65 +295,78 @@ const FormRegister = () => {
       return form[item.name] ? sum + item.price : sum;
     }, courseCost);
 
-  const handleChange = (e, type) => {
-    const { name, checked, value } = e.target
+    const handleChange = (e, type) => {
+      const { name, checked, value } = e.target;
+    
+      setForm((prev) => {
+        const updatedForm = { ...prev };
+    
+        if (type === "checkbox") {
+          updatedForm[name] = checked;
+        } else if (type === "radio") {
+          updatedForm[name] = value; // Dla radio, ustawiamy wartość
+        } else {
+          updatedForm[name] = value;
+        }
+    
+        // Aktualizuj `total` dla opłat dodatkowych
+        const newTotal = oplatyDodatkowe.reduce(
+          (sum, item) => (updatedForm[item.name] ? sum + item.price : sum),
+          courseCost
+        );
+        updatedForm.total = newTotal;
+    
+        return updatedForm;
+      });
+    };
 
-    setForm(prev => {
-      const updatedForm = { ...prev }
-
-      if (type === "checkbox") {
-        updatedForm[name] = checked;
-      } else if (type === "radio") {
-        updatedForm[name] = value;
-      } else {
-        updatedForm[name] = value;
-      }
-  
-      // Przeliczanie total po każdej zmianie
-      const newTotal = oplatyDodatkowe.reduce(
-        (sum, item) => (updatedForm[item.name] ? sum + item.price : sum),
-        courseCost
-      );
-      updatedForm.total = newTotal;
-  
-      return updatedForm;
-    });
-  };
-
+    // useEffect(() => {
+    //   setForm((prev) => ({
+    //     ...prev,
+    //     courseTitle: data.activeCourse.nodes[0]?.nameCourse || '',
+    //     total
+    //   }));
+    // }, [data.activeCourse, total]);
+    
   return (
-    <div className=" py-20 max-w-6xl max-md:mx-auto gap-32 flex flex-col xl:flex-row justify-between">
-      <div className="max-w-3xl max-xl:mx-auto md:w-3/4">
-        <Title padding tag="h1">Formularz rejestracyjny</Title>
-        <Title padding tag='h5'>
-          Kurs:{" "}
-          {data.activeCourse.nodes[0]?.nameCourse && (
-            <span className="font-medium">
-              {data.activeCourse.nodes[0].nameCourse}
-            </span>
-          )}
-        </Title>
-        <Form
-          allFields={allFields}
-          buttonText="Wyślij zgłoszenie"
-          handleChange={handleChange}
-          form={form}
-          setForm={setForm}
-          initialFormState={initialFormState}
-          formRef={formRef}
-          emailjsConfig={emailjsConfig}
-          isRegisterForm={isRegisterForm}
-          saveToAirtable={saveToAirtable}
-          successMessage={successMessage}
-          apiEndpoint={apiEndpoint}
-          total={total}
-        />
-      </div>
-      <SideInfoPanel
-        money={total}
-        time={data.activeCourse.nodes[0]?.courseDuration && data.activeCourse.nodes[0].courseDuration}
-        available="Niedostępne"
-      />
-    </div>
+    <div className="py-10 max-w-6xl mx-auto gap-12 flex flex-col xl:flex-row justify-between items-start">
+  <div className="max-w-3xl w-full xl:w-2/3">
+    <Title tag="h1" className="text-3xl sm:text-4xl">
+      Formularz rejestracyjny
+    </Title>
+    <Title tag="h5" className="mt-4 text-lg sm:text-xl">
+      Kurs:{" "}
+      {data.activeCourse.nodes[0]?.nameCourse && (
+        <span className="font-medium text-gray-800 dark:text-gray-200">
+          {data.activeCourse.nodes[0].nameCourse}
+        </span>
+      )}
+    </Title>
+
+    <Form
+      allFields={allFields}
+      buttonText="Wyślij zgłoszenie"
+      handleChange={handleChange}
+      form={form}
+      setForm={setForm}
+      initialFormState={initialFormState}
+      formRef={formRef}
+      isRegisterForm={true}
+      saveToAirtable={saveToAirtable}
+      successMessage={successMessage}
+      apiEndpoint={apiEndpoint}
+      total={total}
+    />
+  </div>
+
+  <div className="w-full xl:w-1/3 lg:w-2/3 mx-auto mt-10 xl:mt-0 xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)]">
+    <SideInfoPanel
+      money={total}
+      time={data.activeCourse.nodes[0]?.courseDuration}
+      available="Niedostępne"
+    />
+  </div>
+</div>
   )
 }
 

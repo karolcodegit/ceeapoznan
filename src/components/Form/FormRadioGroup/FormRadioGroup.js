@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react'
 
-export const FormRadioGroup = ({ field, form, handleChange, formSubmitted, formErrors }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [fieldValue, setFieldValue] = useState('');
-  const validateField = () => {
-    return !!form[field.name];
-  };
-
+export const FormRadioGroup = ({
+  field,
+  form,
+  handleChange,
+  formSubmitted,
+  formErrors,
+}) => {
   useEffect(() => {
+    // Obsługa resetu radiobuttonów
     if (formSubmitted) {
-      // resetFormState();
-      setFieldValue('');
+      handleChange({ target: { name: field.name, value: '' } }); // Resetuj wybraną opcję
     }
   }, [formSubmitted]);
-  
 
   return (
     <div>
       <span className="block text-sm font-medium text-gray-700 dark:text-gray-200">
         {field.label}
-        
       </span>
       <div className="mt-2" role="radiogroup" aria-labelledby="group_label">
         {field.options.map((option) => (
@@ -30,13 +28,15 @@ export const FormRadioGroup = ({ field, form, handleChange, formSubmitted, formE
               name={field.name}
               value={option}
               checked={form[field.name] === option}
-              onChange={(e) => handleChange(e, field.typ)} // Dodaj e i typ pola jako argumenty
+              onChange={(e) => handleChange(e)}
             />
             <span className="ml-2 dark:text-gray-200">{option}</span>
           </label>
         ))}
       </div>
-      {formErrors[field.name] && !validateField() ? ( <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>) : null}
+      {formErrors[field.name] && (
+        <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>
+      )}
     </div>
   );
 };

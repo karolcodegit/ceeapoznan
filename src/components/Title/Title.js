@@ -1,56 +1,41 @@
 import React from 'react'
 
-const Title = ({ tag: Tag, children, white, padding }) => {
-  // Initialize titleClass based on the 'white' prop
-  const titleClass = white ? 'text-gray-100' : 'text-dark';
+const Title = ({ 
+  tag: Tag = 'h3',
+  children, 
+  white = false, 
+  padding = false, 
+  className = '' 
+}) => {
+  // Kolory oparte na prop 'white'
+  const titleClass = white 
+    ? 'text-white dark:text-gray-100' 
+    : 'text-[#213A58] dark:text-gray-300';
 
-  // Add padding if 'padding' prop is true, otherwise, use an empty string
-  const addPadding = padding ? 'py-3' : '';
+  // Padding zgodny z najlepszymi praktykami
+  const addPadding = padding ? 'py-4 px-4' : '';
 
-  // Return the appropriate heading element based on the 'Tag' prop
-  switch (Tag) {
-    case 'h1':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-5xl max-lg:text-4xl max-md:text-3xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    case 'h2':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-4xl max-lg:text-3xl max-md:text-2xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    case 'h3':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-3xl max-md:text-2xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    case 'h4':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-2xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    case 'h5':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    case 'h6':
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-lg font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-    default:
-      return (
-        <Tag className={`${titleClass} ${addPadding} text-xl font-bold dark:text-gray-300`}>
-          {children}
-        </Tag>
-      );
-  }
+  // Style typograficzne dla każdego tytułu
+  const typographyStyles = {
+    h1: 'text-5xl max-lg:text-4xl max-md:text-3xl font-extrabold',
+    h2: 'text-4xl max-lg:text-3xl max-md:text-2xl font-bold',
+    h3: 'text-3xl max-md:text-2xl font-semibold',
+    h4: 'text-2xl font-semibold',
+    h5: 'text-xl',
+    h6: 'text-lg font-medium',
+    default: 'text-xl font-medium',
+  };
+
+  // Wybór odpowiednich stylów
+  const currentTypography = typographyStyles[Tag] || typographyStyles.default;
+
+  // Końcowy render komponentu
+  return (
+    <Tag 
+      className={`${titleClass} ${addPadding} ${currentTypography} ${className} transition-all duration-200 ease-in-out`}
+    >
+      {children}
+    </Tag>
+  );
 };
 export default Title

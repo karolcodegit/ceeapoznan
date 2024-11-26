@@ -1,8 +1,8 @@
-const path = require('path');
-const { slugify } = require('./utils/slugify');
+const path = require("path")
+const { slugify } = require("./utils/slugify")
 
 exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions;
+  const { createPage } = actions
 
   const result = await graphql(`
     query {
@@ -13,24 +13,36 @@ exports.createPages = async ({ graphql, actions }) => {
           date
         }
       }
+      allDatoCmsBook {
+        nodes {
+          id
+          title
+          editor
+          year
+          price
+          publisher
+          covertype
+          available
+        }
+      }
     }
-  `);
+  `)
 
-  result.data.allDatoCmsCourse.nodes.forEach((node) => {
+  result.data.allDatoCmsCourse.nodes.forEach(node => {
     if (node.date && node.date.length > 0) {
       // Wyciągnij rok z daty ręcznie
-      let year;
-      const dateParts = node.date.split('.');
+      let year
+      const dateParts = node.date.split(".")
       if (dateParts.length > 1) {
-        year = dateParts[2].slice(-4); // Dla formatu np. "8-10.05.2025"
+        year = dateParts[2].slice(-4) // Dla formatu np. "8-10.05.2025"
       } else if (node.date.length === 4) {
-        year = node.date; // Dla formatu np. "2025" lub "2026"
+        year = node.date // Dla formatu np. "2025" lub "2026"
       } else {
-        console.warn(`Nieznany format daty dla kursu ${node.nameCourse}`);
-        year = 'brak-roku'; // Możesz przypisać wartość domyślną, jeśli format daty jest niepoprawny
+        console.warn(`Nieznany format daty dla kursu ${node.nameCourse}`)
+        year = "brak-roku" // Możesz przypisać wartość domyślną, jeśli format daty jest niepoprawny
       }
 
-      const courseSlug = slugify(node.nameCourse);
+      const courseSlug = slugify(node.nameCourse)
 
       // Tworzenie strony kursu
       createPage({
@@ -39,7 +51,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           id: node.id,
         },
-      });
+      })
 
       // Tworzenie strony szczegółów kursu
       createPage({
@@ -48,7 +60,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           id: node.id,
         },
-      });
+      })
 
       // Tworzenie strony rejestracji dla każdego kursu
       createPage({
@@ -57,18 +69,33 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {
           id: node.id,
         },
-      });
+      })
     } else {
-      console.warn(`Brak daty dla kursu ${node.nameCourse}`);
+      console.warn(`Brak daty dla kursu ${node.nameCourse}`)
     }
-  });
-};
+  })
 
+  const books = result.data.allDatoCmsBook.nodes
 
+  // Tworzenie stron dla każdej książki
+  books.forEach(book => {
+    const bookSlug = slugify(book.title) // Tworzymy slug na podstawie tytułu książki
+
+    // Strona zamówienia książki (np. /ksiazki/tytul-ksiazki/zamowienie)
+    createPage({
+      path: `/ksiazki/${bookSlug}/zamowienie`,
+      component: path.resolve(`./src/templates/order-book.js`),
+      context: {
+        id: book.id,
+        
+      },
+    })
+  })
+}
 
 exports.onCreateWebpackConfig = ({ stage, actions }) => {
   // W zależności od etapu (development/production)
   actions.setWebpackConfig({
-    stats: 'errors-only', // Pokazuje tylko błędy
-  });
-};
+    stats: "errors-only", // Pokazuje tylko błędy
+  })
+}

@@ -24,7 +24,17 @@ const Books = ({ data }) => {
   const filtredBooks = searchBooks(nodes, inputValue)
   return (
     <>
+      <div>
+        {/* <p>
+          W celu zamówienia książki prosimy o kontakt mailowy z <b> dr Natalią
+          Znojkiewicz </b> - dane kontaktowe w zakładce "Kontakt". Przy składaniu
+          zamówienia prosimy o podanie numeru telefonu, adresu mailowego oraz
+          adresu do wysyłki - w przypadku zamawiania do Paczkomatu InPost
+          prosimy o podanie numeru paczkomatu.
+        </p> */}
+      </div>
       <div className="flex justify-end py-20">
+     
         <div className="mr-4">
           <Label name="Wyszukiwarka: " />
         </div>

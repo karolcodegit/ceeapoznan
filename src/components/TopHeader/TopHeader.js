@@ -4,8 +4,6 @@ import Breadcrumbs from "../Breadcrumbs/Breadcrumbs"
 import useLastBreadcrumb from "../../hooks/useLastBreadcrumb"
 import { menuLinks, otherLinks, przydatneLinki } from "../Menu"
 
-
-
 const TopHeader = ({ children }) => {
   const title = useLastBreadcrumb()
   const location = useLocation()
@@ -13,19 +11,31 @@ const TopHeader = ({ children }) => {
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
   const currentLink = allLinks.find(link => link.to === currentPath)
   return (
-    <div className="">
-      <div className="max-w-6xl mx-auto">
-        <Breadcrumbs />
-      </div>
-      <div className="mt-10 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-dark dark:text-gray-100">{title}</h1>
+    <div className="pb-12">
+  <div className="max-w-6xl mx-auto">
+    {/* Breadcrumbs Section */}
+    <div className="pt-6">
+      <Breadcrumbs className="text-sm text-gray-600 dark:text-gray-400" />
+    </div>
+
+    {/* Title and Content */}
+    <div className="mt-10">
+      <h1 className="text-3xl font-extrabold text-dark dark:text-gray-100">
+        {title}
+      </h1>
+      <div className="mt-4 text-base leading-7 text-gray-800 dark:text-gray-300">
         {children}
       </div>
-      <p className="mt-2 text-base text-cyan-800 pb-12 dark:text-gray-200">
-        {currentLink ? currentLink.description : ""}
-      </p>
-
     </div>
+
+    {/* Description */}
+    {currentLink?.description && (
+      <p className="mt-6 text-base text-cyan-800 dark:text-gray-400 leading-relaxed">
+        {currentLink.description}
+      </p>
+    )}
+  </div>
+</div>
   )
 }
 

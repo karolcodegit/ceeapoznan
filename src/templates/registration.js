@@ -11,11 +11,7 @@ const Rejestracja = () => {
   const currentLink = allLinks.find(link => link.to === currentPath)
   return (
     <>
-      <p className="mt-2 text-base text-cyan-800 pb-12">
-        {/* {currentLink
-          ? currentLink.description
-          : "Chcesz poszerzyć swoje umiejętności? Zapisz się na nasz kurs! Oferujemy różne kursy dostosowane do Twoich potrzeb."} */}
-      </p>
+      
       <div className="">
         <div className="max-w-6xl mx-auto ">
           <FormRegister />

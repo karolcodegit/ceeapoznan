@@ -6,40 +6,35 @@ import Seo from "../components/seo"
 
 const AboutUs = ({ data }) => {
   return (
-    <>
-      <Paragraph firstLetter>
-        <Img
-          fluid={data.allDatoCmsAboutCompany.nodes[0].paragraph[0].picture.fluid}
-          className="sm:float-right max-sm:hidden w-72 h-auto px-5 p-5"
-          alt={data.allDatoCmsAboutCompany.nodes[0].paragraph[0].picture.alt}
-          loading="eager"
-        />
-        {data.allDatoCmsAboutCompany.nodes[0].paragraph[0].description}
-      </Paragraph>
-
-      <Paragraph firstLetter>
-         <Img
-          fluid={data.allDatoCmsAboutCompany.nodes[0].paragraph[1].picture.fluid}
-          className="sm:float-right max-sm:hidden w-60 h-auto px-5 p-5"
-          alt={data.allDatoCmsAboutCompany.nodes[0].paragraph[1].picture.alt}
-          loading="eager"
-        />
-        {data.allDatoCmsAboutCompany.nodes[0].paragraph[1].description}
-      </Paragraph>
-
-      <Paragraph firstLetter>
-        {data.allDatoCmsAboutCompany.nodes[0].paragraph[2].description}
-        
-        <Img
-          fluid={data.allDatoCmsAboutCompany.nodes[0].paragraph[2].picture.fluid}
-          className="mt-9 max-w-2xl max-md:max-w-xl max-sm:max-w-lg mx-auto object-cover w-full"
-          alt={data.allDatoCmsAboutCompany.nodes[0].paragraph[2].picture.alt}
-          loading="eager"
-        />
-      </Paragraph>
-    </>
-  )
-}
+    <div className="max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {data.allDatoCmsAboutCompany.nodes[0].paragraph.map((para, index) => (
+        <Paragraph
+          key={index}
+          firstLetter
+          className={`relative pb-8 ${
+            index % 2 === 0 ? 'sm:pr-12' : 'sm:pl-12'
+          }`}
+        >
+          {para.picture && (
+            <Img
+              fluid={para.picture.fluid}
+              className={`${
+                index === 2
+                  ? 'mt-9 max-w-2xl max-md:max-w-xl max-sm:max-w-lg mx-auto mb-8'
+                  : 'sm:float-right max-sm:hidden w-60 md:w-72 lg:w-80 h-auto mx-4 py-4'
+              } object-cover rounded-lg shadow-lg`}
+              alt={para.picture.alt}
+              loading="eager"
+            />
+          )}
+          <span className="text-base leading-7 text-gray-700 dark:text-gray-300">
+            {para.description}
+          </span>
+        </Paragraph>
+      ))}
+    </div>
+  );
+};
 
 export const query = graphql`
   query DatoCMSQuery {

@@ -3,7 +3,6 @@ import { useState } from "react"
 import { useStaticQuery, graphql, Link } from "gatsby"
 import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
-// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
@@ -39,7 +38,7 @@ const Header = () => {
         className="mx-auto lg:grid flex justify-between 2xl:grid-cols-6 grid-cols-5 h-full items-center text-center  max-lg:py-9"
         aria-label="Global"
       >
-        <div className="absolute max-lg:hidden top-0 left-0 right-0 w-27 h-36 bg-gradient-to-r from-cyan-500 to-dark skew-x-40 scale-x-150	dark:from-gray-700 dark:to-gray-900"></div>
+        <div className="absolute max-lg:hidden top-0 left-0 right-0 w-27 h-36 bg-gradient-to-r bg-dark skew-x-40 scale-x-150	dark:from-gray-700 dark:to-gray-900"></div>
         <div className="z-50 col-span-2">
           <Link to="/" className="-m-1.5 p-1.5 flex lg:pt-10">
             <span className="sr-only">CEEA - Ośrodek Poznański</span>
@@ -67,14 +66,13 @@ const Header = () => {
           </button>
         </div>
         {/* Navigation desktop */}
-        <div className="hidden h-full lg:flex text-white w-full relative z-50 col-span-3 2xl:ml-4 justify-between">
+        <div className="hidden h-full lg:flex text-white hover:text-white w-full relative z-50 col-span-3 2xl:ml-4 justify-between">
           {menuLinks.map(link => (
             <Link
-              activeClassName="active"
-              activeStyle={{ color: "dark", fontWeight: 700 }}
+              activeClassName="text-navyBlue hover:text-blue-600 font-bold transition-all duration-200 ease-in-out xl:text-lg md:text-base dark:text-blue"
               key={link.title}
               to={link.to}
-              className='px-4 flex items-center relative before:absolute before:content-[""] before:top-0 before:right-0 before:left-0 before:w-full before:h-full before:bg-dark dark:before:bg-slate-900 before:skew-x-40 before:opacity-0 hover:before:opacity-100 before:-z-10 hover:text-white delay-50 xl:text-lg md:text-base font-medium  justify-end transition duration-500 ease-in-out transform hover:scale-110'
+              className='px-4 flex items-center relative before:absolute before:content-[""] before:top-0 before:right-0 before:left-0 before:w-full before:h-full before:bg-dark dark:before:bg-slate-900 before:skew-x-40 before:opacity-0 hover:before:opacity-100 before:-z-10 hover:text-white hover:font-bold delay-50 xl:text-lg md:text-base font-bold justify-end transition duration-500 ease-in-out transform hover:scale-110'
             >
               {link.title}
             </Link>
@@ -127,13 +125,13 @@ const Header = () => {
             </button>
           </div>
           <div className="mt-20 flow">
-            <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50">
-              <div className="space-y-5 py-6 flex flex-col">
+            <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50 ml-5">
+              <div className="space-y-2 py-6 flex flex-col">
                 {menuLinks.map(link => (
-                  <Link
+                  <Link 
                     key={link.title}
                     to={link.to}
-                    className="dark:text-white"
+                    className="dark:text-white py-4 "
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.title}

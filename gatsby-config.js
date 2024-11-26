@@ -26,7 +26,11 @@ module.exports = {
         web: [
           {
             name: `Montserrat`,
-            file: `https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600;700&display=swap`,
+            file: `https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;500;600;700;800;900&display=swap`,
+          },
+          {
+            name: `Roboto`,
+            file: `https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap`,
           },
         ],
       },

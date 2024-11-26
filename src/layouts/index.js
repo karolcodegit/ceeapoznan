@@ -10,6 +10,7 @@ import { Bars4Icon } from "@heroicons/react/24/solid"
 import { FontSizeContext } from "../context/fontSizeContext"
 import TitleContext from "../context/TitleContext"
 import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState('');
@@ -44,6 +45,10 @@ const MainLayout = ({ children }) => {
     }
   }, [darkMode]);
 
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => !prevMode);
+  };
+
   const theme = {
     mode: 'dark', // or 'light'
   };
@@ -56,25 +61,30 @@ const MainLayout = ({ children }) => {
             <NotificationProvider>
               <Header />
               <div className="flex flex-col items-end justify-end relative">
-                <button
-                  onClick={togglePanel}
-                  className="fixed top-60 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-50"
-                  aria-label="Open modal"
-                >
-                  <Bars4Icon className="h-6 w-6" />
-                </button>
-                <SlidePanel
+              <button
+                onClick={toggleDarkMode}
+                className="fixed top-60 right-4 bg-gradient-to-r from-blue to-navyBlue hover:from-blue-600 hover:to-blue-800 text-white font-medium p-4 rounded-full shadow-lg flex items-center space-x-2 z-50 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? (
+                  <SunIcon className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <MoonIcon className="h-6 w-6" aria-hidden="true" />
+                )}
+                
+              </button>
+                {/* <SlidePanel
                   isOpen={isPanelOpen}
                   toggle={togglePanel}
                   darkMode={darkMode}
                   setDarkMode={setDarkMode}
                   setFontSize={setFontSize}
-                />
+                /> */}
               </div>
               <div
                 id="top"
                 className={`${
-                  isHomePage ? '' : 'max-w-6xl py-32 mx-auto px-4 sm:px-6 lg:px-8'
+                  isHomePage ? '' : 'max-w-6xl py-12 sm:py-20 lg:py-28 mx-auto px-4 sm:px-6 lg:px-8'
                 }`}
               >
                 {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}

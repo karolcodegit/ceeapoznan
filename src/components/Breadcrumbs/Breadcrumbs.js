@@ -1,6 +1,7 @@
 import React from "react"
 import { useLocation } from "@reach/router"
 import { menuLinks, otherLinks, przydatneLinki } from "../Menu"
+import { ChevronRightIcon } from "@heroicons/react/24/outline"
 
 const Breadcrumbs = () => {
   const location = useLocation()
@@ -10,28 +11,27 @@ const Breadcrumbs = () => {
 
   return (
     <nav className="flex" aria-label="Breadcrumb">
-      <ol className="flex items-center space-x-2">
+      <ol className="flex items-center space-x-1">
         {links.map((link, index) => (
-          <li key={index}>
-            <div className="flex items-center">
-              {index !== 0 && (
-                <svg
-                  className="flex-shrink-0 h-5 w-5 text-dark"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
-                </svg>
-              )}
+          <li key={index} className="flex items-center">
+            {index !== 0 && (
+              <ChevronRightIcon
+                className="h-5 w-5 text-gray-400 dark:text-gray-500 mx-2"
+                aria-hidden="true"
+              />
+            )}
+            {index === links.length - 1 ? (
+              <span className="text-gray-800 dark:text-gray-200 font-semibold">
+                {link.title}
+              </span>
+            ) : (
               <a
                 href={link.to}
-                className="text-dark font-medium dark:text-gray-100"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 font-medium transition"
               >
                 {link.title}
               </a>
-            </div>
+            )}
           </li>
         ))}
       </ol>

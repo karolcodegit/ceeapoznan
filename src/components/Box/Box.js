@@ -17,7 +17,7 @@ const Box = ({ image, title, description }) => {
             />
           </div>
           <div className="py-8">
-            <Title tag="h5">{title}</Title>
+            <Title tag="h5" className="font-bold text-navyBlue">{title}</Title>
             <Paragraph>{description}</Paragraph>
           </div>
         </div>

@@ -3,21 +3,40 @@
 @tailwind utilities;
 
 html, body {
-  height: 100%;
   overflow: hidden;
+}
+
+html, body, #___gatsby, #gatsby-focus-wrapper {
+  height: 100%;
+}
+
+
+#geowidget {
+  width: 70%;
+  height: 700px; /* Ogranicz wysokość mapy */
+  max-height: 700px; /* Możesz dostosować maksymalną wysokość */
 }
 
 #___gatsby {
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
+  width: 100%;
 }
+
 body {
   background-color: #fff;
   font-family: 'Montserrat', sans-serif;
 }
 ul li span a{
   color: #4267B2;
+}
+p, span, small, .description {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+}
+.search-wrapper[_ngcontent-dcs-c10] .box-container[_ngcontent-dcs-c10] .box-wrapper[_ngcontent-dcs-c10] {
+  display: none !important;
 }
 .custom-image {
   display: flex;
@@ -72,4 +91,22 @@ ul li span a{
     transform: translateX(100%);
     transition: transform 300ms;
   }
+  .no-arrows {
+    -moz-appearance: textfield; /* Ukrywa strzałki w Firefox */
+    -webkit-appearance: none;  /* Ukrywa strzałki w WebKit (Chrome, Safari) */
+    appearance: none;          /* Uniwersalne */
+  }
   
+  .no-arrows::-webkit-inner-spin-button,
+  .no-arrows::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Wyłącza strzałki dla WebKit */
+    margin: 0;
+  }
+
+  .react-tooltip {
+    position: fixed;
+    z-index: 1000;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
