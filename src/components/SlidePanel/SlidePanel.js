@@ -3,8 +3,6 @@ import Switch from "react-switch"
 import { CSSTransition } from "react-transition-group"
 import { SunIcon, MoonIcon } from "@heroicons/react/24/solid"
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faA } from "@fortawesome/free-solid-svg-icons"
 
 const SlidePanel = ({ isOpen, toggle, darkMode, setDarkMode, setFontSize }) => {
   return (

@@ -81,13 +81,17 @@ exports.createPages = async ({ graphql, actions }) => {
   books.forEach(book => {
     const bookSlug = slugify(book.title) // Tworzymy slug na podstawie tytułu książki
 
+    if (!book.id || !book.title) {
+      console.warn(`Pominięto książkę z brakującymi danymi: ${JSON.stringify(book)}`)
+      return
+    }
+
     // Strona zamówienia książki (np. /ksiazki/tytul-ksiazki/zamowienie)
     createPage({
       path: `/ksiazki/${bookSlug}/zamowienie`,
       component: path.resolve(`./src/templates/order-book.js`),
       context: {
         id: book.id,
-        
       },
     })
   })
