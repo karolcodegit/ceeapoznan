@@ -10,10 +10,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    # Ustawienie wersji Node.js
     - uses: actions/setup-node@v3
       with:
         node-version: '20.x'
-    
+
+    # Sprawdzenie wersji Node.js
+    - name: Check Node.js version
+      run: node -v
+
     # Clear cache step
     - name: Clear cache
       uses: actions/cache@v4
@@ -43,6 +49,7 @@ jobs:
         GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
         GATSBY_SITE_URL: ${{ secrets.GATSBY_SITE_URL }}
         GATSBY_INPOST_API: ${{ secrets.GATSBY_INPOST_API }}
+
     - uses: actions/upload-artifact@v3
       with:
         name: public
