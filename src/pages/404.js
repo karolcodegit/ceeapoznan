@@ -2,6 +2,7 @@ import * as React from "react"
 import Seo from "../components/seo"
 import { Link } from "gatsby"
 import { StaticImage } from 'gatsby-plugin-image';
+import Button from "../components/Button/Button";
 
 const NotFoundPage = () => (
   <div class=" flex flex-col items-center justify-center py-20">
@@ -26,12 +27,12 @@ const NotFoundPage = () => (
       </div>
       
     </div>
-    <Link
+    <Button
         to="/"
-        class="mt-6 inline-block px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
+        className="mt-6 inline-block px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
       >
         Wróć na stronę główną
-      </Link>
+      </Button>
   </div>
 )
 

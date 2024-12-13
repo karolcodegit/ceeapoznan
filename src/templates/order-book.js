@@ -8,15 +8,11 @@ import { saveAirableOrderBook } from "../../utils/airtable-order"
 import QuantitySelector from "../components/QuantitySelector/QuantitySelector"
 import { generateOrderNumber } from "../../utils/generateOrderNumber"
 
-const OrderBook = ({ data }) => {
-
-  
+const OrderBook = ({ data }) => {  
   const book = data.datoCmsBook
   const formRef = useRef(null)
-
   // Wygeneruj numer zamówienia
   const orderNumber = generateOrderNumber()
-
   const initialFormState = {
     name: "",
     surname: "",
@@ -85,9 +81,10 @@ const OrderBook = ({ data }) => {
     "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sengrid-order"
 
   const imageData = getImage(book.image.gatsbyImageData)
-if (!data.datoCmsBook) {
-    return <p>Dane książki są niedostępne. Spróbuj ponownie później.</p>
-  }
+  
+  if (!data.datoCmsBook) {
+      return <p>Dane książki są niedostępne. Spróbuj ponownie później.</p>
+    }
   return (
     <>
       <div className="text-center">

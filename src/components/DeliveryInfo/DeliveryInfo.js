@@ -61,7 +61,6 @@ const DeliveryInfo = ({ price, available, title, className }) => {
                 position: "fixed", // Lub "fixed" w zależności od kontekstu
                 zIndex: 999,
                 // Przykład wyśrodkowania
-               
               }}
             >
               <div className="flex flex-col gap-1 text-xs z-50">

@@ -187,7 +187,7 @@ const Footer = () => {
                       alt="Karol Znojkiewicz"
                       width={36}
                       className="ml-2"
-                      src="../../assets/images/LogoWhiteCompany.png"
+                      src="../../assets/images/LogoKarolZnojkiewicz.svg"
                     />
                   </a>
                 </span>
