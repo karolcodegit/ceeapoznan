@@ -46,6 +46,8 @@ jobs:
         GATSBY_AIRTABLE_TABLE_NAME_ORDER: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_ORDER }}
         GATSBY_SITE_URL: ${{ secrets.GATSBY_SITE_URL }}
         GATSBY_INPOST_API: ${{ secrets.GATSBY_INPOST_API }}
+        GATSBY_API_TOKEN: ${{ secrets.GATSBY_API_TOKEN }}
+        GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK }}
 
     - uses: actions/upload-artifact@v3
       with:
