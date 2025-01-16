@@ -1,0 +1,30 @@
+name: DatoCMS to Airtable Sync
+
+on:
+  push:
+    branches:
+      - main  # lub inna gałąź, w zależności od konfiguracji
+
+jobs:
+  update_airtable:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install axios dotenv
+
+    - name: Run script to sync DatoCMS and Airtable
+      env:
+        DATO_CMS_API_KEY: ${{ secrets.GATSBY_DATOCMS_API }}
+        AIRTABLE_API_KEY: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
+        AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
+        AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK }}
+      run: node sync.js
