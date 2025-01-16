@@ -102,6 +102,7 @@ export const handleFormSubmit = async (
       setForm,
       quantity: form.quantity,
       title: book?.title || "Domyślny tytuł",
+      title_book: form?.title || "Domyślny tytuł",
       book_image: imageUrl,
       orderNumber: form.orderNumber,
       parcelLocker:
@@ -122,8 +123,22 @@ export const handleFormSubmit = async (
       cityDelivery: form.delivery === "Adres dostawy" ? form.cityDelivery : "",
       postcodeDelivery: form.delivery === "Adres dostawy" ? form.postcodeDelivery : "",
     }
+
+    // console.log("Form data being sent:", formWithAdditionalData);
+  // console.log("Title book value:", formWithAdditionalData.title_book);
+
     // Wysyłanie danych
-    const response = await axios.post(apiEndpoint, formWithAdditionalData)
+    const response = await axios.post(
+      apiEndpoint,
+      formWithAdditionalData,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GATSBY_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    // console.log("API Response:",  process.env.GATSBY_API_TOKEN);
 
     // console.log('Wysyłane dane:', formWithAdditionalData);
     

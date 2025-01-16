@@ -169,7 +169,7 @@ const Footer = () => {
               <div>
                 <div className="mb-4 flex items-center">
                   <span>
-                    © {new Date().getFullYear()} CEEA. Wszelkie prawa
+                    © 2023 - {new Date().getFullYear()} CEEA. Wszelkie prawa
                     zastrzeżone.
                   </span>
                 </div>

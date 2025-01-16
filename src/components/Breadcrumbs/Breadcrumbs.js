@@ -13,7 +13,7 @@ const Breadcrumbs = () => {
     <nav className="flex" aria-label="Breadcrumb">
       <ol className="flex items-center space-x-1">
         {links.map((link, index) => (
-          <li key={index} className="flex items-center">
+          <li key={index} className="flex items-center dark:text-gray-200">
             {index !== 0 && (
               <ChevronRightIcon
                 className="h-5 w-5 text-gray-400 dark:text-gray-500 mx-2"

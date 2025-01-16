@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import {
   ClockIcon,
   CurrencyDollarIcon,
@@ -6,9 +6,10 @@ import {
 } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
 import DeliveryModal from "../Modal/DeliveryModal"
-// import OrderBooks from "../Modal/OrderBooks"
 import { Tooltip } from "react-tooltip"
 import { slugify } from "../../../utils/slugify"
+import Form from "../Form/Form"
+import { saveAirableNotificationBook } from "../../../utils/airtable-notificationBook"
 
 const DeliveryInfo = ({ price, available, title, className }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -27,6 +28,32 @@ const DeliveryInfo = ({ price, available, title, className }) => {
   const openContactModal = () => {
     setIsOrderBooksOpen(true)
   }
+
+  const formRef = useRef(null)
+  const initialFormState = {
+    email: "",
+    title: title
+  }
+  const [form, setForm] = useState(initialFormState)
+  const allFields = [
+    {
+      name: "email",
+      type: "email",
+      typ: "input",
+      required: "true",
+      placeholder: "E-mail",
+    },
+  ]
+
+  const handleChange = e => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    })
+  }
+  const successMessage = "Zamówienie zostało złożone"
+  const apiEndpoint =
+    "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sengrid-notificationBook"
 
   return (
     <>
@@ -99,7 +126,35 @@ const DeliveryInfo = ({ price, available, title, className }) => {
             </div>
           </Button>
         ) : (
-          " "
+          <>
+            <div className="border-t flex flex-col items-center gap-4 py-5 px-8 mx-auto w-full max-w-[280px] justify-center">
+              <span className="text-gray-700 font-medium text-center text-sm dark:text-gray-200">
+                Podaj swój e-mail, aby otrzymać powiadomienie o dostępności:
+              </span>
+              <Form
+                allFields={allFields}
+                buttonText="Powiadom mnie"
+                handleChange={handleChange}
+                form={form}
+                setForm={setForm}
+                initialFormState={initialFormState}
+                formRef={formRef}
+                maxLength={2000}
+                isRegisterForm={true}
+                saveToAirtable={saveAirableNotificationBook}
+                successMessage={successMessage}
+                apiEndpoint={apiEndpoint}
+                noSpace
+                DeliveryInfoButton
+                tooltip={[
+                  'Jeśli planujesz zamówić więcej niż 3 egzemplarze,',
+                  'skontaktuj się z nami pod adresem:',
+                  'sekretariat@ceea.org.pl'
+                ]}
+                tooltipId="button-more-books"
+              />
+            </div>
+          </>
         )}
       </div>
 

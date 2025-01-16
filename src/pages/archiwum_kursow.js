@@ -7,28 +7,48 @@ import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const ArchiwumKursow = ({ data }) => {
-  const [windowWidth, setWindowWidth] = useState(0) // Początkowa szerokość okna
+  const [windowWidth, setWindowWidth] = useState(0); // Początkowa szerokość okna
 
-  // Użycie useEffect tylko po stronie klienta
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-
     if (typeof window !== "undefined") {
-      // Ustawiamy początkową szerokość okna
-      setWindowWidth(window.innerWidth)
-      window.addEventListener("resize", handleResize)
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      setWindowWidth(window.innerWidth); // Ustawiamy początkową szerokość okna
+      window.addEventListener("resize", handleResize);
 
-      return () => window.removeEventListener("resize", handleResize)
+      return () => window.removeEventListener("resize", handleResize);
     }
-  }, []) // Pusta tablica zależności, aby uruchomić tylko raz po zamontowaniu
+  }, []); // Uruchamiane tylko raz po zamontowaniu komponentu
 
   if (!data) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   const {
     allDatoCmsCourse: { nodes },
-  } = data
+  } = data;
+
+  // Parsowanie i sortowanie dat
+  const sortedCourses = nodes.sort((a, b) => {
+    const parseDate = (dateString) => {
+      if (/^\d{4}$/.test(dateString)) {
+        return { year: parseInt(dateString, 10), month: 0 }; // Domyślnie styczeń
+      }
+      const match = dateString.match(/(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/);
+      if (match) {
+        return {
+          year: parseInt(match[3], 10),
+          month: parseInt(match[2] || "1", 10) - 1,
+        };
+      }
+      return null;
+    };
+
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+
+    if (!dateA || !dateB) return 0; // Jeśli data jest nieprawidłowa
+    return dateA.year - dateB.year || dateA.month - dateB.month;
+  });
 
   return (
     <div>
@@ -38,12 +58,12 @@ const ArchiwumKursow = ({ data }) => {
           gridTemplateColumns: `${
             windowWidth < 640
               ? "1fr"
-              : `repeat(${Math.min(nodes.length, 3)}, 1fr)`
+              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)`
           }`,
         }}
       >
-        {nodes.map(course => {
-          const courseSlug = slugify(course.nameCourse)
+        {sortedCourses.map((course) => {
+          const courseSlug = slugify(course.nameCourse);
           return (
             <div
               key={course.id}
@@ -55,7 +75,7 @@ const ArchiwumKursow = ({ data }) => {
                 backgroundRepeat: "no-repeat",
               }}
             >
-              <Link to={`/kursy/${getYearFromDate(course.date)}/${courseSlug}`}>
+              <Link to={`/kursy/${course.date.slice(-4)}/${courseSlug}`}>
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-md" />
                 <div className="relative z-10 flex flex-col h-full gap-6">
                   {/* Tytuł kursu */}
@@ -84,16 +104,16 @@ const ArchiwumKursow = ({ data }) => {
                 </div>
               </Link>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const query = graphql`
   query archiveCourse {
-    allDatoCmsCourse(filter: { archive: { eq: true } }, sort: { date: ASC }) {
+    allDatoCmsCourse(filter: { archive: { eq: true } }) {
       nodes {
         id
         nameCourse

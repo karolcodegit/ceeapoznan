@@ -37,30 +37,38 @@ const IndexPage = ({ data }) => {
               {data.datoCmsMainsite.paragraph ||
                 "Ośrodek Poznański CEEA już od niespełna 30 lat organizuje kursy dla lekarzy specjalistów oraz lekarzy rezydentów anestezjologii i intensywnej terapii. Dzięki udziałowi w naszych cyklach kursów mają Państwo możliwość udziału w wykładach prowadzonych przez ekspertów w dziedzinie anestezjologii i intensywnej terapii, aktualizacji wiedzy medycznej w oparciu o Evidence Based Medicine oraz dyskusji w gronie praktyków, w której przeniesiemy wiedzę teoretyczną na realia naszej codziennej pracy, niejednokrotnie obfite w wyzwania organizacyjne."}
             </Paragraph>
-            {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
-              <Button
-                href={`/kursy/${getYearFromDate(data.allDatoCmsCourse.nodes[0].date)}/${slugify(
-                  data.allDatoCmsCourse.nodes[0].nameCourse
-                )}/rejestracja`}
-              >
-                Zapisz się na kurs
-              </Button>
-            )}
+            {data.allDatoCmsCourse.nodes
+              .filter(course => course.available === true)
+              .map(course => (
+                <Button
+                  href={`/kursy/${getYearFromDate(
+                    data.allDatoCmsCourse.nodes[0].date
+                  )}/${slugify(
+                    data.allDatoCmsCourse.nodes[0].nameCourse
+                  )}/rejestracja`}
+                >
+                  Zapisz się na kurs
+                </Button>
+              ))}
           </div>
           <div className="w-full lg:h-500 max-lg:hidden px-8 col-span-6">
-            {data.allDatoCmsCourse.nodes.length > 0 ? (
-              data.allDatoCmsCourse.nodes.map(course => (
-                <Img
-                  key={course.id}
-                  fluid={
-                    course.image?.fluid ||
-                    data.defaultImage.childImageSharp.fluid
-                  }
-                  className="rounded-3xl w-full h-full object-cover"
-                  alt={course.nameCourse}
-                  loading="eager"
-                />
-              ))
+            {data.allDatoCmsCourse.nodes.filter(
+              course => course.available === true
+            ).length > 0 ? (
+              data.allDatoCmsCourse.nodes
+                .filter(course => course.available === true) // Filtrujemy kursy z available === true
+                .map(course => (
+                  <Img
+                    key={course.id}
+                    fluid={
+                      course.image?.fluid ||
+                      data.defaultImage.childImageSharp.fluid
+                    }
+                    className="rounded-3xl w-full h-full object-cover"
+                    alt={course.nameCourse}
+                    loading="eager"
+                  />
+                ))
             ) : (
               <Img
                 fluid={data.defaultImage.childImageSharp.fluid}
@@ -101,10 +109,113 @@ const IndexPage = ({ data }) => {
         </div>
       </div>
 
+      <div className="w-full bg-darkBlueGreen py-36">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-20">
+            <Title tag="h2" className="text-center text-white">
+              Sprawdź daty nadchodzących kursów i szkoleń
+            </Title>
+          </div>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
+            {data.allDatoCmsCourse.nodes
+              .filter(course => course.nextCourse === true) // Filtruje kursy
+              .sort((a, b) => {
+                const parseDate = dateString => {
+                  // Sprawdź, czy jest to tylko rok
+                  if (/^\d{4}$/.test(dateString)) {
+                    return { year: parseInt(dateString, 10), month: 0 }
+                  }
+
+                  // Sprawdź, czy jest to zakres dat, np. "23-25.05.2024"
+                  const match = dateString.match(
+                    /(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/
+                  )
+                  if (match) {
+                    return {
+                      year: parseInt(match[3], 10),
+                      month: parseInt(match[2] || "1", 10) - 1, // Domyślnie styczeń
+                    }
+                  }
+
+                  // Jeśli nie pasuje, zwróć null
+                  return null
+                }
+
+                const dateA = parseDate(a.date)
+                const dateB = parseDate(b.date)
+
+                if (!dateA || !dateB) {
+                  return 0 // Jeśli którejś daty brakuje, nie zmieniaj kolejności
+                }
+
+                // Najpierw sortuj po roku, a potem po miesiącu
+                return dateA.year - dateB.year || dateA.month - dateB.month
+              })
+              .slice(0, 2) // Pobierz maksymalnie dwa kursy
+              .map((course, index) => (
+                <div
+                  key={course.id}
+                  className="bg-white shadow-md rounded-lg overflow-hidden ease-in-out transform lg:hover:scale-105 transition duration-500"
+                >
+                  <div className="relative">
+                    <Img
+                      fluid={
+                        course.image?.fluid ||
+                        data.defaultImage.childImageSharp.fluid
+                      }
+                      alt={course.nameCourse}
+                      className="h-56 w-full object-cover"
+                    />
+                    {course.newCourse && (
+                      <span className="absolute top-4 right-4 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-lg">
+                        Nowość
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-darkBlueGreen mb-4 leading-snug">
+                      {course.nameCourse}
+                    </h3>
+                    <ul className="text-sm text-gray-700 space-y-2">
+                      <li>
+                        <span className="px-2">📅</span>{" "}
+                        {course.date || "Data wkrótce"}
+                      </li>
+                      <li>
+                        <span className="px-2">⏳</span>{" "}
+                        {course.duration || "Czas trwania wkrótce"}
+                      </li>
+                      <li>
+                        <span className="px-2">🌐</span>{" "}
+                        {course.language === true ? "PL" : "EN"}
+                      </li>
+                      <li>
+                        <span className="px-2">🖥</span>{" "}
+                        {course.type ||
+                          (course.online ? "Online" : "Stacjonarny")}
+                      </li>
+                    </ul>
+                    {/* <Button
+                href={`/kursy/${getYearFromDate(course.date)}/${slugify(
+                  course.nameCourse
+                )}/rejestracja`}
+                className="mt-4 bg-primary hover:bg-primary-dark text-white font-medium px-4 py-2 rounded-lg"
+              >
+                Zapisz się
+              </Button> */}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
+
       <div className="w-full bg-white dark:bg-gray-800 z-0">
         <div className="max-auto flex flex-col items-center px-6 py-32 ">
           <div className="text-center grid gap-4">
-            <Title tag="h2" className="text-darkBlueGreen">Dlaczego warto wziąć udział w kursach CEEA?</Title>
+            <Title tag="h2" className="text-darkBlueGreen">
+              Dlaczego warto wziąć udział w kursach CEEA?
+            </Title>
             <span className="text-darkBlueGreen">
               Jesteśmy pierwszym w Polsce ośrodkiem CEEA, który od 1995 roku
               wyszkolił dziesiątki polskich anestezjologów.
@@ -138,10 +249,14 @@ const IndexPage = ({ data }) => {
 
 export const query = graphql`
   query ImageQuery {
-    allDatoCmsCourse(filter: { available: { eq: true } }) {
+    allDatoCmsCourse {
       nodes {
         id
         nameCourse
+        nextCourse
+        newCourse
+        online
+        language
         date
         available
         image {
@@ -157,6 +272,7 @@ export const query = graphql`
         nameCourse
       }
     }
+
     allFile(filter: { relativeDirectory: { eq: "Home" } }) {
       edges {
         node {

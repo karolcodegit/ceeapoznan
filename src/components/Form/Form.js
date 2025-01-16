@@ -28,7 +28,10 @@ const Form = ({
   book,
   orderNumber,
   total,
-  courseTitle
+  courseTitle,
+  noSpace,
+  DeliveryInfoButton,
+  tooltip, tooltipId
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -103,7 +106,6 @@ const Form = ({
           // console.log("Zapisano dane w Airtable:", records)
         } catch (err) {
           console.log(err);
-          
           console.error("Błąd podczas zapisu do Airtable:", err)
           showNotification("Nie udało się zapisać danych w Airtable", "error")
         }
@@ -125,7 +127,7 @@ const Form = ({
         noValidate
         ref={formRef}
         onSubmit={handleSubmit}
-        className="space-y-6 mt-8 xl:mx-auto"
+        className={`${noSpace ? '' : 'space-y-6 mt-8'}  xl:mx-auto`}
         method="post"
         aria-label="Formularz"
       >
@@ -294,7 +296,7 @@ const Form = ({
               </React.Fragment>
             ))}
           </div>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} DeliveryInfoButton={DeliveryInfoButton} tooltip={tooltip} tooltipId={tooltipId}>
             {buttonText}
           </Button>
         </fieldset>

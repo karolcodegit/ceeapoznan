@@ -10,6 +10,8 @@ const Books = ({ data }) => {
     allDatoCmsBook: { nodes },
   } = data
 
+
+
   const [inputValue, setInputValue] = useState("")
 
   const handleInputChange = e => {
@@ -62,6 +64,9 @@ export const query = graphql`
         publisher
         editor
         year
+        reprint
+        printOnDemand
+        additionalInformation
         covertype
         available
         image {
