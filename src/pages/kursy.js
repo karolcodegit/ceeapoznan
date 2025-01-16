@@ -31,15 +31,17 @@ const Courses = ({ data }) => {
 
   return (
     <div
-      className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 py-24 relative"
-      style={{
-        gridTemplateColumns: `${
-          windowWidth < 640
-            ? "1fr"
-            : `repeat(${Math.min(nodes.length, 3)}, 1fr)`
-        }`,
-      }}
-    >
+  className="grid gap-4 py-24 relative"
+  style={{
+    gridTemplateColumns: `${
+      windowWidth < 840
+        ? "1fr" // Jedna kolumna na małych ekranach
+        : windowWidth < 1024
+        ? `repeat(${Math.min(nodes.length, 2)}, 1fr)` // Dwie kolumny na średnich ekranach
+        : `repeat(${Math.min(nodes.length, 3)}, 1fr)` // Trzy kolumny na dużych ekranach
+    }`,
+  }}
+>
       {nodes.map(course => {
         const courseSlug = slugify(course.nameCourse)
         return (
@@ -91,22 +93,24 @@ const Courses = ({ data }) => {
 export const query = graphql`
   query MyQuery {
     allDatoCmsCourse(
-      filter: { archive: { eq: null } }
-      sort: { numerCourse: ASC }
-    ) {
-      nodes {
-        id
-        nameCourse
-        date
-        numerCourse
-        available
-        image {
-          fluid {
-            src
-          }
+    filter: {
+      archive: { ne: true }
+    }
+    sort: { numerCourse: ASC }
+  ) {
+    nodes {
+      id
+      nameCourse
+      date
+      numerCourse
+      available
+      image {
+        fluid {
+          src
         }
       }
     }
+  }
   }
 `
 

@@ -7,63 +7,65 @@ import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const ArchiwumKursow = ({ data }) => {
-  const [windowWidth, setWindowWidth] = useState(0); // Początkowa szerokość okna
+  const [windowWidth, setWindowWidth] = useState(0) // Początkowa szerokość okna
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const handleResize = () => setWindowWidth(window.innerWidth);
-      setWindowWidth(window.innerWidth); // Ustawiamy początkową szerokość okna
-      window.addEventListener("resize", handleResize);
+      const handleResize = () => setWindowWidth(window.innerWidth)
+      setWindowWidth(window.innerWidth) // Ustawiamy początkową szerokość okna
+      window.addEventListener("resize", handleResize)
 
-      return () => window.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize)
     }
-  }, []); // Uruchamiane tylko raz po zamontowaniu komponentu
+  }, []) // Uruchamiane tylko raz po zamontowaniu komponentu
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   const {
     allDatoCmsCourse: { nodes },
-  } = data;
+  } = data
 
   // Parsowanie i sortowanie dat
   const sortedCourses = nodes.sort((a, b) => {
-    const parseDate = (dateString) => {
+    const parseDate = dateString => {
       if (/^\d{4}$/.test(dateString)) {
-        return { year: parseInt(dateString, 10), month: 0 }; // Domyślnie styczeń
+        return { year: parseInt(dateString, 10), month: 0 } // Domyślnie styczeń
       }
-      const match = dateString.match(/(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/);
+      const match = dateString.match(/(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/)
       if (match) {
         return {
           year: parseInt(match[3], 10),
           month: parseInt(match[2] || "1", 10) - 1,
-        };
+        }
       }
-      return null;
-    };
+      return null
+    }
 
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
+    const dateA = parseDate(a.date)
+    const dateB = parseDate(b.date)
 
-    if (!dateA || !dateB) return 0; // Jeśli data jest nieprawidłowa
-    return dateA.year - dateB.year || dateA.month - dateB.month;
-  });
+    if (!dateA || !dateB) return 0 // Jeśli data jest nieprawidłowa
+    return dateA.year - dateB.year || dateA.month - dateB.month
+  })
 
   return (
     <div>
       <div
-        className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 py-24 relative"
+        className="grid gap-4 py-24 relative"
         style={{
           gridTemplateColumns: `${
-            windowWidth < 640
-              ? "1fr"
-              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)`
+            windowWidth < 840
+              ? "1fr" // Jedna kolumna na małych ekranach
+              : windowWidth < 1024
+              ? `repeat(${Math.min(sortedCourses.length, 2)}, 1fr)` // Dwie kolumny na średnich ekranach
+              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)` // Trzy kolumny na dużych ekranach
           }`,
         }}
       >
-        {sortedCourses.map((course) => {
-          const courseSlug = slugify(course.nameCourse);
+        {sortedCourses.map(course => {
+          const courseSlug = slugify(course.nameCourse)
           return (
             <div
               key={course.id}
@@ -79,10 +81,18 @@ const ArchiwumKursow = ({ data }) => {
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-md" />
                 <div className="relative z-10 flex flex-col h-full gap-6">
                   {/* Tytuł kursu */}
-                  <Title white tag="h5" className="text-white dark:text-gray-300">
+                  <Title
+                    white
+                    tag="h5"
+                    className="text-white dark:text-gray-300"
+                  >
                     Kurs nr {course.numerCourse}
                   </Title>
-                  <Title white tag="h4" className="text-white dark:text-gray-200">
+                  <Title
+                    white
+                    tag="h4"
+                    className="text-white dark:text-gray-200"
+                  >
                     {course.nameCourse}
                   </Title>
 
@@ -104,12 +114,12 @@ const ArchiwumKursow = ({ data }) => {
                 </div>
               </Link>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const query = graphql`
   query archiveCourse {

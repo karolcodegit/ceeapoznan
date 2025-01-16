@@ -6,7 +6,7 @@ const table = base(process.env.GATSBY_AIRTABLE_TABLE_NAME);
 
 export function saveToAirtable(enrichedForm) {
   return new Promise((resolve, reject) => {
-    console.log('Enriched form data before Airtable save:', enrichedForm);
+    // console.log('Enriched form data before Airtable save:', enrichedForm);
     table.create([
       {
         "fields": {

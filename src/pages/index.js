@@ -109,14 +109,14 @@ const IndexPage = ({ data }) => {
         </div>
       </div>
 
-      <div className="w-full bg-darkBlueGreen py-36">
+      <div className="w-full bg-darkBlueGreen py-36 dark:bg-gray-700">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-20">
             <Title tag="h2" className="text-center text-white">
               Sprawdź daty nadchodzących kursów i szkoleń
             </Title>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
             {data.allDatoCmsCourse.nodes
               .filter(course => course.nextCourse === true) // Filtruje kursy
               .sort((a, b) => {
@@ -178,19 +178,25 @@ const IndexPage = ({ data }) => {
                     </h3>
                     <ul className="text-sm text-gray-700 space-y-2">
                       <li>
-                        <span className="px-2">📅</span>{" "}
-                        {course.date || "Data wkrótce"}
+                        <span className="text-lg px-2">#️⃣</span>
+                        Numer kursu: {course.numerCourse || "Brak numeru"}
                       </li>
                       <li>
-                        <span className="px-2">⏳</span>{" "}
-                        {course.duration || "Czas trwania wkrótce"}
+                        <span className="text-lg px-2">📅</span>
+                        Data: {course.date || "Data wkrótce"}
                       </li>
                       <li>
-                        <span className="px-2">🌐</span>{" "}
-                        {course.language === true ? "PL" : "EN"}
+                        <span className="text-lg px-2">⏳</span>
+
+                       {course.duration ? `Czas trwania: ${course.duration}` : "Czas trwania wkrótce"}
                       </li>
                       <li>
-                        <span className="px-2">🖥</span>{" "}
+                        <span className="text-lg px-2">🌐</span>
+                        Język: {course.language === true ? "PL" : "EN"}
+                      </li>
+                      <li>
+                        <span className="text-lg px-2">🖥</span>
+                        Tryb:{" "}
                         {course.type ||
                           (course.online ? "Online" : "Stacjonarny")}
                       </li>
@@ -252,6 +258,7 @@ export const query = graphql`
     allDatoCmsCourse {
       nodes {
         id
+        numerCourse
         nameCourse
         nextCourse
         newCourse

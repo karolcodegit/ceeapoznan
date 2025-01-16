@@ -4,7 +4,7 @@ const base = new Airtable({apiKey: process.env.GATSBY_AIRTABLE_ACCESS_TOKEN}).ba
 const table = base(process.env.GATSBY_AIRTABLE_TABLE_NAME_ORDER);
 
 export function saveAirableOrderBook(enrichedForm) {
-    console.log("Zawartość enrichedForm przekazywanego do Airtable:", enrichedForm);
+    // console.log("Zawartość enrichedForm przekazywanego do Airtable:", enrichedForm);
     return new Promise((resolve, reject) => {
       if (!enrichedForm) {
         reject("Brak danych do zapisania!");
