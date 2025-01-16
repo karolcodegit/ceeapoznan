@@ -38,7 +38,7 @@ const SideInfoPanel = ({ money, time, available, nameCourse, date }) => {
       {/* Sekcja status zapisów */}
       <div className="border-t p-5 flex flex-col items-center justify-center">
         <span
-          className={`font-bold text-center text-xl mb-5 px-4 py-2 rounded-lg shadow-md transition-all duration-300 transform ${
+          className={`font-bold text-center text-xl px-4 py-2 rounded-lg shadow-md transition-all duration-300 transform ${
             available
               ? "bg-green-500 text-white dark:bg-green-700"
               : "bg-red-500 text-white dark:bg-red-700"
