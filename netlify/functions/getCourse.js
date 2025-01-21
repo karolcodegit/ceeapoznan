@@ -1,42 +1,41 @@
-exports.handler = async function(event, context) {
-    const { request } = await import('graphql-request');
-    
-    const endpoint = 'https://graphql.datocms.com/'; // Adres API
-    const API_KEY = process.env.API_DATOCMS;
-
-    // Logowanie do sprawdzenia, czy zmienna środowiskowa jest dostępna
-    console.log('API Key:', API_KEY);
-
-    const query = `
-      query {
+require('dotenv').config();
+exports.handler = async function (event, context) {
+  const { request } = await import('graphql-request');
+  const endpoint = "https://graphql.datocms.com";
+  const query = `
+    query {
         allCourses {
-          nameCourse
-          courseDuration
-          courseCost
-          date
-          description
+            nameCourse
+            courseDuration
+            courseCost
+            date
+            description
         }
-      }
-    `;
-    
-    try {
-      const data = await request(endpoint, query, {
-        headers: {
-          'Authorization': `Bearer ${API_KEY}`, // Użyj swojego tokenu API
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      });
-    
-      return {
-        statusCode: 200,
-        body: JSON.stringify(data)
-      };
-    } catch (error) {
-      console.error('Error:', error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Something went wrong', details: error.message })
-      };
     }
+  `;
+
+  try {
+    console.log('Sending request to DatoCMS...');
+    const data = await request(endpoint, query, {
+      headers: {
+        Authorization: `Bearer ${process.env.GATSBY_DATOCMS_API_READONLY}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    console.log('Response from DatoCMS:', data);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data),
+    };
+  } catch (error) {
+    console.error("Request failed. Error details:", error.response || error.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "Something went wrong",
+        details: error.response || error.message,
+      }),
+    };
+  }
 };
