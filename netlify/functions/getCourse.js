@@ -15,11 +15,11 @@ exports.handler = async function (event, context) {
   `;
 
   try {
-    console.log(process.env.GATSBY_DATOCMS_API_READONLY);
+    console.log(process.env.DATOCMS_API_READONLY);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.GATSBY_DATOCMS_API_READONLY}`,
+        Authorization: `Bearer ${process.env.DATOCMS_API_READONLY}`,
         "Content-Type": "application/json",
         Accept: "application/json",
       },
