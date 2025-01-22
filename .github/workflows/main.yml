@@ -48,6 +48,7 @@ jobs:
         GATSBY_INPOST_API: ${{ secrets.GATSBY_INPOST_API }}
         GATSBY_API_TOKEN: ${{ secrets.GATSBY_API_TOKEN }}
         GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK }}
+        DATOCMS_API_READONLY: ${{ secrets.DATOCMS_API_READONLY }}
 
     - uses: actions/upload-artifact@v3
       with:

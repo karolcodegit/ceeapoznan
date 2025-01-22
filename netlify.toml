@@ -1,0 +1,2 @@
+[build.environment]
+  DATOCMS_API_READONLY = "bebe92591fb214d3eedde9e656cd0f"
