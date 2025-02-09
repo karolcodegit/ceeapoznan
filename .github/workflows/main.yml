@@ -50,7 +50,7 @@ jobs:
         GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK }}
         DATOCMS_API_READONLY: ${{ secrets.DATOCMS_API_READONLY }}
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: public
         path: public
@@ -61,7 +61,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: public
         path: public
