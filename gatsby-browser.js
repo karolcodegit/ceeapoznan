@@ -14,3 +14,12 @@ export const onClientEntry = () => {
       document.body.appendChild(script);
     }
   };
+
+  export const onRouteUpdate = ({ location }) => {
+    const params = new URLSearchParams(location.search);
+    const preview = params.get("preview");
+
+    if (!preview && !location.pathname.startsWith("/maintenance")) {
+        window.location.replace("/maintenance");
+    }
+};

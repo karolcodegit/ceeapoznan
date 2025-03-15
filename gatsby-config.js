@@ -35,7 +35,12 @@ module.exports = {
         ],
       },
     },
-    `gatsby-plugin-sitemap`,
+    {
+      resolve: `gatsby-plugin-sitemap`,
+      options: {
+        siteUrl: `https://ceea.org.pl/`,
+      }
+    },
     `gatsby-plugin-layout`,
     'gatsby-plugin-postcss',
     `gatsby-plugin-image`,
