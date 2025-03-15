@@ -15,11 +15,11 @@ export const onClientEntry = () => {
     }
   };
 
-  export const onRouteUpdate = ({ location }) => {
-    const params = new URLSearchParams(location.search);
-    const preview = params.get("preview");
+//   export const onRouteUpdate = ({ location }) => {
+//     const params = new URLSearchParams(location.search);
+//     const preview = params.get("preview");
 
-    if (!preview && !location.pathname.startsWith("/maintenance")) {
-        window.location.replace("/maintenance");
-    }
-};
+//     if (!preview && !location.pathname.startsWith("/maintenance")) {
+//         window.location.replace("/maintenance");
+//     }
+// };
