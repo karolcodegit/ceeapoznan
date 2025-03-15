@@ -8,3 +8,6 @@
 # gatsby-adapter-netlify start
 
 # gatsby-adapter-netlify end
+
+http://ceea.org.pl/* https://ceea.org.pl/:splat 301!
+https://www.ceea.org.pl/* https://ceea.org.pl/:splat 301!

@@ -14,6 +14,7 @@ module.exports = {
     siteUrl: process.env.GATSBY_SITE_URL,
   },
   plugins: [
+
     {
       resolve: `gatsby-transformer-remark`,
       options: {},
@@ -35,6 +36,7 @@ module.exports = {
         ],
       },
     },
+    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
@@ -68,7 +70,6 @@ module.exports = {
           process.env.GATSBY_DATOCMS_API,
       },
     },
-    
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
