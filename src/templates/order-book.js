@@ -25,7 +25,7 @@ const OrderBook = ({ data }) => {
     quantity: 1, // Ustawienie domyślnej ilości
     orderNumber: orderNumber || null,
     title: book.title,
-    price: book.price,
+    price: book.price * quantity,
   }
 
   const [form, setForm] = useState(initialFormState)
