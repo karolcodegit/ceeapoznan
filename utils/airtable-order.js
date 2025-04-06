@@ -30,6 +30,7 @@ export function saveAirableOrderBook(enrichedForm) {
         'Address_PostCode_ParcelLocer': enrichedForm.parcelLocker?.address?.post_code || "",
         'OrderNumber': enrichedForm.orderNumber,
         'Quantity': enrichedForm.quantity,
+        'Total': enrichedForm.price
       };
   
       table.create([{ fields }], function (err, records) {

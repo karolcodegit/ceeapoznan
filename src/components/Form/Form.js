@@ -61,6 +61,7 @@ const Form = ({
       }
     })
   }
+console.log(saveToAirtable);
 
   const handleSubmit = async e => {
     e.preventDefault()

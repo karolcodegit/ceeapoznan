@@ -25,6 +25,7 @@ const OrderBook = ({ data }) => {
     quantity: 1, // Ustawienie domyślnej ilości
     orderNumber: orderNumber || null,
     title: book.title,
+    price: book.price,
   }
 
   const [form, setForm] = useState(initialFormState)
@@ -85,6 +86,10 @@ const OrderBook = ({ data }) => {
   if (!data.datoCmsBook) {
       return <p>Dane książki są niedostępne. Spróbuj ponownie później.</p>
     }
+
+    console.log(data);
+    console.log(book);
+
   return (
     <>
       <div className="text-center">
