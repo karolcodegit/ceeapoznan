@@ -87,9 +87,6 @@ const OrderBook = ({ data }) => {
       return <p>Dane książki są niedostępne. Spróbuj ponownie później.</p>
     }
 
-    console.log(data);
-    console.log(book);
-
   return (
     <>
       <div className="text-center">

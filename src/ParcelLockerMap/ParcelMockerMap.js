@@ -44,7 +44,7 @@ const ParcelLockerMap = ({ setForm }) => {
       geowidgetContainerRef.current.innerHTML = "";
     }
 
-    console.log("geowidgetContainerRef:", geowidgetContainerRef.current);
+    //console.log("geowidgetContainerRef:", geowidgetContainerRef.current);
   }, [isGeoWidgetVisible, setForm]);
 
   return (

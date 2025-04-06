@@ -15,7 +15,6 @@ exports.handler = async function (event, context) {
   `;
 
   try {
-    console.log(process.env.DATOCMS_API_READONLY);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
