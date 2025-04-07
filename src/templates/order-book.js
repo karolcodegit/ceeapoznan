@@ -25,10 +25,11 @@ const OrderBook = ({ data }) => {
     quantity: 1, // Ustawienie domyślnej ilości
     orderNumber: orderNumber || null,
     title: book.title,
-    price: book.price * quantity,
+    price: book.totalPrice || book.price,
   }
 
   const [form, setForm] = useState(initialFormState)
+
 
   const allFields = [
     {
@@ -67,7 +68,6 @@ const OrderBook = ({ data }) => {
       typ: "radio",
     },
   ]
-
   const handleChange = e => {
     // const { name, type, value } = e.target;
     // setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -143,12 +143,16 @@ const OrderBook = ({ data }) => {
                   min={1}
                   max={20}
                   initial={1}
-                  onChange={newQuantity =>
-                    setForm(prevForm => ({
-                      ...prevForm,
-                      quantity: newQuantity,
-                    }))
-                  }
+                  onChange={(newQuantity) => {
+                    setForm((prevForm) => {
+                      const updatedTotalPrice = parseFloat((newQuantity * book.price).toFixed(2));
+                      return {
+                        ...prevForm,
+                        quantity: newQuantity,
+                        price: updatedTotalPrice,
+                      };
+                    });
+                  }}
                 />
               </div>
               <Title tag="h4" padding>
@@ -169,7 +173,7 @@ const OrderBook = ({ data }) => {
                 apiEndpoint={apiEndpoint}
                 book={book}
                 orderNumber={generateOrderNumber}
-              />
+              />  
             </div>
           </div>
         </div>

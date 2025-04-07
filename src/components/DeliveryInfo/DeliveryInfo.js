@@ -67,6 +67,11 @@ const DeliveryInfo = ({ price, available, title, className }) => {
           <span className="font-bold text-4xl text-darkBlueGreen dark:text-[#6b91c0] ml-2">
             {price} zł
           </span>
+          <div>
+          <span className="font-bold text-sm text-darkBlueGreen dark:text-[#6b91c0] ml-2 flex justify-end">
+           + koszty przesyłki
+          </span>
+          </div>
         </div>
         {/* Wysyłka */}
         <div className="border-t p-5 flex items-start space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
