@@ -55,6 +55,8 @@ const DeliveryInfo = ({ price, available, title, className }) => {
   const apiEndpoint =
     "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sengrid-notificationBook"
 
+    console.log("Dostępność książki (available):", available);
+    
   return (
     <>
       <div

@@ -111,7 +111,7 @@ const OrderBook = ({ data }) => {
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-200 text-gray-500">
-                    <span className="text-lg">📚</span> {/* Ikonka książki */}
+                    <span className="text-lg">📚</span>
                   </div>
                 )}
               </div>

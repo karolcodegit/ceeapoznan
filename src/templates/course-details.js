@@ -112,9 +112,9 @@ const courseDetails = ({ data }) => {
             </div>
             <div className="">
               <StyledMarkdown>
-                {course.detailedInformationAboutTheCourse &&
-                course.detailedInformationAboutTheHotel
-                  .conditionsOfParticipation
+                {course?.detailedInformationAboutTheCourse &&
+                course?.detailedInformationAboutTheHotel
+                  ?.conditionsOfParticipation
                   ? course.detailedInformationAboutTheHotel
                       .conditionsOfParticipation
                   : ""}
@@ -158,8 +158,8 @@ const courseDetails = ({ data }) => {
               <Paragraph>Dla osób chętnych:</Paragraph>
               <Paragraph>
                 <StyledMarkdown>
-                  {course.detailedInformationAboutTheCourse &&
-                  course.detailedInformationAboutTheHotel.extras
+                  {course?.detailedInformationAboutTheCourse &&
+                  course?.detailedInformationAboutTheHotel?.extras
                     ? course.detailedInformationAboutTheHotel.extras
                     : ""}
                 </StyledMarkdown>
