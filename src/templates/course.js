@@ -16,7 +16,7 @@ const Course = ({ data }) => {
   
   return (
     <div className="py-20 max-w-6xl max-md:mx-auto gap-32 flex flex-col xl:flex-row justify-between">
-      <div className=" max-w-2xl">
+      <div className=" max-w-2xl w-full">
         <section className="border-b">
           <div>
             <Title tag="h3">{course.nameCourse}</Title>

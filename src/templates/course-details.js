@@ -48,38 +48,37 @@ const courseDetails = ({ data }) => {
                 />
               </Paragraph>
 
-              <Paragraph>
-                W celu rezerwacji pokoju (na hasło:{" "}
-                <span className="font-bold">
-                  {course.detailedInformationAboutTheCourse &&
-                  course.detailedInformationAboutTheCourse.password
-                    ? course.detailedInformationAboutTheCourse.password
-                    : ""}
-                </span>
-                ) prosimy o kontakt z:
-              </Paragraph>
-              <Paragraph margin>
-                <div className="flex my-2">
-                  <EnvelopeOpenIcon className="w-8"></EnvelopeOpenIcon>
-                  <span className="pl-4">
-                    {course.detailedInformationAboutTheCourse &&
-                    course.detailedInformationAboutTheCourse.emailHotel
-                      ? course.detailedInformationAboutTheCourse.emailHotel
-                      : ""}
+              {course?.detailedInformationAboutTheCourse?.password && (
+                <Paragraph>
+                  W celu rezerwacji pokoju (na hasło:{" "}
+                  <span className="font-bold">
+                    {course.detailedInformationAboutTheCourse.password}
                   </span>
-                </div>
-              </Paragraph>
-              <Paragraph margin>
-                <div className="flex my-2">
-                  <PhoneIcon className="w-8"></PhoneIcon>
-                  <span className="pl-4">
-                    {course.detailedInformationAboutTheCourse &&
-                    course.detailedInformationAboutTheCourse.phone
-                      ? course.detailedInformationAboutTheCourse.phone
-                      : ""}
-                  </span>
-                </div>
-              </Paragraph>
+                  ) prosimy o kontakt z:
+                </Paragraph>
+              )}
+
+              {course?.detailedInformationAboutTheCourse?.emailHotel && (
+                <Paragraph margin>
+                  <div className="flex my-2">
+                    <EnvelopeOpenIcon className="w-8"></EnvelopeOpenIcon>
+                    <span className="pl-4">
+                      {course.detailedInformationAboutTheCourse.emailHotel}
+                    </span>
+                  </div>
+                </Paragraph>
+              )}
+
+              {course?.detailedInformationAboutTheCourse?.phone && (
+                <Paragraph margin>
+                  <div className="flex my-2">
+                    <PhoneIcon className="w-8"></PhoneIcon>
+                    <span className="pl-4">
+                      {course.detailedInformationAboutTheCourse.phone}
+                    </span>
+                  </div>
+                </Paragraph>
+              )}
               <Paragraph>
                 Na powyższego maila należy przesłać swoje dane, a w przypadku,
                 gdy potrzebujecie Państwo FV należy podać także NIP i dane
@@ -154,17 +153,16 @@ const courseDetails = ({ data }) => {
                 </Paragraph>
               </div>
             </div>
-            <div>
-              <Paragraph>Dla osób chętnych:</Paragraph>
-              <Paragraph>
-                <StyledMarkdown>
-                  {course?.detailedInformationAboutTheCourse &&
-                  course?.detailedInformationAboutTheHotel?.extras
-                    ? course.detailedInformationAboutTheHotel.extras
-                    : ""}
-                </StyledMarkdown>
-              </Paragraph>
-            </div>
+            {course?.detailedInformationAboutTheHotel?.extras && (
+              <div>
+                <Paragraph>Dla osób chętnych:</Paragraph>
+                <Paragraph>
+                  <StyledMarkdown>
+                    {course.detailedInformationAboutTheHotel.extras}
+                  </StyledMarkdown>
+                </Paragraph>
+              </div>
+            )}
             <div className="py-4">
               <Paragraph>
                 Prosimy o dokonywanie wpłat z uwzględnieniem w tytule „Kurs nr{" "}
