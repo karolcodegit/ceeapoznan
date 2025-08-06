@@ -1,0 +1,32 @@
+export const prepareRegistrationData = (data) => {
+
+  return{
+    firstName: data.firstName || "",
+    surName: data.surName || "",
+    street: data.street || "",
+    numberHome: data.numberHome || "",
+    zipCode: data.zipCode || "",
+    city: data.city || "",
+    phone: data.phone || "",
+    birthday: data.birthday || "",
+    email: data.email || "",
+    profession: data.profession || "",
+    profesionNumber: data.profesionNumber || "",
+    specjalist: data.specjalist || "",
+    specialist2: data.specialist2 || "",
+    lastcourse: data.lastcourse || "",
+    yearSpecialist: data.yearSpecialist || "",
+    invoiceName: data.invoiceName || "",
+    invoiceStreet: data.invoiceStreet || "",
+    invoiceNumberHome: data.invoiceNumberHome || "",
+    invoiceZipCode: data.invoiceZipCode || "",
+    invoiceCity: data.invoiceCity || "",
+    invoiceNip: data.invoiceNip || "",
+    option1: data.option1 || "",
+    option2: data.option2 || "",
+    option3: data.option3 || "",
+    dishes: data.dishes || "",
+    wyrazamZgode: data.wyrazamZgode || "",
+    courseTitle: data.courseTitle || "",
+    total: data.total || ""
+  }}

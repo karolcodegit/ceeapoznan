@@ -1,66 +1,132 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateField as updateContactField } from '../../../store/contact/contactSlice';
+import { updateField as updateRegisterField } from '../../../store/RegisterForm/formSlice'
+import { updateDeliveryField } from '../../../store/delivery/deliverySlice';
+import { updateField as updateUserCartField } from '../../../store/user/userSlice';
+import { updateField as updateNotificationField } from '../../../store/notificationBook/notificationSlice';
 
-export const FormField = ({
-  field,
-  form,
-  handleChange,
-  formSubmitted,
-  formErrors,
-  pattern,
+const sliceMap = {
+  formRegister: updateRegisterField,
+  contact: updateContactField,
+  userCart: updateUserCartField,
+  delivery: updateDeliveryField,
+  notificationBook: updateNotificationField,
+
+};
+
+const FormField = ({
+  name,
+  label,
+  type = 'text',
+  required,
+  placeholder,
+  error,
+  formSliceKey = 'formRegister',
+  value: customValue,
+  onChange: customOnChange,
+  onChangeAction = null,
+  margin,
+  id,
 }) => {
-  const [fieldValue, setFieldValue] = useState(form[field.name] || ''); // Synchronizowanie wartości z formularzem
+  const dispatch = useDispatch();
+  const value = useSelector((state) => {
+    if (formSliceKey === "delivery" && name.startsWith("address.")) {
+      const addressField = name.split(".")[1]; // Pobierz klucz, np. "street"
+      return state.delivery.address?.[addressField] || "";
+    }
+    if (id && state[formSliceKey]?.books) {
+      // Obsługa formularzy z `id` (np. notificationBook)
+      return state[formSliceKey]?.books?.[id]?.[name] || "";
+    }
+    return state[formSliceKey]?.[name] || "";
+  });
 
-  // Synchronizacja lokalnego stanu z globalnym stanem `form`
-  useEffect(() => {
-    setFieldValue(form[field.name] || '');
-  }, [form[field.name]]);
+  const update = sliceMap[formSliceKey];
 
-  // Funkcja walidacji
-  const validateField = () => {
-    return form[field.name] !== '' && form[field.name] !== undefined;
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+  
+    // Wywołanie customowego onChange, jeśli istnieje
+    if (customOnChange) {
+      customOnChange(e);
+    }
+  
+    // Wywołanie onChangeAction, jeśli istnieje
+    if (onChangeAction) {
+      onChangeAction({ field: name, value: newValue });
+    }
+  
+    // Aktualizacja Redux
+    if (formSliceKey === "delivery") {
+      dispatch(updateDeliveryField({ field: name, value: newValue }));
+    } else if (update) {
+      if (id) {
+        // Aktualizacja z `id` (np. notificationBook)
+        dispatch(update({ id, field: name, value: newValue }));
+      } else {
+        // Aktualizacja bez `id` (np. formRegister, contact)
+        dispatch(update({ field: name, value: newValue }));
+      }
+    } else {
+      console.warn(`Nie znaleziono akcji dla formSliceKey: ${formSliceKey}`);
+    }
   };
 
-  // Funkcja obsługująca zmianę wartości pola
-  const handleFieldChange = (e) => {
-    setFieldValue(e.target.value);
-    handleChange(e); // Przekazujemy zmiany do głównego formularza
-  };
+  const inputValue = customValue !== undefined ? customValue : value;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <label
-        htmlFor={field.name}
-        className='block text-sm font-medium text-gray-700 dark:text-gray-200'
+        htmlFor={name}
+        className={`block text-sm font-medium text-gray-700 dark:text-gray-200 ${margin ? margin : 'mt-7' }`}
       >
-        {field.label}
-        {field.required && formSubmitted && !validateField() && (
-          <span className="text-red-500">*</span>
-        )}
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
-      {field.type === 'textarea' ? (
+      {type === 'textarea' ? (
         <textarea
-          id={field.name}
-          name={field.name}
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 h-64"
-          value={fieldValue}
-          onChange={handleFieldChange}
+          id={name}
+          name={name}
+          value={inputValue}
+          onChange={handleChange}
+          placeholder={placeholder}
+          className={`block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 ${
+            error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-indigo-500"
+          } dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 h-64`}
         />
       ) : (
         <input
-          placeholder={field.placeholder}
-          id={field.name}
-          name={field.name}
-          type={field.type}
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600"
-          value={fieldValue}
-          onChange={handleFieldChange}
-          pattern={pattern}
+          id={name}
+          name={name}
+          type={type}
+          value={inputValue}
+          onChange={handleChange}
+          placeholder={placeholder}
+          className={`mt-1  block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 ${
+            error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-indigo-500"
+          } dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600`}
         />
       )}
-      {formErrors?.[field.name] && !validateField() && (
-        <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>
-      )}
+
+      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
     </div>
   );
 };
+
+FormField.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  type: PropTypes.string,
+  required: PropTypes.bool,
+  placeholder: PropTypes.string,
+  error: PropTypes.string,
+  formSliceKey: PropTypes.string,
+  value: PropTypes.any,
+  onChange: PropTypes.func,
+};
+
+export default FormField;

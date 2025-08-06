@@ -1,65 +1,73 @@
-import React, {useRef, useState } from "react"
-import Title from "../Title/Title"
+import React from "react"
+import { navigate } from "gatsby"
+import { useDispatch, useSelector } from "react-redux"
+import PropTypes from "prop-types"
+import {
+  clearForm,
+} from "../../store/contact/contactSlice"
 import Form from "./Form"
+import FormField from "../Form/FormField/FormField"
+import { prepareContactData } from "../../utils/prepareContactData"
+import { handleContactSubmit } from "../../utils/handlerContactSubmit"
 
-const ContactForm = () => {
-  const formRef = useRef(null);
+const ContactForm = ({
+  apiEndpoint = "https://contact-559160331745.us-central1.run.app",
+  buttonText = "Wyślij wiadomość",
+}) => {
+  const contactData = useSelector((state) => state.contact)
+  const dispatch = useDispatch();
 
-  const initialFormState = {
-    name: '',
-    email: '',
-    message: '',
-  }
 
-  const [form, setForm] = useState(initialFormState);
-
-  const allFields = [
-    { name: 'name', label: 'Imię', type: 'text',typ: 'input', required: 'true' },
-    { name: 'email', label: 'E-mail', type: 'email',typ: 'input', required: 'true' },
-    { name: 'message', label: 'Wiadomość', type: 'textarea',typ: 'input', required: 'true' },
-  ];
-
-  const handleChange = (e) => {
-    // const { name, type, value } = e.target;
-    // setForm((prevForm) => ({ ...prevForm, [name]: value }));
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+  const handleSubmitOverride = async (e) => {
+    e.preventDefault();
+    await handleContactSubmit(contactData, apiEndpoint, dispatch, navigate);
   };
+ 
+  return (
+    <Form
+      apiEndpoint={apiEndpoint}
+      variant='submit'
+      submitButtonText={buttonText}
+      notificationMessage="Formularz został wysłany!"
+      clearAction={clearForm}
+      formSliceKey="contact"
+      requiredFields={["name", "email", "message"]}
+      prepareFormData={prepareContactData}
+      onSubmitOverride={handleSubmitOverride}
+      addToButton='float-right'
+    >
+      <FormField
+        label="Imię"
+        type="text"
+        name="name"
+        required
+        formSliceKey="contact"
+      />
+      <FormField
+        label="E-mail"
+        type="email"
+        name="email"
+        required
+        formSliceKey="contact"
+      />
+      <FormField
+        label="Wiadomość"
+        name="message"
+        type="textarea"
+        required
+        formSliceKey="contact"
+      />
+    </Form>
+  )
+}
 
-    // Define configEmail outside of handleSubmit
-    // const emailjsConfig = {
-    //     serviceId: "service_r6jzpbd",
-    //     templateId: "template_d0033vp",
-    //     userId: "sUtJzifkBSdcRbC_M",
-    // }
-    
-    const successMessage = "Wiadomość została pomyślnie wysłana!";
-    const apiEndpoint = "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sendgrid-contact";
-  
-    return (
-      <div className="px-5 py-20 mx-auto flex flex-col xl:flex-row">
-        <div className="w-full mx-auto">
-          <Title tag="h2">Formularz kontaktowy</Title>
-  
-          <Form
-            allFields={allFields}
-            buttonText="Wyślij wiadomość"
-            handleChange={handleChange}
-            form={form}
-            setForm={setForm}
-            initialFormState={initialFormState}
-            formRef={formRef}
-            // emailjsConfig={emailjsConfig}
-            maxLength={2000}
-            successMessage={successMessage}
-            apiEndpoint={apiEndpoint}
-          />
-        </div>
-      </div>
-    );
-  };
+ContactForm.propTypes = {
+  apiEndpoint: PropTypes.string,
+  airtableSaveFn: PropTypes.func,
+  buttonText: PropTypes.string,
+  notification: PropTypes.shape({
+    show: PropTypes.func,
+  }),
+}
 
 export default ContactForm

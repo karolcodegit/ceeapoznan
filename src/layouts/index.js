@@ -3,12 +3,13 @@ import { useLocation } from "@reach/router"
 import { ThemeProvider } from "@emotion/react"
 import Header from "../components/Header/Header"
 import Footer from "../components/Footer/Footer"
-import NotificationProvider from "../components/Notification/NotificationProvider"
+import { Toaster } from 'sonner';
 import TopHeader from "../components/TopHeader/TopHeader"
 import { FontSizeContext } from "../context/fontSizeContext"
 import TitleContext from "../context/TitleContext"
 import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import Cart from "../components/Shop/Cart"
 
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState('');
@@ -51,17 +52,19 @@ const MainLayout = ({ children }) => {
     mode: 'dark', // or 'light'
   };
 
+
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <TitleContext.Provider value={{ title, setTitle }}>
           <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
-            <NotificationProvider>
               <Header />
+              <Toaster richColors position="top-right" closeButton />
               <div className="flex flex-col items-end justify-end relative">
               <button
                 onClick={toggleDarkMode}
-                className="fixed top-60 right-4 bg-gradient-to-r from-blue to-navyBlue hover:from-blue-600 hover:to-blue-800 text-white font-medium p-4 rounded-full shadow-lg flex items-center space-x-2 z-50 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                className="fixed top-60 right-4 bg-gradient-to-r from-custom-blue to-navyBlue hover:from-blue-600 hover:to-blue-800 text-white font-medium p-4 rounded-full shadow-lg flex items-center space-x-2 z-50 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none"
                 aria-label="Toggle dark mode"
               >
                 {darkMode ? (
@@ -71,6 +74,7 @@ const MainLayout = ({ children }) => {
                 )}
                 
               </button>
+              <Cart />
                 {/* <SlidePanel
                   isOpen={isPanelOpen}
                   toggle={togglePanel}
@@ -90,7 +94,7 @@ const MainLayout = ({ children }) => {
                 {children}
               </div>
               <Footer />
-            </NotificationProvider>
+            
           </FontSizeContext.Provider>
         </TitleContext.Provider>
       </ThemeProvider>

@@ -1,13 +1,11 @@
 import React, { useContext } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import NotificationContext from '../Notification/NotificationContext';
+import { toast } from 'sonner';
 
 
 const CopyToClipboardWithNotification = ({ text, children }) => {
-    const showNotification = useContext(NotificationContext);
-
     return (
-      <CopyToClipboard text={text} onCopy={() => showNotification('Numer został skopiowany', 'success')}>
+      <CopyToClipboard text={text} onCopy={() => toast.success('Numer został skopiowany')}>
         <span style={{ cursor: 'pointer' }}>{children}</span>
       </CopyToClipboard>
     );

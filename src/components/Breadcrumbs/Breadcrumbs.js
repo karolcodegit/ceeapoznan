@@ -27,7 +27,7 @@ const Breadcrumbs = () => {
             ) : (
               <a
                 href={link.to}
-                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 font-medium transition"
+                className="text-gray-700 hover:text-blue-800 dark:text-blue-400 font-medium transition"
               >
                 {link.title}
               </a>

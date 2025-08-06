@@ -5,8 +5,8 @@ import scrollTo from "gatsby-plugin-smoothscroll"
 import Logo from "../../assets/images/Logo.png"
 import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
-import { slugify } from "../../../utils/slugify"
-import { getYearFromDate } from "../../../utils/getYearFromDate"
+import { slugify } from "../../utils/slugify"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const Footer = () => {
   const data = useStaticQuery(graphql`

@@ -5,6 +5,9 @@ import ContactForm from "../components/Form/ContactForm"
 import Seo from "../components/seo"
 // import GoogleMaps from "../components/GoogleMaps/googleMaps"
 import Title from "../components/Title/Title"
+import { toast } from "sonner"
+// import { saveToAirtable } from "../utils/saveToAirtable"
+
 
 const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
   const {
@@ -19,6 +22,10 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
     bankAccount,
     mail,
   } = datoCmsCompany
+
+  const onSubmit = (formData) => {
+    console.log("Formularz wysłany:", formData);
+  };
 
   return (
     <>
@@ -67,7 +74,12 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
 
       <div className="grid grid-cols-1 gap-x-20 gap-y-10 mx-auto py-10 px-4 items-center">
         <div className="flex-1  ">
-          <ContactForm />
+        <ContactForm
+            // airtableSaveFn={saveToAirtable}
+           
+            // notification={{ show: (msg) => toast.success(msg) }}
+            // onSubmit={onSubmit}
+          />
         </div>
       </div>
 

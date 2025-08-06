@@ -1,5 +1,5 @@
 const path = require("path")
-const { slugify } = require("./utils/slugify")
+const { slugify } = require("./src/utils/slugify")
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
@@ -70,6 +70,11 @@ exports.createPages = async ({ graphql, actions }) => {
           id: node.id,
         },
       })
+      createPage({
+        path: `/kursy/${year}/${courseSlug}/rejestracja/formularz-wyslany`,
+        component: path.resolve(`./src/templates/formularz-wyslany.js`), // Komponent dla strony sukcesu
+        context: {}, // Możesz przekazać dodatkowe dane, jeśli potrzebujesz
+      });
     } else {
       console.warn(`Brak daty dla kursu ${node.nameCourse}`)
     }
@@ -85,15 +90,6 @@ exports.createPages = async ({ graphql, actions }) => {
       console.warn(`Pominięto książkę z brakującymi danymi: ${JSON.stringify(book)}`)
       return
     }
-
-    // Strona zamówienia książki (np. /ksiazki/tytul-ksiazki/zamowienie)
-    createPage({
-      path: `/ksiazki/${bookSlug}/zamowienie`,
-      component: path.resolve(`./src/templates/order-book.js`),
-      context: {
-        id: book.id,
-      },
-    })
   })
 }
 

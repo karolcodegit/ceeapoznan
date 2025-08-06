@@ -16,8 +16,9 @@ module.exports = {
         'medium': '#00b4d8',
         'light': '#006BBA',
         'lighter': '#88C8EC',
+        
 
-        'blue': '#00B4D8',
+        'custom-blue': '#00B4D8',
         'lightMint': "#80EE98",
         'pastelTurquoise': "#46DFB1",
         'vividTurquoise': "#09D1C7",
@@ -25,7 +26,18 @@ module.exports = {
         'darkBlueGreen': "#0C6478",
         'navyBlue': "#213A58",
         
+        'customGreen': 'bg-gray-300',
 
+
+        gray: {
+          300: "#D1D5DB",
+          400: "#9CA3AF",
+          500: "#6B7280",
+        },
+        yellow: {
+          500: "#FBBF24",
+          600: "#D97706",
+        },
         // 'LavenderMist': '#C3C7F4',
         // 'Lilac': '#C8A8E9',
         // 'PastelPink': '#E3AADD',

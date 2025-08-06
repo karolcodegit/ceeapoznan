@@ -5,11 +5,11 @@ import Paragraph from "../components/Paragraph/Paragraph"
 import Line from "../components/Line/Line"
 import Button from "../components/Button/Button"
 import SideInfoPanel from "../components/SideInfoPanel/SideInfoPanel"
-import { MarkdownText } from "../../utils/markdownText"
-import { slugify } from "../../utils/slugify"
+import { MarkdownText } from "../utils/markdownText"
+import { slugify } from "../utils/slugify"
 import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 import { FaFacebook } from "react-icons/fa"
-import { getYearFromDate } from "../../utils/getYearFromDate"
+import { getYearFromDate } from "../utils/getYearFromDate"
 
 const Course = ({ data }) => {
   const { datoCmsCourse: course } = data

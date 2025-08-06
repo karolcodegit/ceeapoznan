@@ -1,42 +1,73 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
-export const FormRadioGroup = ({
-  field,
-  form,
-  handleChange,
-  formSubmitted,
-  formErrors,
+import { useDispatch, useSelector } from "react-redux"
+import { updateField, setFormError } from "../../../store/RegisterForm/formSlice"
+import { updateDeliveryField } from '../../../store/delivery/deliverySlice'
+import { selectFormErrors, selectFormSubmitted } from '../../../utils/selectors'
+
+const FormRadioGroup = ({
+  name,
+  label,
+  options = [],
+  required = false,
+  formSliceKey = "formRegister",
+  onChange,
+  className = "",
 }) => {
-  useEffect(() => {
-    // Obsługa resetu radiobuttonów
-    if (formSubmitted) {
-      handleChange({ target: { name: field.name, value: '' } }); // Resetuj wybraną opcję
+  const dispatch = useDispatch()
+  const value = useSelector((state) => state[formSliceKey]?.[name] || "")
+  const formErrors = useSelector((state) => selectFormErrors(state, formSliceKey));
+  const formSubmitted = useSelector((state) => selectFormSubmitted(state, formSliceKey));
+
+  
+  const handleChange = (e) => {
+    const newValue = e.target.value
+
+
+    // Wywołaj przekazane onChange, jeśli istnieje
+    if (onChange) {
+      onChange(newValue);
     }
-  }, [formSubmitted]);
+
+    // wybierz właściwą akcję
+    if (formSliceKey === "delivery") {
+      dispatch(updateDeliveryField({ field: name, value: newValue }))
+    } else {
+      dispatch(updateField({ field: name, value: newValue }))
+    }
+
+    if (formSubmitted && required && newValue === "") {
+      dispatch(setFormError({ field: name, message: "To pole jest wymagane." }))
+    }
+  }
 
   return (
-    <div>
-      <span className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-        {field.label}
-      </span>
-      <div className="mt-2" role="radiogroup" aria-labelledby="group_label">
-        {field.options.map((option) => (
-          <label key={option} className="inline-flex items-center mx-2">
+    <div className={`pb-4 ${className}`}>
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 py-4">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <div className="mt-2" role="radiogroup" aria-labelledby={`${name}-label`}>
+        {options.map((option) => (
+          <label key={option} className="inline-flex items-center mr-6">
             <input
               type="radio"
               className="form-radio"
-              name={field.name}
+              name={name}
               value={option}
-              checked={form[field.name] === option}
-              onChange={(e) => handleChange(e)}
+              checked={value === option}
+              onChange={handleChange}
+              required={required}
             />
             <span className="ml-2 dark:text-gray-200">{option}</span>
           </label>
         ))}
       </div>
-      {formErrors[field.name] && (
-        <p className="text-sm text-red-500 mt-1">{formErrors[field.name]}</p>
+
+      {formErrors[name] && (
+        <p className="text-sm text-red-500 mt-1">{formErrors[name]}</p>
       )}
     </div>
-  );
-};
+  )
+}
+
+export default FormRadioGroup

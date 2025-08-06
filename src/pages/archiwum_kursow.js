@@ -3,8 +3,8 @@ import { graphql } from "gatsby"
 import Title from "../components/Title/Title"
 import Seo from "../components/seo"
 import { Link } from "gatsby"
-import { slugify } from "../../utils/slugify"
-import { getYearFromDate } from "../../utils/getYearFromDate"
+import { slugify } from "../utils/slugify"
+import { getYearFromDate } from "../utils/getYearFromDate"
 
 const ArchiwumKursow = ({ data }) => {
   const [windowWidth, setWindowWidth] = useState(0) // Początkowa szerokość okna

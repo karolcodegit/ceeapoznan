@@ -59,6 +59,7 @@ export const query = graphql`
   query MyQuery {
     allDatoCmsBook(sort: { year: DESC }) {
       nodes {
+        originalId
         title
         price
         publisher

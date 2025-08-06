@@ -1,372 +1,358 @@
-import React, { useRef, useState, useEffect } from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import React, { useEffect } from "react"
+import { navigate } from "gatsby"
+import { useDispatch, useSelector } from "react-redux"
+import FormField from "./FormField/FormField"
+import {
+  updateField,
+  resetForm,
+} from "../../store/RegisterForm/formSlice"
+import Form from "./Form"
 import Title from "../Title/Title"
 import SideInfoPanel from "../SideInfoPanel/SideInfoPanel"
-import Form from "./Form"
-import { saveToAirtable } from "../../../utils/airtable"
+import { CheckboxOption } from "./CheckboxOption/CheckboxOption"
+import FormRadioGroup from "./FormRadioGroup/FormRadioGroup"
+import { FormList } from "./FormList/FormList"
+import Paragraph from "../Paragraph/Paragraph"
+import { prepareRegistrationData } from "../../utils/prepareRegistrationData"
 
-const FormRegister = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      activeCourse: allDatoCmsCourse(filter: { available: { eq: true } }) {
-        nodes {
-          id
-          nameCourse
-          courseDuration
-          courseCost
-        }
-      }
-      allDatoCmsRegisterform{
-        nodes{
-          positioncheckbox{
-            label
-            price
-            available
-          }
-          dish{
-            dish
-          }
-        }
-      }
+import { handleRegisterSubmit } from "../../utils/handleRegisterSubmit"
+import { changeDate } from "../../utils/changeDate"
+
+const FormRegister = ({
+  data = { allDatoCmsRegisterform: { nodes: [] } },
+  apiEndpoint = "https://course-559160331745.europe-west1.run.app",
+  buttonText = "Zapisz na kurs",
+  availableCourse,
+}) => {
+  const dispatch = useDispatch()
+  const registerData = useSelector(state => state.formRegister || {})
+
+  const handleSubmitOverride = async (e) => {
+    e.preventDefault();
+    await handleRegisterSubmit(registerData, apiEndpoint, navigate);
+  };
+
+  const checkboxFields =
+    data.allDatoCmsRegisterform.nodes[0].positioncheckbox.map(
+      (item, index) => ({
+        id: item.id,
+        name: `option${index + 1}`,
+        label: `${item.label} (${item.price} PLN)`,
+        price: item.price,
+        typ: "checkbox",
+        disabled: !item.available,
+      })
+    )
+  const formData = useSelector(state => state.formRegister || {})
+  const total = formData.total || 0;
+  const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
+    if (formData[field.name]) {
+      return sum + field.price
     }
-  `)
-  const activeCourse = data.activeCourse.nodes[0];
-  const courseCost = activeCourse ? activeCourse.courseCost : 0;
-  const formRef = useRef(null)
-  const [isRegisterForm, setIsRegisterForm] = useState(true)
+    return sum
+  }, 0)
 
-  const initialFormState = {
-    firstName: "",
-    surName: "",
-    street: "",
-    numberHome: "",
-    zipCode: "",
-    city: "",
-    phone: "",
-    birthday: "",
-    email: "",
-    profession: "",
-    profesionNumber: "",
-    specjalist: false,
-    specialist2: false,
-    lastcourse: false,
-    yearSpecialist: "Nie dotyczy",
-    invoiceName: "",
-    invoiceStreet: "",
-    invoiceNumberHome: "",
-    invoiceZipCode: "",
-    invoiceCity: "",
-    invoiceNip: "",
-    option1: false,
-    option2: false,
-    option3: false,
-    dishes: "Proszę wybrać dania",
-    wyrazamZgode: false,
-    courseTitle: data.activeCourse.nodes[0]?.nameCourse || '',
-  }
+  const dishOptions =
+    data?.allDatoCmsRegisterform?.nodes?.[0]?.dish?.map(item => item.dish) || []
 
-  const [form, setForm] = useState(initialFormState)
-
-  const allFields = [
-    {
-      name: "firstName",
-      label: "Imię",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "surName",
-      label: "Nazwisko",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "street",
-      label: "Ulica",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "numberHome",
-      label: "Numer domu",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "zipCode",
-      label: "Kod pocztowy",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "city",
-      label: "Miasto",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "phone",
-      label: "Numer telefonu",
-      type: "text",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "birthday",
-      label: "Data urodzenia",
-      type: "date",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "email",
-      label: "E-mail",
-      type: "mail",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "profession",
-      label: " Ile lat w zawodzie?",
-      type: "number",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "profesionNumber",
-      label: " Numer Prawa Wykonywania Zawodu (NPWZ)",
-      type: "number",
-      typ: "input",
-      required: true,
-    },
-    {
-      name: "specjalist",
-      type: "radio",
-      label:
-        "Jestem w trakcie specjalizacji z anestezjologii i intensywnej terapii",
-      options: ["tak", "nie"],
-      typ: "radio",
-      required: true,
-    },
-    {
-      name: "specialist2",
-      type: "radio",
-      label: "Jestem specjalistą anestezjologii i intensywnej terapii",
-      options: ["tak", "nie"],
-      typ: "radio",
-      required: true,
-    },
-    {
-      name: "lastcourse",
-      type: "radio",
-      label: " Czy bieżący kurs jest ostatnim z cyklu kursów CEEA?",
-      options: ["tak", "nie"],
-      typ: "radio",
-      required: true,
-    },
-
-    {
-      type: "invoice",
-      title: "Dane do faktury",
-      fields: [
-        {
-          name: "invoiceName",
-          label: "Nazwa firmy/imię i nazwisko",
-          type: "text",
-          typ: "input",
-        },
-        { name: "invoiceStreet", label: "Ulica", type: "text", typ: "input" },
-        {
-          name: "invoiceNumberHome",
-          label: "Numer domu",
-          type: "text",
-          typ: "input",
-        },
-        {
-          name: "invoiceZipCode",
-          label: "Kod pocztowy",
-          type: "text",
-          typ: "input",
-        },
-        { name: "invoiceCity", label: "Miasto", type: "text", typ: "input" },
-        { name: "invoiceNip", label: "NIP", type: "text", typ: "input" },
-      ],
-    },
-
-    {
-      name: "yearSpecialist",
-      label: "Rok specjalizacji",
-      options: ["Nie dotyczy", "1", "2", "3", "4", "5"],
-      typ: "list",
-    },
-    {
-      name: "dishes",
-      label: "W przypadku wybrania posiłków:",
-      options: [
-        "Proszę wybrać dania",
-        ...(data.allDatoCmsRegisterform.nodes.length > 0 && data.allDatoCmsRegisterform.nodes[0].dish ? data.allDatoCmsRegisterform.nodes[0].dish.map(dish => dish.dish) : [])
-      ],
-      typ: "list",
-    },
+    useEffect(() => {
+      if (availableCourse?.courseCost) {
+        dispatch(updateField({
+          form: "formRegister",
+          field: "baseCourseCost",
+          value: availableCourse.courseCost,
+        }))
+      }
     
-    {
-      name: "option1",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
-      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`,
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
-    },
-    {
-      name: "option2",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
-      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`,
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
-    },
-    {
-      name: "option3",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
-      price: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`,
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available 
-    },
-
-    {
-      typ: "consent",
-      content: [
-        {
-          title: "Zgody na przetwarzanie danych osobowych:",
-          description:
-            "Zgoda na przetwarzanie danych osobowych jest dobrowolna, ale niezbędna do udziału w kursie. Zgoda może być w każdej chwili wycofana. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania, którego dokonano na podstawie zgody przed jej wycofaniem. Wycofanie zgody może nastąpić poprzez wysłanie wiadomości na adres",
-          typ: "checkbox",
-          label:
-            "Nie wyrażam zgody na utrwalanie wizerunku podczas Kursu (zdjęcia, nagrania).",
-          name: "wyrazamZgode",
-        },
-        {
-          title: "Uwaga",
-          description:
-            "Potwierdzenie rejestracji oraz faktura za udział w kursie zostaną przesłane na wskazany adres mailowy po opłaceniu przelewem kosztów udziału w kursie.",
-        },
-      ],
-    },
-  ]
-  const oplatyDodatkowe = [
-    {
-      name: "option1",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[0].available
-    },
-    {
-      name: "option2",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[1].available
-    },
-    {
-      name: "option3",
-      label: `${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].label}`,
-      price: parseFloat(`${data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].price}`),
-      typ: "checkbox",
-      disabled: !data.allDatoCmsRegisterform.nodes[0].positioncheckbox[2].available
-    },
-  ]
-
-  // const emailjsConfig = {
-  //   serviceId: "service_r6jzpbd",
-  //   templateId: "template_1mhvytc",
-  //   userId: "sUtJzifkBSdcRbC_M",
-  // }
-
-  const successMessage = "Zapisano na kurs!"
-  const apiEndpoint =
-    "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sendgrid"
-
-    const total = oplatyDodatkowe.reduce((sum, item) => {
-      return form[item.name] ? sum + item.price : sum;
-    }, courseCost);
-
-    const handleChange = (e, type) => {
-      const { name, checked, value } = e.target;
+      if (availableCourse?.nameCourse) {
+        dispatch(updateField({
+          form: "formRegister",
+          field: "courseTitle",
+          value: availableCourse.nameCourse,
+        }))
+      }
+    }, [availableCourse])
     
-      setForm((prev) => {
-        const updatedForm = { ...prev };
+    // liczenie total
+    useEffect(() => {
+      const base = parseFloat(availableCourse?.courseCost || 0)
     
-        if (type === "checkbox") {
-          updatedForm[name] = checked;
-        } else if (type === "radio") {
-          updatedForm[name] = value; // Dla radio, ustawiamy wartość
-        } else {
-          updatedForm[name] = value;
+      const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
+        if (formData[field.name]) {
+          return sum + field.price
         }
+        return sum
+      }, 0)
     
-        // Aktualizuj `total` dla opłat dodatkowych
-        const newTotal = oplatyDodatkowe.reduce(
-          (sum, item) => (updatedForm[item.name] ? sum + item.price : sum),
-          courseCost
-        );
-        updatedForm.total = newTotal;
+      const total = base + selectedOptionsCost
     
-        return updatedForm;
-      });
-    };
-
-    // useEffect(() => {
-    //   setForm((prev) => ({
-    //     ...prev,
-    //     courseTitle: data.activeCourse.nodes[0]?.nameCourse || '',
-    //     total
-    //   }));
-    // }, [data.activeCourse, total]);
+      dispatch(updateField({
+        form: "formRegister",
+        field: "total",
+        value: total,
+      }))
+    }, [formData, availableCourse, checkboxFields])
     
   return (
     <div className="py-10 max-w-6xl mx-auto gap-12 flex flex-col xl:flex-row justify-between items-start">
-  <div className="max-w-3xl w-full xl:w-2/3">
-    <Title tag="h1" className="text-3xl sm:text-4xl">
-      Formularz rejestracyjny
-    </Title>
-    <Title tag="h5" className="mt-4 text-lg sm:text-xl">
-      Kurs:{" "}
-      {data.activeCourse.nodes[0]?.nameCourse && (
-        <span className="font-medium text-gray-800 dark:text-gray-200">
-          {data.activeCourse.nodes[0].nameCourse}
-        </span>
-      )}
-    </Title>
+      <div className="max-w-3xl w-full xl:w-2/3">
+        <Title tag="h1" className="text-3xl sm:text-4xl">
+          Formularz rejestracyjny
+        </Title>
+        <Title tag="h5" className="mt-4 text-lg sm:text-xl">
+          Kurs:{" "}
+          <span className="font-medium text-gray-800 dark:text-gray-200">
+            {availableCourse.nameCourse}
+          </span>
+        </Title>
+        <Form
+          onSubmitOverride={(e) => handleSubmitOverride(e)}
+          apiEndpoint={apiEndpoint}
+          submitButtonText={buttonText}
+          variant="submit"
+          notificationMessage="Formularz został wysłany!"
+          clearAction={resetForm}
+          formSliceKey="formRegister"
+          prepareFormData={prepareRegistrationData}
+          addToButton='float-right'
+          requiredFields={[
+            "firstName",
+            "surName",
+            "street",
+            "numberHome",
+            "zipCode",
+            "city",
+            "phone",
+            "birthday",
+            "email",
+            "profession",
+            "npwz",
+            "specjalist",
+            "specialist2",
+            'lastcourse',
+            "dishes",
+            "lastcourse",
+          ]}
+        >
+          <FormField
+            type="text"
+            label="Imię"
+            name="firstName"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="text"
+            label="Nazwisko"
+            name="surName"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="text"
+            label="Ulica"
+            name="street"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="text"
+            label="Numer domu"
+            name="numberHome"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="text"
+            label="Kod pocztowy"
+            name="zipCode"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="text"
+            label="Miasto"
+            name="city"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="phone"
+            label="Numer telefonu"
+            name="phone"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="date"
+            label="Data urodzenia"
+            name="birthday"
+            formSliceKey="formRegister"
+            required
+            onBlur={(e) => {
+              const value = e.target.value;
+              const formattedBirthday = changeDate(value); // Konwersja daty
+              dispatch(updateField({
+                form: "formRegister",
+                field: "birthday",
+                value: changeDate(formattedBirthday), // Zapisz datę w formacie DD/MM/YYYY
+              }));
+            }}
+          />
+          <FormField
+            type="email"
+            name="email"
+            label="Adres email"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="number"
+            label="Ile lat w zawodzie?"
+            name="profession"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormField
+            type="number"
+            label="Numer Prawa Wykonywania Zawodu (NPWZ)"
+            name="npwz"
+            formSliceKey="formRegister"
+            required
+          />
+          <FormRadioGroup
+            label="Jestem w trakcie specjalizacji z anestezjologii i intensywnej terapii"
+            name="specjalist"
+            options={["tak", "nie"]}
+            required
+            formSliceKey="formRegister"
+          />
+          <FormRadioGroup
+            label="Jestem specjalistą anestezjologii i intensywnej terapii"
+            name="specialist2"
+            options={["tak", "nie"]}
+            required
+            formSliceKey="formRegister"
+          />
+          <FormRadioGroup
+            label="Czy bieżący kurs jest ostatnim z cyklu kursów CEEA?"
+            name="lastcourse"
+            options={["tak", "nie"]}
+            required
+            formSliceKey="formRegister"
+          />
+          {/* Faktura */}
+          <Title tag="h5">Dane do faktury</Title>
+          <FormField
+            type="text"
+            label="Nazwa firmy/imię i nazwisko"
+            name="invoiceName"
+            formSliceKey="formRegister"
+          />
+          <FormField
+            type="text"
+            label="Ulica"
+            name="invoiceStreet"
+            formSliceKey="formRegister"
+          />
+          <FormField
+            type="text"
+            label="Numer domu"
+            name="invoiceNumberHome"
+            formSliceKey="formRegister"
+          />
+          <FormField
+            type="text"
+            label="Kod pocztowy"
+            name="invoiceZipCode"
+            formSliceKey="formRegister"
+          />
+          <FormField
+            type="text"
+            label="Miasto"
+            name="invoiceCity"
+            formSliceKey="formRegister"
+          />
+          <FormField
+            type="text"
+            label="NIP"
+            name="invoiceNip"
+            formSliceKey="formRegister"
+          />
+          <FormList
+            name="ocenaKursu"
+            label="Rok specjalizacji"
+            options={["1", "2", "3", "4", "5"]}
+            placeholder="Nie dotyczy"
+            formSliceKey="formRegister"
+          />
+          {dishOptions.length > 0 && (
+            <FormList
+              name="dishes"
+              label="Wybierz danie"
+              options={dishOptions}
+              required
+              placeholder="Proszę wybrać dania"
+              formSliceKey="formRegister"
+            />
+          )}
 
-    <Form
-      allFields={allFields}
-      buttonText="Wyślij zgłoszenie"
-      handleChange={handleChange}
-      form={form}
-      setForm={setForm}
-      initialFormState={initialFormState}
-      formRef={formRef}
-      isRegisterForm={true}
-      saveToAirtable={saveToAirtable}
-      successMessage={successMessage}
-      apiEndpoint={apiEndpoint}
-      total={total}
-    />
-  </div>
+          <div className="pt-5">
+            <label
+              htmlFor="additional"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-200 mt-3 mb-3"
+            >
+              Dodatkowe opcje
+            </label>
+            {checkboxFields.map(field => (
+              <CheckboxOption
+                key={field.id}
+                name={field.name}
+                label={field.label}
+                disabled={field.disabled}
+                formSliceKey="formRegister"
+              />
+            ))}
+          </div>
+          {/* Przetwarzanie danych osobowych */}
+          <div className="pt-14">
+            <Title tag="h5">Zgody na przetwarzanie danych osobowych:</Title>
+            <Paragraph>
+              Zgoda na przetwarzanie danych osobowych jest dobrowolna, ale
+              niezbędna do udziału w kursie. Zgoda może być w każdej chwili
+              wycofana. Wycofanie zgody nie wpływa na zgodność z prawem
+              przetwarzania, którego dokonano na podstawie zgody przed jej
+              wycofaniem. Wycofanie zgody może nastąpić poprzez wysłanie
+              wiadomości na adres
+            </Paragraph>
 
-  <div className="w-full xl:w-1/3 lg:w-2/3 mx-auto mt-10 xl:mt-0 xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)]">
-    <SideInfoPanel
-      money={total}
-      time={data.activeCourse.nodes[0]?.courseDuration}
-      available="Niedostępne"
-    />
-  </div>
-</div>
+            <CheckboxOption
+              label="Nie wyrażam zgody na utrwalanie wizerunku podczas Kursu (zdjęcia, nagrania)."
+              name="wyrazamZgode"
+              formSliceKey="formRegister"
+
+              // onChange={handleCheckboxChange}
+            />
+          </div>
+          {/* Uwaga */}
+          <div className="pt-14">
+            <Title tag="h3">Uwaga</Title>
+            <Paragraph>
+              Potwierdzenie rejestracji oraz faktura za udział w kursie zostaną
+              przesłane na wskazany adres mailowy po opłaceniu przelewem kosztów
+              udziału w kursie.
+            </Paragraph>
+          </div>
+        </Form>
+      </div>
+      <div className="w-full xl:w-1/3 lg:w-2/3 mx-auto mt-10 xl:mt-0 xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)]">
+        <SideInfoPanel
+          money={total}
+          time={availableCourse?.courseDuration}
+          available={availableCourse ? "Dostępny" : "Niedostępny"}
+        />
+      </div>
+    </div>
   )
 }
 

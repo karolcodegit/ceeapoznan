@@ -1,4 +1,6 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Tooltip } from "react-tooltip"
 import {
   ClockIcon,
   CurrencyDollarIcon,
@@ -6,12 +8,49 @@ import {
 } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
 import DeliveryModal from "../Modal/DeliveryModal"
-import { Tooltip } from "react-tooltip"
-import { slugify } from "../../../utils/slugify"
+// import { slugify } from "../../utils/slugify"
+import { addToCart, calculateSummary } from "../../store/cart/cartSlice"
+import { toast } from "sonner"
 import Form from "../Form/Form"
-import { saveAirableNotificationBook } from "../../../utils/airtable-notificationBook"
+import FormField from "../Form/FormField/FormField"
+import { handleNotificationSubmit } from "../../utils/handlerNotificationSubmit"
+import { updateBookInfo } from "../../store/notificationBook/notificationSlice"
+import { selectBookById } from "../../store/notificationBook/notificationBook"; // Import selektora
 
-const DeliveryInfo = ({ price, available, title, className }) => {
+
+
+const DeliveryInfo = ({
+  price,
+  available,
+  title,
+  className,
+  originalId,
+  image,
+}) => {
+  const dispatch = useDispatch()
+
+
+  const formData = useSelector((state) => selectBookById(state, originalId));
+
+
+
+  // const formData = useSelector((state) => state.notificationBook.books[originalId] || {}); // Pobierz dane dla konkretnej książki
+
+  const handleAddToCart = () => {
+    dispatch(
+      addToCart({
+        id: originalId,
+        title,
+        price,
+        image,
+        quantity: 1,
+      })
+    )
+    // dispatch(calculateSummary())
+    toast.success("Dodano do koszyka")
+  }
+
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isOrderBooksOpen, setIsOrderBooksOpen] = useState(false)
 
@@ -30,33 +69,28 @@ const DeliveryInfo = ({ price, available, title, className }) => {
   }
 
   const formRef = useRef(null)
-  const initialFormState = {
-    email: "",
-    title: title
-  }
-  const [form, setForm] = useState(initialFormState)
-  const allFields = [
-    {
-      name: "email",
-      type: "email",
-      typ: "input",
-      required: "true",
-      placeholder: "E-mail",
-    },
-  ]
 
-  const handleChange = e => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    })
-  }
-  const successMessage = "Zamówienie zostało złożone"
   const apiEndpoint =
-    "https://us-central1-ceea-poznan-426120.cloudfunctions.net/sengrid-notificationBook"
-
-    console.log("Dostępność książki (available):", available);
+    "https://notificationbook-559160331745.us-central1.run.app"
     
+    useEffect(() => {
+      dispatch(updateBookInfo({ id: originalId, bookInfo: { title, price, image } })); // Zapisz dane książki w Redux
+    }, [title, originalId, price, image, dispatch]);
+
+    const handleSubmitOverride = async (e) => {
+      e.preventDefault();
+      const localFormData = {
+        email: formData.email || "",
+      };
+    
+      const bookInfo = {
+        title,
+        originalId,
+        price,
+        image,
+      };
+      await handleNotificationSubmit(localFormData, bookInfo,  apiEndpoint, dispatch);
+    };
   return (
     <>
       <div
@@ -70,9 +104,9 @@ const DeliveryInfo = ({ price, available, title, className }) => {
             {price} zł
           </span>
           <div>
-          <span className="font-bold text-sm text-darkBlueGreen dark:text-[#6b91c0] ml-2 flex justify-end">
-           + koszty przesyłki
-          </span>
+            <span className="font-bold text-sm text-darkBlueGreen dark:text-[#6b91c0] ml-2 flex justify-end">
+              + koszty przesyłki
+            </span>
           </div>
         </div>
         {/* Wysyłka */}
@@ -114,22 +148,24 @@ const DeliveryInfo = ({ price, available, title, className }) => {
           />
           <span
             onClick={openModal}
-            className="font-normal text-sm pl-4 cursor-pointer text-blue-600 dark:text-blue-400"
+            className="font-normal text-sm pl-4 cursor-pointer"
           >
             Sprawdź koszt dostawy
           </span>
         </div>
         {available ? (
           <Button
+            onClick={handleAddToCart}
             className="font-normal text-sm pl-4"
-            href={`/ksiazki/${slugify(title)}/zamowienie`}
+            variant='default'
+            margines='mt-0'
           >
             <div className="flex items-center px-1 py-2 gap-4 text-gray-50 rounded-md">
               <ShoppingCartIcon
                 className="h-6 w-6 flex-shrink-0"
                 aria-hidden="true"
               />
-              <span>Zamów teraz</span>
+              <span>Dodaj do koszyka</span>
             </div>
           </Button>
         ) : (
@@ -139,27 +175,33 @@ const DeliveryInfo = ({ price, available, title, className }) => {
                 Podaj swój e-mail, aby otrzymać powiadomienie o dostępności:
               </span>
               <Form
-                allFields={allFields}
-                buttonText="Powiadom mnie"
-                handleChange={handleChange}
-                form={form}
-                setForm={setForm}
-                initialFormState={initialFormState}
-                formRef={formRef}
-                maxLength={2000}
-                isRegisterForm={true}
-                saveToAirtable={saveAirableNotificationBook}
-                successMessage={successMessage}
+                ref={formRef}
+                submitButtonText="Powiadom mnie"
+                formSliceKey="notificationBook"
+                notificationMessage="Formularz został wysłany!"
+                requiredFields={[]}
                 apiEndpoint={apiEndpoint}
-                noSpace
-                DeliveryInfoButton
-                tooltip={[
-                  'Jeśli planujesz zamówić więcej niż 3 egzemplarze,',
-                  'skontaktuj się z nami pod adresem:',
-                  'sekretariat@ceea.org.pl'
-                ]}
-                tooltipId="button-more-books"
-              />
+                onSubmitOverride={handleSubmitOverride} 
+                variant="notify"
+                addToButton='mt-3'
+                padding="py-3"
+                className="flex flex-col items-center w-full"
+                // tooltip={[
+                //   'Jeśli planujesz zamówić więcej niż 3 egzemplarze,',
+                //   'skontaktuj się z nami pod adresem:',
+                //   'sekretariat@ceea.org.pl'
+                // ]}
+                // tooltipId="button-more-books"
+              >
+                <FormField
+                  type="email"
+                  name="email"
+                  formSliceKey="notificationBook"
+                  placeholder="Twój e-mail"
+                  id={originalId}
+                  margin='mt-0'
+                />
+              </Form>
             </div>
           </>
         )}

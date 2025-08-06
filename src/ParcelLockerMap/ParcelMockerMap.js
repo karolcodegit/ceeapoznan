@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react"
 import Title from "../components/Title/Title"
 import Button from "../components/Button/Button"
+import { useDispatch } from "react-redux";
+import { setParcelLocker, updateDeliveryField } from "../store/delivery/deliverySlice";
 
-const ParcelLockerMap = ({ setForm }) => {
+const ParcelLockerMap = () => {
+  const dispatch = useDispatch();
   const geowidgetContainerRef = useRef(null);
   const [isGeoWidgetVisible, setIsGeoWidgetVisible] = useState(true);
-  const [isButtonVisible, setIsButtonVisible] = useState(false); // Dodajemy stan do ukrywania/wyświetlania przycisku
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
 
   useEffect(() => {
     if (isGeoWidgetVisible && geowidgetContainerRef.current) {
@@ -18,34 +21,35 @@ const ParcelLockerMap = ({ setForm }) => {
       geowidgetContainerRef.current.innerHTML = ""; // Usuwanie poprzednich instancji
       geowidgetContainerRef.current.appendChild(geowidget);
 
-      // Nasłuchiwanie inicjalizacji widgetu
       geowidget.addEventListener("inpost.geowidget.init", (event) => {
         const api = event.detail.api;
 
         api.addPointSelectedCallback((selectedPoint) => {
           const { name, address_details } = selectedPoint;
-
-          // Aktualizacja formularza
-          setForm((prevForm) => ({
-            ...prevForm,
-            parcelLocker: {
+          // ⬇️ Aktualizacja Redux Store zamiast lokalnego state
+          dispatch(
+            setParcelLocker({
               name,
               address: address_details,
-            },
-          }));
+            })
+          );
+          
+          dispatch(
+            updateDeliveryField({
+              field: "lockerCode",
+              value: name,
+            })
+          );
 
-          // Zamknięcie mapy
           setIsGeoWidgetVisible(false);
-          setIsButtonVisible(true); // Ustawienie widoczności przycisku
+          setIsButtonVisible(true);
         });
       });
     } else if (!isGeoWidgetVisible && geowidgetContainerRef.current) {
-      // Usuwanie widgetu po ukryciu
       geowidgetContainerRef.current.innerHTML = "";
     }
+  }, [isGeoWidgetVisible, dispatch]);
 
-    //console.log("geowidgetContainerRef:", geowidgetContainerRef.current);
-  }, [isGeoWidgetVisible, setForm]);
 
   return (
     <div className="w-full">

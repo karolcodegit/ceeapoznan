@@ -6,9 +6,9 @@ import Title from "../components/Title/Title"
 import Button from "../components/Button/Button"
 import Box from "../components/Box/Box"
 import Paragraph from "../components/Paragraph/Paragraph"
-import { slugify } from "../../utils/slugify"
+import { slugify } from "../utils/slugify"
 import { AcademicCapIcon, BookOpenIcon } from "@heroicons/react/24/outline"
-import { getYearFromDate } from "../../utils/getYearFromDate"
+import { getYearFromDate } from "../utils/getYearFromDate"
 
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
@@ -41,6 +41,8 @@ const IndexPage = ({ data }) => {
               .filter(course => course.available === true)
               .map(course => (
                 <Button
+                  key={course.id}
+                  variant="default"
                   href={`/kursy/${getYearFromDate(
                     data.allDatoCmsCourse.nodes[0].date
                   )}/${slugify(

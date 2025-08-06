@@ -1,310 +1,142 @@
-import React, { useContext, useState } from "react"
-import { FormField } from "./FormField/FormField"
+// components/Form.js
+import React, { useState } from "react"
+import PropTypes from "prop-types"
+import { useDispatch, useSelector } from "react-redux"
+import { toast } from "sonner"
 import Button from "../Button/Button"
-import Title from "../Title/Title"
-import Paragraph from "../Paragraph/Paragraph"
-import { ConsentCheckbox } from "./ConsentCheckbox/ConsentCheckbox"
-import { FormRadioGroup } from "./FormRadioGroup/FormRadioGroup"
-import { FormList } from "./FormList/FormList"
-import { CheckboxOption } from "./CheckboxOption/CheckboxOption"
-import { handleFormSubmit, validateForm } from "./formHandlers"
-import NotificationContext from "../Notification/NotificationContext"
-import ParcelLockerMap from "../../ParcelLockerMap/ParcelMockerMap"
+import { selectDynamicState } from "../../utils/selectors"
+import { flattenObject } from "../../utils/flattenObject"
 
-const Form = ({
-  allFields,
-  buttonText,
-  handleChange,
-  form,
-  setForm,
-  initialFormState,
-  formRef,
-  // emailjsConfig,
-  isRegisterForm,
-  saveToAirtable = null,
-  successMessage,
+// const flattenObject = (obj, prefix = "") =>
+//   Object.keys(obj).reduce((acc, key) => {
+//     const value = obj[key];
+//     const prefixedKey = prefix ? `${prefix}.${key}` : key;
+//     if (typeof value === "object" && value !== null) {
+//       Object.assign(acc, flattenObject(value, prefixedKey));
+//     } else {
+//       acc[prefixedKey] = value;
+//     }
+//     return acc;
+//   }, {});
+
+const Form = React.forwardRef(({
+  prepareFormData,
+  children,
+  submitButtonText = "Wyślij",
   apiEndpoint,
-  pattern,
-  book,
-  orderNumber,
-  total,
-  courseTitle,
-  noSpace,
-  DeliveryInfoButton,
-  tooltip, tooltipId
-}) => {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formSubmitted, setFormSubmitted] = useState(false)
-  const showNotification = useContext(NotificationContext)
-  const [formErrors, setFormErrors] = useState({})
+  clearAction,
+  notificationMessage = "Dziękujemy! Formularz został wysłany.",
+  saveToAirtable, // Funkcja do zapisu danych do Airtable
+  formSliceKey = "contact",
+  className,
+  requiredFields = [],
+  onSubmitOverride,
+  onSuccess,
+  isStepForm = false,
+  extraFormData = {},
+  dynamicRequiredFields = [],
+  variant,
+  addToButton,
+  padding
+}, ref) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const formDataFromRedux = useSelector(state => state[formSliceKey] || {}); // Wywołanie useSelector na najwyższym poziomie
+  const [errors, setErrors] = useState({});
+  const dynamicState = useSelector(selectDynamicState);
+  
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Resetuj formularz do wartości początkowych
-  const resetFormState = () => {
-    setForm(initialFormState)
-  }
+    // Obsługa dynamicRequiredFields
+    const dynamicFields = typeof dynamicRequiredFields === "function"
+      ? dynamicRequiredFields(dynamicState)
+      : [];
+    const allRequiredFields = [...requiredFields, ...dynamicFields];
+    const formData = { ...formDataFromRedux, ...extraFormData };
+    const flattenedFormData = flattenObject(formData);
 
-  const handleDeliveryChange = e => {
-    const { name, value } = e.target; 
-    setForm(prevForm => {
-      if (name === "delivery" && value === "Paczkomat") {
-        return {
-          ...prevForm,
-          [name]: value,
-          streetDelivery: "", // Resetujemy pola adresowe
-          cityDelivery: "",
-          postcodeDelivery: "",
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    const allFilled = allRequiredFields.every((field) => {
+      const value = flattenedFormData[field];
+      return value !== undefined && value !== null && value.toString().trim() !== "";
+    });
+
+    if (!allFilled) {
+      const newErrors = {};
+      allRequiredFields.forEach((field) => {
+        if (!flattenedFormData[field] || flattenedFormData[field].toString().trim() === "") {
+          newErrors[field] = "To pole jest wymagane.";
         }
-      }
-      return {
-        ...prevForm,
-        [name]: value,
-      }
-    })
-  }
-
-
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    // Sprawdzenie, czy allFields jest tablicą
-    if (!Array.isArray(allFields)) {
-      console.error("allFields nie jest tablicą:", allFields)
-      showNotification("Wystąpił błąd: allFields nie jest tablicą", "error")
-      setIsSubmitting(false)
-      return
+      });
+      setErrors(newErrors);
+      toast.error("Wypełnij wszystkie wymagane pola.");
+      return; // Zatrzymaj dalsze przetwarzanie
     }
-    const errors = validateForm(form, allFields)
-    setFormErrors(errors)
 
-    if (Object.keys(errors).length > 0) {
-      showNotification("Formularz nie został prawidłowo wypełniony")
-      setIsSubmitting(false)
-      return
-    }
+    // Jeśli wszystkie pola są wypełnione, kontynuuj
+    setErrors({});
+    toast.success("Wszystkie wymagane pola zostały wypełnione.");
+    setIsLoading(true);
+
     try {
-      // Wywołanie handleFormSubmit i uzyskanie przetworzonych danych
-      const enrichedForm = await handleFormSubmit(
-        e,
-        formRef,
-        form,
-        // emailjsConfig,
-        showNotification,
-        allFields,
-        successMessage,
-        apiEndpoint,
-        book,
-        setForm,
-        orderNumber,
-        total,
-        courseTitle
-      )
+      // Wywołanie onSubmitOverride tylko po poprawnej walidacji
+      if (onSubmitOverride) {
+        await onSubmitOverride(e);
+      }
 
-      // Jeśli zapis do Airtable jest wymagany i funkcja jest dostępna
-      if (isRegisterForm && typeof saveToAirtable === "function") {
+      // Kontynuacja operacji w handleSubmit (np. zapis do Airtable)
+      if (saveToAirtable) {
         try {
-          const records = await saveToAirtable(form)
-          // console.log("Zapisano dane w Airtable:", records)
-        } catch (err) {
-          console.log(err);
-          console.error("Błąd podczas zapisu do Airtable:", err)
-          showNotification("Nie udało się zapisać danych w Airtable", "error")
+          await saveToAirtable(formData);
+          console.log("✅ Zapis do Airtable zakończony sukcesem.");
+        } catch (error) {
+          console.error("❌ Błąd podczas zapisu do Airtable:", error);
+          toast.error("Wystąpił błąd przy zapisie do Airtable.");
+          return;
         }
       }
-      setFormSubmitted(false)
-      resetFormState()
-    } catch (err) {
-      console.error(err)
-      // Obsługa błędów, np. brak połączenia z serwerem
-      showNotification("Wystąpił błąd podczas wysyłania formularza", "error")
+
+      if (clearAction) dispatch(clearAction());
+      toast.success(notificationMessage);
+
+      // Wywołanie onSuccess po poprawnej walidacji i zapisaniu danych
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      toast.error("Wystąpił błąd przy wysyłaniu formularza.");
+      console.error("❌ Błąd podczas wysyłania formularza:", error);
     } finally {
-      setIsSubmitting(false)
+      setIsLoading(false);
     }
-  }
-
+  };
   return (
-    <>
-      <form
-        noValidate
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className={`${noSpace ? '' : 'space-y-6 mt-8'}  xl:mx-auto`}
-        method="post"
-        aria-label="Formularz"
-      >
-        <fieldset>
-          <legend className="sr-only">Wypełnij formularz</legend>
-          {/* Mapowanie pól formularza */}
-          <div className={`grid sm:grid-cols-1 gap-y-10 gap-x-6 pb-6`}>
-            {allFields.map((field, index) => (
-              <React.Fragment key={field.name || index}>
-                {field.typ === "input" && (
-                  <FormField
-                    field={field}
-                    form={form}
-                    handleChange={handleChange}
-                    formErrors={formErrors}
-                    formSubmitted={formSubmitted}
-                    pattern={pattern}
-                    resetFormState={resetFormState}
-                  />
-                )}
-                {field.type === "invoice" && (
-                  <>
-                    <Title tag="h5">{field.title}</Title>
-                    {field.fields.map((item, index) => (
-                      <React.Fragment key={index}>
-                        {item.typ === "input" && (
-                          <FormField
-                            field={item}
-                            form={form}
-                            handleChange={handleChange}
-                            formErrors={formErrors}
-                            formSubmitted={formSubmitted}
-                            resetFormState={resetFormState}
-                          />
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </>
-                )}
-                {field.typ === "checkbox" && (
-                  <CheckboxOption
-                    field={field}
-                    form={form}
-                    handleChange={handleChange}
-                    formErrors={formErrors}
-                    formSubmitted={formSubmitted}
-                    resetFormState={resetFormState}
-                    // disabled={disabled}
-                  />
-                )}
-                {field.typ === "radio" && (
-                  <>
-                    <FormRadioGroup
-                      field={field}
-                      form={form}
-                      handleChange={handleDeliveryChange}
-                      formErrors={formErrors}
-                      formSubmitted={formSubmitted}
-                      resetFormState={resetFormState}
-                    />
-                  </>
-                )}
-
-                {field.typ === "list" && (
-                  <FormList
-                    field={field}
-                    form={form}
-                    handleChange={handleChange}
-                    formErrors={formErrors}
-                    formSubmitted={formSubmitted}
-                  />
-                )}
-
-                {form.delivery === "Adres dostawy" && field.typ === "radio" && (
-                  <>
-                    <FormField
-                      field={{
-                        name: "streetDelivery",
-                        label: "Ulica",
-                        type: "text",
-                        typ: "input",
-                        required: true,
-                      }}
-                      form={form}
-                      formErrors={formErrors}
-                      formSubmitted={formSubmitted}
-                      handleChange={handleChange}
-                      resetFormState={resetFormState}
-                    />
-                    <FormField
-                      field={{
-                        name: "cityDelivery",
-                        label: "Miasto",
-                        type: "text",
-                        typ: "input",
-                        required: true,
-                      }}
-                      form={form}
-                      formErrors={formErrors}
-                      formSubmitted={formSubmitted}
-                      handleChange={handleChange}
-                      resetFormState={resetFormState}
-                    />
-                    <FormField
-                      field={{
-                        name: "postcodeDelivery",
-                        label: "Kod pocztowy",
-                        type: "text",
-                        typ: "input",
-                        required: true,
-                      }}
-                      form={form}
-                      formErrors={formErrors}
-                      formSubmitted={formSubmitted}
-                      handleChange={handleChange}
-                      resetFormState={resetFormState}
-                    />
-                  </>
-                )}
-
-                {form.delivery === "Paczkomat" && field.typ === "radio" && (
-                  <ParcelLockerMap setForm={setForm} />
-                )}
-
-                {form.delivery === "Paczkomat" &&
-                  field.typ === "radio" &&
-                  form.parcelLocker && (
-                    <div className="flex flex-col gap-5 border p-5 rounded-lg shadow-md my-6">
-                      <Title tag="h4">Wybrany paczkomat:</Title>
-                      <p>
-                        <strong>Nazwa paczkomatu:</strong>{" "}
-                        {form.parcelLocker.name}
-                      </p>
-                      <p>
-                        <strong>Adres:</strong>{" "}
-                        {form.parcelLocker.address.street}{" "}
-                        {form.parcelLocker.address.building_number},{" "}
-                        {form.parcelLocker.address.city},{" "}
-                        {form.parcelLocker.address.post_code}
-                      </p>
-                    </div>
-                  )}
-
-                {field.typ === "consent" && (
-                  <>
-                    {field.content.map((item, index) => (
-                      <React.Fragment key={index}>
-                        <Title tag={index === 0 ? "h5" : "h3"}>
-                          {item.title}
-                        </Title>
-                        <Paragraph>{item.description}</Paragraph>
-                        {item.typ === "checkbox" && (
-                          <ConsentCheckbox
-                            field={item}
-                            form={form}
-                            handleChange={handleChange}
-                            formErrors={formErrors}
-                            formSubmitted={formSubmitted}
-                            resetFormState={resetFormState}
-                          />
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-          <Button type="submit" disabled={isSubmitting} DeliveryInfoButton={DeliveryInfoButton} tooltip={tooltip} tooltipId={tooltipId}>
-            {buttonText}
-          </Button>
-        </fieldset>
-      </form>
-    </>
+    <form ref={ref} onSubmit={handleSubmit} className={className}>
+      {React.Children.map(children, (child, index) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, {
+            key: child.key || child.props.name || index,
+            error: errors[child.props.name],// Przekazanie błędu do FormField
+          })
+        }
+        return child
+      })}
+      {!isStepForm && (
+        <Button type="submit" variant={variant} disabled={isLoading} className={addToButton} padding={padding}>
+          {isLoading ? "Wysyłanie..." : submitButtonText}
+        </Button>
+      )}
+    </form>
   )
+})
+Form.propTypes = {
+  children: PropTypes.node.isRequired,
+  submitButtonText: PropTypes.string,
+  notificationMessage: PropTypes.string,
+  saveToAirtable: PropTypes.func,
+  // onSubmit: PropTypes.func.isRequired,
 }
 
 export default Form

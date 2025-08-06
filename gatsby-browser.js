@@ -1,4 +1,9 @@
+import React from 'react';
+import { Provider } from 'react-redux';
+import {store}  from './src/store/index';
 import './src/styles/global.css'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 export const onClientEntry = () => {
@@ -14,6 +19,11 @@ export const onClientEntry = () => {
       document.body.appendChild(script);
     }
   };
+
+
+export const wrapRootElement = ({ element }) => (
+  <Provider store={store}>{element}</Provider>
+);
 
 //   export const onRouteUpdate = ({ location }) => {
 //     const params = new URLSearchParams(location.search);

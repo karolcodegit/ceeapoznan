@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react"
 import { Link, graphql } from "gatsby"
 import Seo from "../components/seo"
 import Title from "../components/Title/Title"
-import { slugify } from "../../utils/slugify"
-import { getYearFromDate } from "../../utils/getYearFromDate"
+import { slugify } from "../utils/slugify"
+import { getYearFromDate } from "../utils/getYearFromDate"
 
 const Courses = ({ data }) => {
   const [windowWidth, setWindowWidth] = useState(0) // Zmieniamy początkową wartość na 0

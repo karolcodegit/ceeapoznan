@@ -6,7 +6,7 @@ import Paragraph from "../components/Paragraph/Paragraph"
 import Line from "../components/Line/Line"
 import Seo from "../components/seo"
 import { EnvelopeOpenIcon, PhoneIcon } from "@heroicons/react/24/outline"
-import { MarkdownText } from "../../utils/markdownText"
+import { MarkdownText } from "../utils/markdownText"
 import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 
 const courseDetails = ({ data }) => {

@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react"
+import React from "react"
 import Title from "../Title/Title"
 import DeliveryInfo from "../DeliveryInfo/DeliveryInfo"
-import { MarkdownText } from "../../../utils/markdownText"
+import { MarkdownText } from "../../utils/markdownText"
 
 const Book = ({
+  originalId,
   image,
   title,
   editor,
@@ -95,14 +96,13 @@ const Book = ({
                 </div>
               </div>
             )}
-            
           </div>
         </div>
       </div>
 
       {/* Informacje o dostawie */}
       <div className="mt-8 md:mt-0 md:ml-8 flex-shrink-0">
-        <DeliveryInfo price={price} available={available} title={title} />
+        <DeliveryInfo price={price} available={available} title={title} originalId={originalId} image={image}/>
       </div>
     </div>
   )

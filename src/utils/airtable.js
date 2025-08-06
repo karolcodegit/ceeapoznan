@@ -6,7 +6,6 @@ const table = base(process.env.GATSBY_AIRTABLE_TABLE_NAME);
 
 export function saveToAirtable(enrichedForm) {
   return new Promise((resolve, reject) => {
-    // console.log('Enriched form data before Airtable save:', enrichedForm);
     table.create([
       {
         "fields": {
@@ -19,7 +18,7 @@ export function saveToAirtable(enrichedForm) {
         'Phone': enrichedForm.phone,
         'Mail': enrichedForm.email,
         'Profession': enrichedForm.profession,
-        'NPWZ': enrichedForm.profesionNumber,
+        'NPWZ': enrichedForm.npwz,
         'Specialist': enrichedForm.specjalist == 'tak' ? true : false,
         'SpecialistAnestezjologii': enrichedForm.specialist2 == 'tak' ? true : false,
         'LastCourse': enrichedForm.lastcourse == 'tak' ? true : false,
@@ -35,9 +34,10 @@ export function saveToAirtable(enrichedForm) {
         'Option1': enrichedForm.option1 === true ? true : false,
         'Option2': enrichedForm.option2 === true ? true : false,
         'Option3': enrichedForm.option3 === true ? true : false,
-        'Agree':enrichedForm.wyrazamZgode === 'on',
+        'No agree':enrichedForm.wyrazamZgode === true ? true : false,
         'CourseTitle': enrichedForm.courseTitle,
-        'Total': enrichedForm.total
+        'Total': enrichedForm.total,
+        'Order Number': enrichedForm.orderNumber,
         }
       },
     ], function(err, records) {

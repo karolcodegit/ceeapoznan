@@ -17,7 +17,7 @@ export function saveAirableNotificationBook(enrichedForm) {
   
       // Przygotowanie danych do zapisu
       const fields = {
-        'Title': enrichedForm.title,
+        'Title': enrichedForm.bookTitle,
         'Mail': enrichedForm.email,
         'Status': status,
         'Available': available

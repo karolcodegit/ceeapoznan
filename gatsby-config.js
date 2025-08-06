@@ -8,13 +8,12 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `CEEA`,
+    title: `CEEA Poznań`,
     description: `Ceea - Ośrodek Poznański. Szkolenia, kursy z certyfikatem. `,
     author: `Karol Znojkiewicz`,
     siteUrl: process.env.GATSBY_SITE_URL,
   },
   plugins: [
-
     {
       resolve: `gatsby-transformer-remark`,
       options: {},

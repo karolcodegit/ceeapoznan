@@ -7,8 +7,8 @@ import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
 import RightArrow from "../RightArrow"
-import { slugify } from "../../../utils/slugify"
-import { getYearFromDate } from "../../../utils/getYearFromDate"
+import { slugify } from "../../utils/slugify"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const Header = () => {
   const data = useStaticQuery(graphql`
@@ -81,6 +81,8 @@ const Header = () => {
         {activeCourse && (
           <div className="hidden 2xl:flex justify-end relative">
             <Button
+            margines="mt-0"
+            variant="submit"
               href={`/kursy/${getYearFromDate(activeCourse.date)}/${slugify(
                 activeCourse.nameCourse
               )}/rejestracja`}

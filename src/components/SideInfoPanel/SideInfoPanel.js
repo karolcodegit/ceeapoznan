@@ -1,8 +1,8 @@
 import React from "react"
 import { useLocation } from "@reach/router"
 import Button from "../Button/Button"
-import { slugify } from "../../../utils/slugify"
-import { getYearFromDate } from "../../../utils/getYearFromDate"
+import { slugify } from "../../utils/slugify"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const SideInfoPanel = ({ money, time, available, nameCourse, date }) => {
   const location = useLocation()
@@ -51,7 +51,8 @@ const SideInfoPanel = ({ money, time, available, nameCourse, date }) => {
             href={`/kursy/${getYearFromDate(date)}/${slugify(
               nameCourse
             )}/rejestracja`}
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300"
+            className="mt-4"
+            variant='default'
           >
             Zapisz się na kurs
           </Button>
