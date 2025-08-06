@@ -109,6 +109,7 @@ const KoszykPage = () => {
         <Button
             onClick={() => dispatch(clearCart())}
             variant='cancel'
+            className="bg-blue-500"
           >
             Wyczyść koszyk
           </Button>

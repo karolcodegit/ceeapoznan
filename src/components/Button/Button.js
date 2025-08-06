@@ -32,8 +32,8 @@ const Button = ({
     back: `bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900 hover:from-gray-400 hover:to-gray-500 shadow-md hover:shadow-lg`, // Wstecz
     next: `bg-gradient-to-r from-lightMint to-pastelTurquoise text-green-800 hover:from-pastelTurquoise hover:to-lightMint shadow-md hover:shadow-lg`, // Przejdź dalej
     notify: `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-500 shadow-md hover:shadow-lg`, // Powiadom mnie
-    cancel: `bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800`, // Anuluj
-    default: `bg-gradient-to-r from-medium to-light text-white hover:from-light hover:to-medium shadow-md hover:shadow-lg`, // Domyślny styl
+    cancel: `bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 max-md:text-xs`, // Anuluj
+    default: `bg-gradient-to-r from-medium to-light text-white hover:from-light hover:to-medium shadow-md hover:shadow-lg `, // Domyślny styl
   };
   
   const buttonClass = `
