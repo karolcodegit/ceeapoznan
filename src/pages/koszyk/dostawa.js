@@ -32,7 +32,7 @@ const Dostawa = () => {
   
 
   const handleDeliveryMethodChange = (deliveryMethod) => {
-    console.log("Selected delivery method:", deliveryMethod);
+    //console.log("Selected delivery method:", deliveryMethod);
 
     // Zaktualizuj metodę dostawy w deliverySlice
     dispatch(updateDeliveryField({ field: "deliveryMethod", value: deliveryMethod }));

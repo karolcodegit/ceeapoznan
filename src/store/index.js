@@ -13,6 +13,8 @@ const loadState = () => {
   try {
     if (!isBrowser) return undefined;
 
+
+    
     const cart = localStorage.getItem("cartState");
     const userCart = localStorage.getItem("userCartState");
     const delivery = localStorage.getItem("delivery");
@@ -20,37 +22,68 @@ const loadState = () => {
     const parsedCart = cart ? JSON.parse(cart) : undefined;
     const parsedDelivery = delivery ? JSON.parse(delivery) : undefined;
 
-    // Oblicz koszt dostawy na podstawie zapisanej metody dostawy
-    if (parsedCart && parsedDelivery?.method) {
-      const deliveryMethod = parsedDelivery.method;
-      const lockerDeliveryCost = parsedCart.summary?.lockerDeliveryCost || 0;
-      const homeDeliveryCost = parsedCart.summary?.homeDeliveryCost || 0;
 
-      parsedCart.summary.deliveryCost =
-        deliveryMethod === "Paczkomat"
-          ? lockerDeliveryCost
-          : homeDeliveryCost;
-    }
+    console.log("Stan koszyka po załadowaniu:", parsedCart);
+    console.log("Stan dostawy po załadowaniu:", parsedDelivery);
 
-    return {
-      cart: {
-        ...parsedCart,
-        deliveryPrices: parsedCart?.deliveryPrices || {
-          A: 20.99,
-          B: 23.99,
-          C: 25.99,
-        },
-        summary: {
-          ...parsedCart?.summary,
-          lockerDeliveryCost: parsedCart?.summary?.lockerDeliveryCost || 0,
-          homeDeliveryCost: parsedCart?.summary?.homeDeliveryCost || 0,
-          deliveryCost: parsedCart?.summary?.deliveryCost || 0,
-          total: parsedCart?.summary?.total || 0,
-        },
-      },
-      userCart: userCart ? JSON.parse(userCart) : undefined,
-      delivery: parsedDelivery || undefined,
+
+    // Domyślne ceny dostawy do domu
+    const defaultHomeDeliveryPrices = {
+      A: 19.99,
+      B: 20.99,
+      C: 25.99,
     };
+
+    // Domyślne ceny paczkomatów
+    const defaultLockerPrices = {
+      A: 20.99,
+      B: 23.99,
+      C: 25.99,
+    };
+
+    const defaultDelivery = {
+      method: "Paczkomat", // Domyślna metoda dostawy
+    };
+
+    const deliveryPrices = parsedCart?.deliveryPrices || defaultLockerPrices;
+    const homeDeliveryCost = defaultHomeDeliveryPrices;
+    const lockerPrices = parsedCart?.lockerPrices || defaultLockerPrices; // Dodano obsługę lockerPrices
+
+
+    const lockerDeliveryCost =
+      parsedCart?.summary?.parcelSize && deliveryPrices[parsedCart.summary.parcelSize]
+        ? deliveryPrices[parsedCart.summary.parcelSize]
+        : 0;
+
+    const homeDeliveryCostValue =
+      parsedCart?.summary?.parcelSize && homeDeliveryCost[parsedCart.summary.parcelSize]
+        ? homeDeliveryCost[parsedCart.summary.parcelSize]
+        : 0;
+
+    const deliveryCost =
+      parsedDelivery?.method === "Paczkomat"
+        ? lockerDeliveryCost
+        : homeDeliveryCostValue;
+
+
+   
+
+        return {
+          cart: {
+            ...parsedCart,
+            deliveryPrices,
+            lockerPrices,
+            summary: {
+              ...parsedCart?.summary,
+              lockerDeliveryCost,
+              homeDeliveryCost: homeDeliveryCostValue,
+              deliveryCost,
+              total: parsedCart?.summary?.total || 0,
+            },
+          },
+          userCart: userCart ? JSON.parse(userCart) : undefined,
+          delivery: parsedDelivery || defaultDelivery,
+        };
   } catch (e) {
     console.error("Błąd przy ładowaniu stanu z localStorage:", e);
     return undefined;
@@ -60,6 +93,10 @@ const loadState = () => {
 const saveState = (state) => {
   try {
     if (!isBrowser) return;
+
+    console.log("Zapisywanie stanu koszyka:", state.cart);
+    console.log("Zapisywanie stanu dostawy:", state.delivery);
+
     localStorage.setItem("cartState", JSON.stringify(state.cart));
     localStorage.setItem("userCartState", JSON.stringify(state.userCart));
     localStorage.setItem("delivery", JSON.stringify(state.delivery));

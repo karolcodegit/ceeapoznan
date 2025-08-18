@@ -3,10 +3,7 @@ import { graphql } from "gatsby"
 import ContactBox from "../components/ContactBox/ContactBox"
 import ContactForm from "../components/Form/ContactForm"
 import Seo from "../components/seo"
-// import GoogleMaps from "../components/GoogleMaps/googleMaps"
 import Title from "../components/Title/Title"
-import { toast } from "sonner"
-// import { saveToAirtable } from "../utils/saveToAirtable"
 
 
 const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
@@ -24,7 +21,7 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
   } = datoCmsCompany
 
   const onSubmit = (formData) => {
-    console.log("Formularz wysłany:", formData);
+    //console.log("Formularz wysłany:", formData);
   };
 
   return (

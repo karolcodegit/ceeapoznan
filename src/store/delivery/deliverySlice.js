@@ -25,9 +25,20 @@ const deliverySlice = createSlice({
   initialState,
   reducers: {
     updateDeliveryField: (state, action) => {
-      const { field, value } = action.payload;    
+      const { field, value } = action.payload;
+    
       if (field.startsWith("address.")) {
         const addressField = field.split(".")[1]; // Pobierz nazwę pola, np. "street"
+    
+        // Upewnij się, że state.address istnieje
+        if (!state.address) {
+          state.address = {
+            street: "",
+            city: "",
+            postcode: "",
+          };
+        }
+    
         state.address[addressField] = value; // Aktualizuj tylko w obiekcie address
       } else {
         state[field] = value; // Aktualizuj inne pola, np. deliveryMethod

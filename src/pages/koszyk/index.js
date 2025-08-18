@@ -24,6 +24,11 @@ const KoszykPage = () => {
 
   const paczkomatPrices = usePaczkomatPrices();
 
+  const formattedLockerPrices = paczkomatPrices.reduce((acc, item) => {
+    acc[item.type] = item.price;
+    return acc;
+  }, {});
+
 
   // Wywołaj updateSubtotal tylko wtedy, gdy zmieniają się dane w koszyku
   useEffect(() => {
@@ -41,9 +46,10 @@ const KoszykPage = () => {
   // Zapisz ceny paczkomatów w Redux
   useEffect(() => {
     if (Array.isArray(paczkomatPrices) && paczkomatPrices.length > 0) {
-      dispatch(setLockerPrices(paczkomatPrices));
+      console.log("Setting locker prices:", formattedLockerPrices);
+      dispatch(setLockerPrices(formattedLockerPrices));
     } else {
-      console.error("Paczkomat prices are undefined or empty");
+      console.error("Paczkomat prices are undefined or empty:", paczkomatPrices);
     }
   }, [paczkomatPrices, dispatch]);
 

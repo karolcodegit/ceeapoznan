@@ -5,8 +5,15 @@ export const getParcelSize = (totalItems) => {
 };
 
 export const getDeliveryCost = (deliveryMethod, parcelSize, lockerPrices, deliveryPrices) => {
+  
+  console.log("Delivery method:", deliveryMethod);
+  console.log("Parcel size:", parcelSize);
+  console.log("Locker prices:", lockerPrices);
   if (deliveryMethod === "Paczkomat") {
     const paczkomatCost = lockerPrices?.find(cost => cost.type === parcelSize);
+    
+    console.log("Found paczkomat cost:", paczkomatCost);
+
     return paczkomatCost ? paczkomatCost.price : 0;
   }
 

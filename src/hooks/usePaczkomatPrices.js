@@ -26,11 +26,16 @@ const usePaczkomatPrices = () => {
                 };
               }),
             }));
-
+          console.log("Pobrane ceny paczkomatów:", costs)
           setDeliveryCost(costs[0]?.packTypes || [])
         })
         .catch(error => {
           console.error("Błąd pobierania cen:", error)
+          setDeliveryCost([
+            { type: "A", price: 20.99 },
+            { type: "B", price: 23.99 },
+            { type: "C", price: 25.99 },
+          ])
         })
     }
 

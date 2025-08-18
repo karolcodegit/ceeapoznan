@@ -40,6 +40,7 @@ const IndexPage = ({ data }) => {
             {data.allDatoCmsCourse.nodes
               .filter(course => course.available === true)
               .map(course => (
+                <>
                 <Button
                   key={course.id}
                   variant="default"
@@ -51,6 +52,7 @@ const IndexPage = ({ data }) => {
                 >
                   Zapisz się na kurs
                 </Button>
+                </>
               ))}
           </div>
           <div className="w-full lg:h-500 max-lg:hidden px-8 col-span-6">

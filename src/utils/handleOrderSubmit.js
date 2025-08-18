@@ -61,7 +61,7 @@ export const handleOrderSubmit = async (orderData, apiEndpoint, dispatch, naviga
         const payload = {
           toYou: {
             to: "sekretariat@ceea.org.pl",
-            subject: `Nowa wiadomość od ${orderData.customer.firstName} ${orderData.customer.lastName}`,
+            subject: `Nowe zamówienie od ${orderData.customer.firstName} ${orderData.customer.lastName}`,
             html: emailHtmlToYou,
           },
           toUser: {

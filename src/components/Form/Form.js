@@ -90,7 +90,7 @@ const Form = React.forwardRef(({
       if (saveToAirtable) {
         try {
           await saveToAirtable(formData);
-          console.log("✅ Zapis do Airtable zakończony sukcesem.");
+          //console.log("✅ Zapis do Airtable zakończony sukcesem.");
         } catch (error) {
           console.error("❌ Błąd podczas zapisu do Airtable:", error);
           toast.error("Wystąpił błąd przy zapisie do Airtable.");

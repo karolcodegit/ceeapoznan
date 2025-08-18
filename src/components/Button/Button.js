@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useEffect } from "react"
+import * as Sentry from "@sentry/react";
 import { Link } from "gatsby"
 import { Tooltip } from "react-tooltip"
 
@@ -41,7 +42,9 @@ const Button = ({
     transform hover:scale-105 active:scale-95 
     ${variantClasses[variant]} ${className}
   `;  
-  
+  useEffect(() => {
+    Sentry.captureException(new Error("Testowy błąd Sentry!"));
+  }, []);
 
 return (
     <>

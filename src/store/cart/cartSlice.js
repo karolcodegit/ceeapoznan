@@ -5,18 +5,22 @@ import { getParcelSize, getDeliveryCost } from "../../constants/shippingCosts";
 const initialState = {
   items: [],
   summary: {
+    deliveryCost: 0,
+    lockerDeliveryCost: 0,
+    homeDeliveryCost: 0,
+    total: 0,
     subtotal: 0,
     parcelSize: "A",
-    total: 0,
-    lockerDeliveryCost: 0, // Koszt dostawy dla paczkomatu
-    homeDeliveryCost: 0,   // Koszt dostawy dla adresu dostawy
-    deliveryCost: 0, // Koszt dostawy, który będzie aktualizowany
   },
-  lockerPrices: [],
   deliveryPrices: {
     A: 20.99,
     B: 23.99,
     C: 25.99,
+  },
+  lockerPrices: {
+    A: 16.99,
+    B: 18.99,
+    C: 20.99,
   },
 };
 
@@ -120,6 +124,26 @@ const cartSlice = createSlice({
     },
     setLockerPrices(state, action) {
       state.lockerPrices = action.payload;
+    
+      // Automatyczne przeliczenie kosztów dostawy po aktualizacji lockerPrices
+      const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
+      const parcelSize = getParcelSize(totalItems);
+    
+      const lockerPricesArray = Object.entries(state.lockerPrices).map(([type, price]) => ({
+        type,
+        price,
+      }));
+    
+      const lockerPrice = getDeliveryCost("Paczkomat", parcelSize, lockerPricesArray, state.deliveryPrices);
+      const homePrice = getDeliveryCost("Kurier InPost", parcelSize, lockerPricesArray, state.deliveryPrices);
+    
+      state.summary.parcelSize = parcelSize;
+      state.summary.lockerDeliveryCost = lockerPrice;
+      state.summary.homeDeliveryCost = homePrice;
+    
+      console.log("Zaktualizowano koszty dostawy po zmianie lockerPrices:");
+      console.log("Locker price:", lockerPrice);
+      console.log("Home price:", homePrice);
     },
     updateSubtotal(state, action) {
       if (action.payload !== undefined) {
@@ -157,11 +181,24 @@ const cartSlice = createSlice({
       const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
       const parcelSize = getParcelSize(totalItems);
     
-      const lockerPrice = getDeliveryCost("Paczkomat", parcelSize, state.lockerPrices, state.deliveryPrices);
-      const homePrice = getDeliveryCost("Kurier InPost", parcelSize, state.lockerPrices, state.deliveryPrices);
+
+      console.log("Locker prices before conversion:", state.lockerPrices);
+
+ // Przekształć lockerPrices na tablicę obiektów
+ const lockerPricesArray = state.lockerPrices
+  ? Object.entries(state.lockerPrices).map(([type, price]) => ({
+      type,
+      price,
+    }))
+  : [];
+
+  console.log("Converted lockerPricesArray:", lockerPricesArray);
+      const lockerPrice = getDeliveryCost("Paczkomat", parcelSize, lockerPricesArray, state.deliveryPrices);
+      const homePrice = getDeliveryCost("Kurier InPost", parcelSize, lockerPricesArray, state.deliveryPrices);
     
-      console.log("Locker price:", lockerPrice);
-      console.log("Home price:", homePrice);
+      console.log("Parcel size:", parcelSize);
+  console.log("Locker price:", lockerPrice);
+  console.log("Home price:", homePrice);
     
       state.summary.parcelSize = parcelSize;
       state.summary.lockerDeliveryCost = lockerPrice;

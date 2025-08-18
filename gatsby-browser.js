@@ -1,5 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+// import * as Sentry from "@sentry/react";
+// import { BrowserTracing } from "@sentry/react";
 import {store}  from './src/store/index';
 import './src/styles/global.css'
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,6 +21,15 @@ export const onClientEntry = () => {
       document.body.appendChild(script);
     }
   };
+  
+  // Sentry.init({
+  //   dsn: "https://ea0a7a50b85a8028c4a4fd11dac4f1d9@o4509803771265024.ingest.de.sentry.io/4509803783323728",
+  //   integrations: [new BrowserTracing()],
+  //   tracesSampleRate: 1.0, // Ustaw na 1.0, aby śledzić 100% transakcji (zmniejsz w produkcji)
+  //   sendDefaultPii: true,
+  //   debug: true, // Włącz debugowanie, aby zobaczyć logi w konsoli
+  //   environment: "development",
+  // });
 
 
 export const wrapRootElement = ({ element }) => (
