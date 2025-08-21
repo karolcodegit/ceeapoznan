@@ -14,7 +14,6 @@ import FormRadioGroup from "./FormRadioGroup/FormRadioGroup"
 import { FormList } from "./FormList/FormList"
 import Paragraph from "../Paragraph/Paragraph"
 import { prepareRegistrationData } from "../../utils/prepareRegistrationData"
-
 import { handleRegisterSubmit } from "../../utils/handleRegisterSubmit"
 import { changeDate } from "../../utils/changeDate"
 
@@ -130,7 +129,6 @@ const FormRegister = ({
             "specjalist",
             "specialist2",
             'lastcourse',
-            "dishes",
             "lastcourse",
           ]}
         >
@@ -291,7 +289,6 @@ const FormRegister = ({
               name="dishes"
               label="Wybierz danie"
               options={dishOptions}
-              required
               placeholder="Proszę wybrać dania"
               formSliceKey="formRegister"
             />

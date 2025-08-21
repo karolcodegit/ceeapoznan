@@ -110,7 +110,7 @@ const DeliveryInfo = ({
           </div>
         </div>
         {/* Wysyłka */}
-        <div className="border-t p-5 flex items-start space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
+        {/* <div className="border-t p-5 flex items-start space-x-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
           <ClockIcon
             className="h-6 w-6 text-gray-500 dark:text-gray-400 flex-shrink-0"
             aria-hidden="true"
@@ -140,7 +140,7 @@ const DeliveryInfo = ({
               </div>
             </Tooltip>
           </div>
-        </div>
+        </div> */}
         <div className="border-t p-5 flex items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
           <CurrencyDollarIcon
             className="h-6 w-6 text-gray-500 dark:text-gray-400 flex-shrink-0"
