@@ -98,7 +98,7 @@ const Course = ({ data }) => {
         money={course.courseCost}
         time={course.courseDuration}
         available={course.available}
-        nameCourse={course.nameCourse}
+        nameCourse={course?.nameCourse}
         date={course.date}
       />
     </div>

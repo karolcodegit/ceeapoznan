@@ -31,16 +31,25 @@ exports.createPages = async ({ graphql, actions }) => {
   result.data.allDatoCmsCourse.nodes.forEach(node => {
     if (node.date && node.date.length > 0) {
       // Wyciągnij rok z daty ręcznie
-      let year
+      let year = null
+
+     if (node.date) {
       const dateParts = node.date.split(".")
-      if (dateParts.length > 1) {
-        year = dateParts[2].slice(-4) // Dla formatu np. "8-10.05.2025"
-      } else if (node.date.length === 4) {
-        year = node.date // Dla formatu np. "2025" lub "2026"
-      } else {
-        console.warn(`Nieznany format daty dla kursu ${node.nameCourse}`)
-        year = "brak-roku" // Możesz przypisać wartość domyślną, jeśli format daty jest niepoprawny
+
+      // format np. "8-10.05.2025"
+      if (dateParts.length > 1 && dateParts[2]) {
+        year = dateParts[2].slice(-4)
       }
+      // format np. "2025" lub "2026"
+      else if (node.date.length === 4) {
+        year = node.date
+      }
+    }
+
+    // jeśli nadal nie udało się wyciągnąć roku, ustaw domyślny
+    if (!year) {
+      year = "unknown"
+    }
 
       const courseSlug = slugify(node.nameCourse)
 
@@ -76,7 +85,7 @@ exports.createPages = async ({ graphql, actions }) => {
         context: {}, // Możesz przekazać dodatkowe dane, jeśli potrzebujesz
       });
     } else {
-      console.warn(`Brak daty dla kursu ${node.nameCourse}`)
+      console.warn(`Brak daty dla kursu ${node?.nameCourse}`)
     }
   })
 

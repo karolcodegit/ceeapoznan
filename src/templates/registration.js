@@ -18,7 +18,7 @@ const Rejestracja = ({ data }) => {
     <>
       <div className="">
         <div className="max-w-6xl mx-auto ">
-          <FormRegister data={data} availableCourse={availableCourse} />
+          <FormRegister data={data} availableCourse={availableCourse || { nameCourse: "Bez nazwy kursu" }} />
         </div>
       </div>
     </>

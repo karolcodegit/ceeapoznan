@@ -67,7 +67,7 @@ const FormRegister = ({
         dispatch(updateField({
           form: "formRegister",
           field: "courseTitle",
-          value: availableCourse.nameCourse,
+          value: availableCourse?.nameCourse,
         }))
       }
     }, [availableCourse])
@@ -101,7 +101,7 @@ const FormRegister = ({
         <Title tag="h5" className="mt-4 text-lg sm:text-xl">
           Kurs:{" "}
           <span className="font-medium text-gray-800 dark:text-gray-200">
-            {availableCourse.nameCourse}
+            {availableCourse?.nameCourse}
           </span>
         </Title>
         <Form

@@ -167,7 +167,7 @@ const IndexPage = ({ data }) => {
                         course.image?.fluid ||
                         data.defaultImage.childImageSharp.fluid
                       }
-                      alt={course.nameCourse}
+                      alt={course?.nameCourse}
                       className="h-56 w-full object-cover"
                     />
                     {course.newCourse && (
@@ -178,31 +178,31 @@ const IndexPage = ({ data }) => {
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-darkBlueGreen mb-4 leading-snug">
-                      {course.nameCourse}
+                      {course?.nameCourse}
                     </h3>
                     <ul className="text-sm text-gray-700 space-y-2">
                       <li>
                         <span className="text-lg px-2">#️⃣</span>
-                        Numer kursu: {course.numerCourse || "Brak numeru"}
+                        Numer kursu: {course?.numerCourse || "Brak numeru"}
                       </li>
                       <li>
                         <span className="text-lg px-2">📅</span>
-                        Data: {course.date || "Data wkrótce"}
+                        Data: {course?.date || "Data wkrótce"}
                       </li>
                       <li>
                         <span className="text-lg px-2">⏳</span>
 
-                       {course.duration ? `Czas trwania: ${course.duration}` : "Czas trwania wkrótce"}
+                       {course?.duration ? `Czas trwania: ${course.duration}` : "Czas trwania wkrótce"}
                       </li>
                       <li>
                         <span className="text-lg px-2">🌐</span>
-                        Język: {course.language === true ? "PL" : "EN"}
+                        Język: {course?.language === true ? "PL" : "EN"}
                       </li>
                       <li>
                         <span className="text-lg px-2">🖥</span>
                         Tryb:{" "}
                         {course.type ||
-                          (course.online ? "Online" : "Stacjonarny")}
+                          (course?.online ? "Online" : "Stacjonarny")}
                       </li>
                     </ul>
                     {/* <Button

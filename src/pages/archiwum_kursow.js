@@ -93,7 +93,7 @@ const ArchiwumKursow = ({ data }) => {
                     tag="h4"
                     className="text-white dark:text-gray-200"
                   >
-                    {course.nameCourse}
+                    {course?.nameCourse}
                   </Title>
 
                   {/* Informacje o kursie */}
