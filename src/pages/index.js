@@ -40,115 +40,120 @@ const IndexPage = ({ data }) => {
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section className="relative min-h-[calc(100vh-7rem)] w-full flex items-center overflow-hidden">
-  {/* 🔹 GatsbyImage jako tło */}
-  {currentCourse?.backgroundimage?.gatsbyImageData && (
-     <GatsbyImage
-     image={getImage(currentCourse.backgroundimage)}
-     alt={currentCourse.nameCourse || "Tło kursu"}
-     layout="fullWidth"
-     className="absolute inset-0 w-full h-full"
-     style={{ objectFit: "cover", filter: "brightness(0.7)" }}
-   />
-  )}
+        <section className="relative-min-h relative min-h-[calc(100vh-7rem)] w-full flex items-center overflow-hidden">
+          {/* 🔹 GatsbyImage jako tło */}
+          {currentCourse?.backgroundimage?.gatsbyImageData && (
+            <GatsbyImage
+              image={getImage(currentCourse.backgroundimage)}
+              alt={currentCourse.nameCourse || "Tło kursu"}
+              layout="fullWidth"
+              className="absolute inset-0 w-full h-full"
+              style={{ objectFit: "cover", filter: "brightness(0.7)" }}
+            />
+          )}
 
-  {/* 🔹 Opcjonalna ciemna nakładka */}
-  
-<div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
+          {/* 🔹 Opcjonalna ciemna nakładka */}
 
-  {/* 🔹 Dekoracyjna fala SVG */}
-  <svg
-    className="absolute bottom-0 left-0 w-full"
-    viewBox="0 0 1430 300"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <defs>
-      <linearGradient id="headerWaveLight" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#F1F5F9" />
-        <stop offset="100%" stopColor="#F1F5F9" />
-      </linearGradient>
-      <linearGradient id="headerWaveDark" x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0%" stopColor="#10172A" />
-        <stop offset="100%" stopColor="#10172A" />
-      </linearGradient>
-    </defs>
-    <path
-      d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
-      fill="url(#headerWaveLight)"
-      className="dark:fill-[url(#headerWaveDark)]"
-    />
-  </svg>
+          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
 
-  {/* 🔹 Zawartość */}
-  <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-12 gap-10 items-center px-6 space-y-6">
-    {/* Lewa kolumna: tekst */}
-    <motion.div
-      className="col-span-6 text-white space-y-6"
-      initial={{ opacity: 0, x: -40 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1 }}
-    >
-      <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
-        Kurs już dostępny
-      </div>
-      <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
-        {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
-      </h1>
-      <p className="text-lg text-gray-100 font-medium mt-4 drop-shadow-md">
-        {currentCourse?.date
-          ? `Data kursu: ${currentCourse.date}`
-          : "Nowa edycja kursów CEEA już wkrótce!"}
-      </p>
-      <p className="text-gray-200 max-w-xl mx-auto leading-relaxed text-lg mt-6 drop-shadow-md">
-        {currentCourse?.description2 ||
-          "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
-      </p>
-      {currentCourse && (
-        <motion.div whileHover={{ scale: 1.05 }}>
-          <Link
-            to={websiteRegister}
-            className="inline-flex items-center mt-20 gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
+          {/* 🔹 Dekoracyjna fala SVG */}
+          <svg
+            className="absolute bottom-0 left-0 w-full"
+            viewBox="0 0 1430 300"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-7-7l7 7-7 7" />
-            </svg>
-            Zapisz się na kurs
-          </Link>
-        </motion.div>
-      )}
-    </motion.div>
+            <defs>
+              <linearGradient id="headerWaveLight" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#F1F5F9" />
+                <stop offset="100%" stopColor="#F1F5F9" />
+              </linearGradient>
+              <linearGradient id="headerWaveDark" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="#10172A" />
+                <stop offset="100%" stopColor="#10172A" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
+              fill="url(#headerWaveLight)"
+              className="dark:fill-[url(#headerWaveDark)]"
+            />
+          </svg>
 
-    {/* Prawa kolumna: obrazek kursu */}
-    <motion.div
-      className="col-span-6 relative max-lg:hidden"
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1 }}
-    >
-      <motion.div
-        className="relative group"
-        whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
-        transition={{ type: "spring", stiffness: 150, damping: 15 }}
-      >
-        <Img
-          fluid={
-            currentCourse?.image?.fluid || data.defaultImage.childImageSharp.fluid
-          }
-          alt={currentCourse?.nameCourse || "CEEA kurs"}
-          className="rounded-[2.5rem] shadow-2xl border border-white/20 object-cover w-full"
-        />
-        <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
+          {/* 🔹 Zawartość */}
+          <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-12 gap-10 items-center px-6 space-y-6">
+            {/* Lewa kolumna: tekst */}
+            <motion.div
+              className="col-span-6 text-white space-y-6"
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
+                Kurs już dostępny
+              </div>
+              <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
+                {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
+              </h1>
+              <p className="text-lg text-gray-100 font-medium mt-4 drop-shadow-md">
+                {currentCourse?.date
+                  ? `Data kursu: ${currentCourse.date}`
+                  : "Nowa edycja kursów CEEA już wkrótce!"}
+              </p>
+              <p className="text-gray-200 max-w-xl mx-auto leading-relaxed text-lg mt-6 drop-shadow-md">
+                {currentCourse?.description2 ||
+                  "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
+              </p>
+              {currentCourse && (
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Link
+                    to={websiteRegister}
+                    className="inline-flex items-center mt-20 gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 12h14m-7-7l7 7-7 7"
+                      />
+                    </svg>
+                    Zapisz się na kurs
+                  </Link>
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Prawa kolumna: obrazek kursu */}
+            <motion.div
+              className="col-span-6 relative max-lg:hidden"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <motion.div
+                className="relative group"
+                whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 150, damping: 15 }}
+              >
+                <Img
+                  fluid={
+                    currentCourse?.image?.fluid ||
+                    data.defaultImage.childImageSharp.fluid
+                  }
+                  alt={currentCourse?.nameCourse || "CEEA kurs"}
+                  className="rounded-[2.5rem] shadow-2xl border border-white/20 object-cover w-full"
+                />
+                <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
 
         {/* === NADCHODZĄCE KURSY === */}
         <section className="py-24 bg-slate-100 dark:bg-slate-900">
