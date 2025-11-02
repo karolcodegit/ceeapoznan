@@ -44,14 +44,11 @@ const IndexPage = ({ data }) => {
           {/* 🔹 GatsbyImage jako tło */}
           {currentCourse?.backgroundimage?.gatsbyImageData && (
             <GatsbyImage
-              image={getImage(currentCourse.backgroundimage)}
-              alt={currentCourse.nameCourse || "Tło kursu"}
-              className="absolute inset-0 w-full h-full object-cover brightness-75"
-            />
+            image={getImage(currentCourse.backgroundimage)}
+            alt={currentCourse.nameCourse || "Tło kursu"}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
           )}
-
-
-  <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
 
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
@@ -85,9 +82,11 @@ const IndexPage = ({ data }) => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}
               >
-                <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
-                  Kurs już dostępny
-                </div>
+                <div className="flex">
+  <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
+    Kurs już dostępny
+  </div>
+</div>
                 <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
                   {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
                 </h1>
