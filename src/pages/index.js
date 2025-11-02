@@ -40,21 +40,22 @@ const IndexPage = ({ data }) => {
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section className="relative-min-h relative min-h-[calc(100vh-7rem)] w-full flex items-center overflow-hidden">
+        <section className="relative min-h-screen w-full flex items-center overflow-hidden">
           {/* 🔹 GatsbyImage jako tło */}
-          {currentCourse?.backgroundimage?.gatsbyImageData && (
+          {currentCourse?.backgroundimage?.gatsbyImageData ? (
             <GatsbyImage
-              image={getImage(currentCourse.backgroundimage)}
-              alt={currentCourse.nameCourse || "Tło kursu"}
-              layout="fullWidth"
-              className="absolute inset-0 w-full h-full"
-              style={{ objectFit: "cover", filter: "brightness(0.7)" }}
-            />
-          )}
+            image={getImage(currentCourse.backgroundimage)}
+            alt={currentCourse.nameCourse || "Tło kursu"}
+            className="absolute inset-0 w-full h-full object-cover brightness-75"
+          />
+          ) : (
+            <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
+          )
+          
+          }
 
-          {/* 🔹 Opcjonalna ciemna nakładka */}
 
-          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
+          
 
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
