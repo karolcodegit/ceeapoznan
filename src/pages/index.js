@@ -40,22 +40,16 @@ const IndexPage = ({ data }) => {
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section className="relative min-h-screen w-full flex items-center overflow-hidden">
+        <section className="relative min-h-screen w-full overflow-hidden">
           {/* 🔹 GatsbyImage jako tło */}
-          {currentCourse?.backgroundimage?.gatsbyImageData ? (
+          {currentCourse?.backgroundimage?.gatsbyImageData && (
             <GatsbyImage
             image={getImage(currentCourse.backgroundimage)}
             alt={currentCourse.nameCourse || "Tło kursu"}
             className="absolute inset-0 w-full h-full object-cover brightness-75"
           />
-          ) : (
-            <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
-          )
-          
-          }
-
-
-          
+        )}
+          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
 
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
@@ -81,7 +75,8 @@ const IndexPage = ({ data }) => {
           </svg>
 
           {/* 🔹 Zawartość */}
-          <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-12 gap-10 items-center px-6 space-y-6">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-12 gap-10">
+            <div className="col-span-6 flex flex-col justify-center text-white space-y-6">
             {/* Lewa kolumna: tekst */}
             <motion.div
               className="col-span-6 text-white space-y-6"
@@ -130,6 +125,9 @@ const IndexPage = ({ data }) => {
               )}
             </motion.div>
 
+</div>
+
+<div className="col-span-6 relative max-lg:hidden">
             {/* Prawa kolumna: obrazek kursu */}
             <motion.div
               className="col-span-6 relative max-lg:hidden"
@@ -153,6 +151,7 @@ const IndexPage = ({ data }) => {
                 <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
               </motion.div>
             </motion.div>
+          </div>
           </div>
         </section>
 
