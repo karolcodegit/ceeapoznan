@@ -52,6 +52,8 @@ const IndexPage = ({ data }) => {
           />
           )}
 
+<div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
+
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
             className="absolute bottom-0 left-0 w-full"
