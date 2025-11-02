@@ -43,16 +43,18 @@ const IndexPage = ({ data }) => {
         <section className="relative min-h-[calc(100vh-7rem)] w-full flex items-center overflow-hidden">
   {/* 🔹 GatsbyImage jako tło */}
   {currentCourse?.backgroundimage?.gatsbyImageData && (
-    <GatsbyImage
-      image={getImage(currentCourse.backgroundimage)}
-      alt={currentCourse.nameCourse || "Tło kursu"}
-      className="absolute inset-0 w-full h-full"
-      style={{ filter: "brightness(0.7)", objectFit: "cover" }}
-    />
+     <GatsbyImage
+     image={getImage(currentCourse.backgroundimage)}
+     alt={currentCourse.nameCourse || "Tło kursu"}
+     layout="fullWidth"
+     className="absolute inset-0 w-full h-full"
+     style={{ objectFit: "cover", filter: "brightness(0.7)" }}
+   />
   )}
 
   {/* 🔹 Opcjonalna ciemna nakładka */}
-  <div className="absolute inset-0 bg-black/40 dark:bg-black/50"></div>
+  
+<div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
 
   {/* 🔹 Dekoracyjna fala SVG */}
   <svg
