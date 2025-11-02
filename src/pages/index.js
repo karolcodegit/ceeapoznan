@@ -46,7 +46,9 @@ const IndexPage = ({ data }) => {
             <GatsbyImage
             image={getImage(currentCourse.backgroundimage)}
             alt={currentCourse.nameCourse || "Tło kursu"}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full !important"
+            imgClassName="object-cover w-full h-full"
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
           />
           )}
 
