@@ -61,6 +61,7 @@ const MainLayout = ({ children }) => {
             <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
               <Header />
               <Toaster richColors position="top-right" closeButton />
+              <div className="bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800">
               <div className="flex flex-col items-end justify-end relative">
                 <button
                   onClick={toggleDarkMode}
@@ -93,6 +94,7 @@ const MainLayout = ({ children }) => {
                 {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
                 {!isHomePage && !is404Page && <TopHeader />}
                 {children}
+              </div>
               </div>
               <Footer />
             </FontSizeContext.Provider>

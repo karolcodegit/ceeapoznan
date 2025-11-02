@@ -117,6 +117,8 @@ const CourseConfirmationUser = ({ courseTitle, total, orderNumber }) => {
             W tytule przelewu prosimy o podanie <b>imienia i nazwiska</b> oraz numer zamówienia <b>${orderNumber} </b>.
           </p>
 
+         
+
           <p>
             Potwierdzenie uczestnictwa wraz z fakturą zostaną wysłane na koniec miesiąca, w którym nastąpiło opłacenie udziału w kursie. Prosimy o cierpliwe oczekiwanie na wiadomość zwrotną drogą mailową.
           </p>

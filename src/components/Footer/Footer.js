@@ -1,6 +1,6 @@
 import React from "react"
 import { Link, useStaticQuery, graphql, navigate } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image";  
+import { StaticImage } from "gatsby-plugin-image"
 import scrollTo from "gatsby-plugin-smoothscroll"
 import Logo from "../../assets/images/Logo.png"
 import { menuLinks, przydatneLinki } from "../Menu"
@@ -54,8 +54,33 @@ const Footer = () => {
     }, 100) // adjust delay as needed);
   }
   return (
-    <footer className="min-w-full bg-gradient-to-r bg-dark dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0">
-      <div className="min-w-full md:mx-auto lg:pt-20 max-lg:pt-16 xl:px-20 max-xl:px-5">
+    <footer className="relative min-w-full bg-gradient-to-r bg-dark dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0 overflow-hidden">
+      <svg
+        className="absolute top-0 left-0 w-full rotate-180 -translate-y-px"
+        viewBox="0 0 1440 320"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          {/* 🔹 Gradient dla trybu jasnego */}
+          <linearGradient id="footerWaveLight" x1="1" y1="1" x2="1" y2="1">
+            <stop offset="0%" stopColor="#F1FAFF" />
+            <stop offset="100%" stopColor="#f0f9ff" /> {/* to-sky-50 */}
+          </linearGradient>
+
+          {/* 🔹 Gradient dla trybu ciemnego */}
+          <linearGradient id="footerWaveDark" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="100%" stopColor="#1e293b" /> {/* slate-900 */}
+            <stop offset="0%" stopColor="#0f172a" /> {/* slate-800 */}
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
+          fill="url(#footerWaveLight)"
+          className="dark:fill-[url(#footerWaveDark)]"
+        ></path>
+      </svg>
+
+      <div className="min-w-full md:mx-auto 2xl:pt-80 xl:pt-72 md:pt-40 sm:pt-32 pt-36 xl:px-20 max-xl:px-5">
         <div className="grid grid-cols-2 max-xl:grid-cols-1 justify-between md:gap-12 max-md:gap-0">
           <div className="max-w-md mb-10 md:mb-0">
             <div className="flex items-center">
@@ -182,7 +207,11 @@ const Footer = () => {
                 </div>
                 <span className="flex items-center">
                   Projekt i wykonanie:
-                  <a href="https://karolznojkiewicz.pl" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://karolznojkiewicz.pl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <StaticImage
                       alt="Karol Znojkiewicz"
                       width={36}
@@ -192,9 +221,7 @@ const Footer = () => {
                   </a>
                 </span>
               </div>
-              <div>
-                
-              </div>
+              <div></div>
             </div>
           </div>
           <div className="mb-4">

@@ -8,18 +8,13 @@ export const menuLinks = [
     to: "/o-nas/",
     description: "",
   },
-
-  // {
-  //   title: 'Pracownicy',
-  //   to: "/pracownicy/",
-  //   description: 'Poznaj naszą wyjątkową kadrę, która tworzy serce naszego uniwersytetu.'
-  // },
   {
     title: "Kursy",
     to: "/kursy/",
     description:
       "Zapraszamy do odkrycia naszej różnorodnej oferty kursów, które pomogą Ci rozwijać swoje umiejętności i wiedzę.",
   },
+ 
   {
     title: "Książki",
     to: "/ksiazki/",

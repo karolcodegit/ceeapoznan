@@ -59,32 +59,34 @@ const courseDetails = ({ data }) => {
               )}
 
               {course?.detailedInformationAboutTheCourse?.emailHotel && (
-                <Paragraph margin>
-                  <div className="flex my-2">
-                    <EnvelopeOpenIcon className="w-8"></EnvelopeOpenIcon>
+                <Paragraph>
+                  <span className="flex my-2 items-center">
+                    <EnvelopeOpenIcon className="w-8" />
                     <span className="pl-4">
                       {course.detailedInformationAboutTheCourse.emailHotel}
                     </span>
-                  </div>
+                  </span>
                 </Paragraph>
               )}
 
               {course?.detailedInformationAboutTheCourse?.phone && (
-                <Paragraph margin>
-                  <div className="flex my-2">
+                <Paragraph>
+                   <span className="flex my-2 items-center">
                     <PhoneIcon className="w-8"></PhoneIcon>
                     <span className="pl-4">
                       {course.detailedInformationAboutTheCourse.phone}
                     </span>
-                  </div>
+                  </span>
                 </Paragraph>
               )}
-              <Paragraph>
-                Na powyższego maila należy przesłać swoje dane, a w przypadku,
-                gdy potrzebujecie Państwo FV należy podać także NIP i dane
-                firmy.
-              </Paragraph>
-              <div className="py-5">
+              <div className="mt-4">
+                <Paragraph>
+                  Na powyższego maila należy przesłać swoje dane, a w przypadku,
+                  gdy potrzebujecie Państwo FV należy podać także NIP i dane
+                  firmy.
+                </Paragraph>
+              </div>
+              <div className="py-1">
                 <Paragraph>Koszt pokoju wynosi:</Paragraph>
                 <StyledMarkdown>
                   {course.detailedInformationAboutTheCourse &&

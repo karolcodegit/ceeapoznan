@@ -21,7 +21,7 @@ const Dane = () => {
   };
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-lg shadow-md transition-colors duration-300">
       <CheckoutProgress currentStep="dane" />
           <Title tag="h4" className="pt-3 pb-5">
             Dane do wysyłki

@@ -88,7 +88,7 @@ const Course = ({ data }) => {
         {(course.detailedInformationAboutTheCourse ||
           course.detailedInformationAboutTheHotel) && (
           <div className="flex justify-start mt-8">
-            <Button href={`/kursy/${getYearFromDate(course.date)}/${slugify(course.nameCourse)}/szczegoly`}>
+            <Button href={`/kursy/${getYearFromDate(course.date)}/${slugify(course.nameCourse)}/szczegoly`} variant='notify'>
               Szczegółowe informacje o kursie
             </Button>
           </div>

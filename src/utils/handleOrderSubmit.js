@@ -27,6 +27,9 @@ export const handleOrderSubmit = async (orderData, apiEndpoint, dispatch, naviga
       submittedAt,
     };
 
+    console.log(fullOrderData);
+    
+
     // Operacje w tle
     const performBackgroundTasks = async () => {
       try {

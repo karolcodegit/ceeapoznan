@@ -29,12 +29,42 @@ const Button = ({
   
 
   const variantClasses = {
-    submit: `bg-gradient-to-r from-vividTurquoise to-deepTurquoise text-white hover:from-deepTurquoise hover:to-vividTurquoise shadow-md hover:shadow-lg`, // Wyślij / Zapisz na kurs
-    back: `bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900 hover:from-gray-400 hover:to-gray-500 shadow-md hover:shadow-lg`, // Wstecz
-    next: `bg-gradient-to-r from-lightMint to-pastelTurquoise text-green-800 hover:from-pastelTurquoise hover:to-lightMint shadow-md hover:shadow-lg`, // Przejdź dalej
-    notify: `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-500 shadow-md hover:shadow-lg`, // Powiadom mnie
-    cancel: `bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 max-md:text-xs`, // Anuluj
-    default: `bg-gradient-to-r from-medium to-light text-white hover:from-light hover:to-medium shadow-md hover:shadow-lg `, // Domyślny styl
+    submit: `
+    bg-gradient-to-r from-vividTurquoise to-deepTurquoise text-white 
+    hover:from-deepTurquoise hover:to-vividTurquoise 
+    shadow-md hover:shadow-lg 
+    dark:from-[#3fa7d6] dark:to-[#257ca3] 
+    dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] 
+    dark:shadow-[#1e293b]/60
+  `,
+  back: `
+    bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900 
+    hover:from-gray-400 hover:to-gray-500 shadow-md hover:shadow-lg 
+    dark:from-slate-600 dark:to-slate-700 dark:text-gray-200
+    dark:hover:from-slate-700 dark:hover:to-slate-800 dark:shadow-black/50
+  `,
+  next: `
+    bg-gradient-to-r from-lightMint to-pastelTurquoise text-green-800 
+    hover:from-pastelTurquoise hover:to-lightMint shadow-md hover:shadow-lg 
+    dark:from-[#3ba37d] dark:to-[#4fc89a] dark:text-white
+    dark:hover:from-[#4fc89a] dark:hover:to-[#3ba37d] dark:shadow-[#1e293b]/50
+  `,
+  notify: `
+    bg-gradient-to-r from-yellow-500 to-yellow-600 text-white 
+    hover:from-yellow-600 hover:to-yellow-500 shadow-md hover:shadow-lg 
+    dark:from-[#eab308] dark:to-[#ca8a04]
+  `,
+  cancel: `
+    bg-gradient-to-r from-red-500 to-red-700 text-white 
+    hover:from-red-600 hover:to-red-800 shadow-md hover:shadow-lg 
+    dark:from-[#b91c1c] dark:to-[#7f1d1d] dark:hover:from-[#991b1b] dark:hover:to-[#dc2626]
+    max-md:text-xs
+  `,
+  default: `
+    bg-gradient-to-r from-medium to-light text-white 
+    hover:from-light hover:to-medium shadow-md hover:shadow-lg
+    dark:from-slate-700 dark:to-slate-600 dark:hover:from-slate-600 dark:hover:to-slate-700
+  `
   };
   
   const buttonClass = `

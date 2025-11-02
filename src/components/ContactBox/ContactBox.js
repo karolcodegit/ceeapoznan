@@ -17,7 +17,7 @@ const ContactBox = ({
   place2,
 }) => {
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-2xl flex flex-col space-y-6">
+    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl flex flex-col space-y-6">
   {/* Nagłówek */}
   <div>
     <Title tag="h4" className="text-2xl font-bold dark:text-white">
