@@ -65,8 +65,7 @@ const MainLayout = ({ children }) => {
                 <div className="flex flex-col items-end justify-end relative">
                   <button
                     onClick={toggleDarkMode}
-                    className="fixed top-40 right-3 sm:top-48 sm:right-4 md:top-60 md:right-6 bg-gradient-to-r from-custom-blue to-navyBlue
-hover:from-blue-600 hover:to-blue-800
+                    className="fixed top-40 right-3 sm:top-48 sm:right-4 md:top-60 md:right-6 bg-gradient-to-r from-custom-blue to-navyBlue hover:from-blue-600 hover:to-blue-800
 text-white font-medium
 p-3 sm:p-4
 rounded-full shadow-lg

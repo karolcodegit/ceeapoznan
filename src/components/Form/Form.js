@@ -49,7 +49,29 @@ const Form = React.forwardRef(({
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Pobierz dane formularza
+    const formEl = e.target;
+    const formDataHTML = new FormData(formEl);
+  
+    // 🛑 1. Sprawdzenie honeypota Netlify
+    if (formDataHTML.get("bot-field")) {
+      console.warn("🚫 Spam wykryty (bot-field wypełniony).");
+      return;
+    }
+  
+    // 🛑 2. Fake pole — boty często wypełniają wszystko
+    if (formDataHTML.get("website")) {
+      console.warn("🚫 Spam wykryty (fake field 'website').");
+      return;
+    }
+  
+    // 🛑 3. Token JS — prosty test, czy formularz był renderowany po stronie użytkownika
+    if (!formDataHTML.get("token")) {
+      console.warn("🚫 Spam wykryty (brak JS tokena).");
+      return;
+    }
+  
     // Obsługa dynamicRequiredFields
     const dynamicFields = typeof dynamicRequiredFields === "function"
       ? dynamicRequiredFields(dynamicState)
@@ -57,13 +79,13 @@ const Form = React.forwardRef(({
     const allRequiredFields = [...requiredFields, ...dynamicFields];
     const formData = { ...formDataFromRedux, ...extraFormData };
     const flattenedFormData = flattenObject(formData);
-
-    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+  
+    // Sprawdzenie czy wszystkie pola są wypełnione
     const allFilled = allRequiredFields.every((field) => {
       const value = flattenedFormData[field];
       return value !== undefined && value !== null && value.toString().trim() !== "";
     });
-
+  
     if (!allFilled) {
       const newErrors = {};
       allRequiredFields.forEach((field) => {
@@ -73,36 +95,34 @@ const Form = React.forwardRef(({
       });
       setErrors(newErrors);
       toast.error("Wypełnij wszystkie wymagane pola.");
-      return; // Zatrzymaj dalsze przetwarzanie
+      return;
     }
-
-    // Jeśli wszystkie pola są wypełnione, kontynuuj
+  
+    // Jeśli wszystko OK
     setErrors({});
     toast.success("Wszystkie wymagane pola zostały wypełnione.");
     setIsLoading(true);
-
+  
     try {
-      // Wywołanie onSubmitOverride tylko po poprawnej walidacji
+      // Wywołanie onSubmitOverride po walidacji
       if (onSubmitOverride) {
         await onSubmitOverride(e);
       }
-
-      // Kontynuacja operacji w handleSubmit (np. zapis do Airtable)
+  
+      // Zapis do Airtable (jeśli włączony)
       if (saveToAirtable) {
         try {
           await saveToAirtable(formData);
-          //console.log("✅ Zapis do Airtable zakończony sukcesem.");
         } catch (error) {
-          console.error("❌ Błąd podczas zapisu do Airtable:", error);
+          console.error("❌ Błąd przy zapisie do Airtable:", error);
           toast.error("Wystąpił błąd przy zapisie do Airtable.");
           return;
         }
       }
-
+  
       if (clearAction) dispatch(clearAction());
       toast.success(notificationMessage);
-
-      // Wywołanie onSuccess po poprawnej walidacji i zapisaniu danych
+  
       if (onSuccess) {
         onSuccess();
       }

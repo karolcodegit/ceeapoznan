@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { useDispatch, useSelector } from "react-redux"
 import PropTypes from "prop-types"
@@ -14,20 +14,31 @@ const ContactForm = ({
   apiEndpoint = "https://contact-559160331745.us-central1.run.app",
   buttonText = "Wyślij wiadomość",
 }) => {
-  const contactData = useSelector((state) => state.contact)
+  const contactData = useSelector((state) => state.contact);
   const dispatch = useDispatch();
 
 
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(Math.random().toString(36).substring(2));
+  }, []);
+
   const handleSubmitOverride = async (e) => {
     e.preventDefault();
-    await handleContactSubmit(contactData, apiEndpoint, dispatch, navigate);
+    // Opcjonalnie można sprawdzić honeypot i fake field tutaj dodatkowo
+    if (contactData["bot-field"] || contactData.website) {
+      console.warn("🚫 Spam wykryty.");
+      return;
+    }
+    await handleContactSubmit(contactData, apiEndpoint, dispatch);
   };
- 
+
   return (
     <Form
-      name="contact" 
+      name="contact"
       apiEndpoint={apiEndpoint}
-      variant='submit'
+      variant="submit"
       submitButtonText={buttonText}
       notificationMessage="Formularz został wysłany!"
       clearAction={clearForm}
@@ -35,14 +46,34 @@ const ContactForm = ({
       requiredFields={["name", "email", "message"]}
       prepareFormData={prepareContactData}
       onSubmitOverride={handleSubmitOverride}
-      addToButton='float-right'
+      addToButton="float-right"
       data-netlify="true"
       netlify-honeypot="bot-field"
     >
-      <p className="hidden">
-        <label>Nie wypełniaj tego pola: <input name="bot-field" /></label>
+      {/* Honeypot Netlify */}
+      <p style={{ display: "none" }} aria-hidden="true">
+        <label>
+          Nie wypełniaj tego pola:
+          <input name="bot-field" tabIndex="-1" autoComplete="off" />
+        </label>
       </p>
+
+      {/* Pole wymagane przez Netlify */}
       <input type="hidden" name="form-name" value="contact" />
+
+      {/* Fake pole dla botów */}
+      <input
+        type="text"
+        name="website"
+        style={{ display: "none" }}
+        tabIndex="-1"
+        autoComplete="off"
+      />
+
+      {/* Token JS */}
+      <input type="hidden" name="token" value={token} />
+
+      {/* Pola formularza */}
       <FormField
         label="Imię"
         type="text"
@@ -65,8 +96,8 @@ const ContactForm = ({
         formSliceKey="contact"
       />
     </Form>
-  )
-}
+  );
+};
 
 ContactForm.propTypes = {
   apiEndpoint: PropTypes.string,
