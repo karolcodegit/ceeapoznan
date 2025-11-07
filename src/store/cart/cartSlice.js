@@ -48,13 +48,15 @@ const cartSlice = createSlice({
     },
     removeFromCart(state, action) {
       const id = action.payload;
-
-      // Upewnij się, że state.items jest tablicą
+    
       if (!Array.isArray(state.items)) {
         state.items = [];
       }
+    
       state.items = state.items.filter(item => item.id !== id);
-      cartSlice.caseReducers.updateSubtotal(state);
+    
+      const newSubtotal = state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      cartSlice.caseReducers.updateSubtotal(state, { payload: newSubtotal });
       cartSlice.caseReducers.updateTotal(state);
     },
     updateQuantity(state, action) {
@@ -157,10 +159,6 @@ const cartSlice = createSlice({
 
     updateDeliveryCost: (state, action) => {
       const { deliveryMethod, lockerDeliveryCost, homeDeliveryCost } = action.payload;
-    
-      console.log("Delivery method:", deliveryMethod);
-      console.log("Locker delivery cost:", lockerDeliveryCost);
-      console.log("Home delivery cost:", homeDeliveryCost);
     
       // Przypisz odpowiednią wartość do deliveryCost w obiekcie summary
       state.summary.deliveryCost =

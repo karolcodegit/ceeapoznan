@@ -62,39 +62,53 @@ const MainLayout = ({ children }) => {
               <Header />
               <Toaster richColors position="top-right" closeButton />
               <div className="bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800">
-              <div className="flex flex-col items-end justify-end relative">
-                <button
-                  onClick={toggleDarkMode}
-                  className="fixed top-60 right-4 bg-gradient-to-r from-custom-blue to-navyBlue hover:from-blue-600 hover:to-blue-800 text-white font-medium p-4 rounded-full shadow-lg flex items-center space-x-2 z-50 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-blue-300 focus:outline-none"
-                  aria-label="Toggle dark mode"
-                >
-                  {darkMode ? (
-                    <SunIcon className="h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MoonIcon className="h-6 w-6" aria-hidden="true" />
-                  )}
-                </button>
-                <Cart />
-                {/* <SlidePanel
+                <div className="flex flex-col items-end justify-end relative">
+                  <button
+                    onClick={toggleDarkMode}
+                    className="fixed top-40 right-3 sm:top-48 sm:right-4 md:top-60 md:right-6 bg-gradient-to-r from-custom-blue to-navyBlue
+hover:from-blue-600 hover:to-blue-800
+text-white font-medium
+p-3 sm:p-4
+rounded-full shadow-lg
+flex items-center justify-center
+z-50
+transition-all duration-300 transform hover:scale-105
+focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                    aria-label="Toggle dark mode"
+                  >
+                    {darkMode ? (
+                      <SunIcon
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <MoonIcon
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
+                  <Cart />
+                  {/* <SlidePanel
                   isOpen={isPanelOpen}
                   toggle={togglePanel}
                   darkMode={darkMode}
                   setDarkMode={setDarkMode}
                   setFontSize={setFontSize}
                 /> */}
-              </div>
-              <div
-                id="top"
-                className={`${
-                  isHomePage
-                    ? ""
-                    : "max-w-6xl py-12 sm:py-20 lg:py-28 mx-auto px-4 sm:px-6 lg:px-8"
-                }`}
-              >
-                {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
-                {!isHomePage && !is404Page && <TopHeader />}
-                {children}
-              </div>
+                </div>
+                <div
+                  id="top"
+                  className={`${
+                    isHomePage
+                      ? ""
+                      : "max-w-6xl py-12 sm:py-20 lg:py-28 mx-auto px-4 sm:px-6 lg:px-8"
+                  }`}
+                >
+                  {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
+                  {!isHomePage && !is404Page && <TopHeader />}
+                  {children}
+                </div>
               </div>
               <Footer />
             </FontSizeContext.Provider>

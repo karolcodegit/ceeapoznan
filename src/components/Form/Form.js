@@ -37,7 +37,8 @@ const Form = React.forwardRef(({
   dynamicRequiredFields = [],
   variant,
   addToButton,
-  padding
+  padding,
+  ...props
 }, ref) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -113,7 +114,7 @@ const Form = React.forwardRef(({
     }
   };
   return (
-    <form ref={ref} onSubmit={handleSubmit} className={className}>
+    <form ref={ref} onSubmit={handleSubmit} className={className} {...props}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {

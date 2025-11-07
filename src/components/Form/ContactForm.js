@@ -25,6 +25,7 @@ const ContactForm = ({
  
   return (
     <Form
+      name="contact" 
       apiEndpoint={apiEndpoint}
       variant='submit'
       submitButtonText={buttonText}
@@ -35,7 +36,13 @@ const ContactForm = ({
       prepareFormData={prepareContactData}
       onSubmitOverride={handleSubmitOverride}
       addToButton='float-right'
+      data-netlify="true"
+      netlify-honeypot="bot-field"
     >
+      <p className="hidden">
+        <label>Nie wypełniaj tego pola: <input name="bot-field" /></label>
+      </p>
+      <input type="hidden" name="form-name" value="contact" />
       <FormField
         label="Imię"
         type="text"
