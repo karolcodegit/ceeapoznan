@@ -24,14 +24,24 @@ const ContactForm = ({
     setToken(Math.random().toString(36).substring(2));
   }, []);
 
+  
+
   const handleSubmitOverride = async (e) => {
     e.preventDefault();
-    // Opcjonalnie można sprawdzić honeypot i fake field tutaj dodatkowo
+  
+    // 🧠 Sprawdź spam lokalnie (dla pewności)
     if (contactData["bot-field"] || contactData.website) {
-      console.warn("🚫 Spam wykryty.");
+      console.warn("🚫 Spam wykryty (honeypot/fake field).");
       return;
     }
-    await handleContactSubmit(contactData, apiEndpoint, dispatch);
+  
+    // 🧩 Dołącz token do wysyłanych danych
+    const payload = { ...contactData, token };
+
+    console.log(payload);
+    
+  
+    await handleContactSubmit(payload, apiEndpoint, dispatch, navigate, token);
   };
 
   return (

@@ -2,20 +2,19 @@ import { toast } from "react-toastify"
 import { clearForm } from "../store/contact/contactSlice"
 import { renderEmailTemplate } from "./renderEmailTemplate"
 
-
 export const handleContactSubmit = async (
   contactData,
   apiEndpoint,
   dispatch,
   navigate,
+  token
 ) => {
   try {
-
     // Generowanie treści e-maili za pomocą szablonów
     const emailHtmlToYou = renderEmailTemplate("ContactConfirmation", {
-        name: contactData.name,
-        email: contactData.email,
-        message: contactData.message,
+      name: contactData.name,
+      email: contactData.email,
+      message: contactData.message,
     })
     const emailHtmlToUser = renderEmailTemplate("ContactConfirmationUser", {
       name: contactData.name,
@@ -23,8 +22,12 @@ export const handleContactSubmit = async (
       message: contactData.message,
     })
 
-    // Przygotowanie payload do wysyłki do Google Cloud Functions
+    // ✅ UWAGA: Dodajemy token do payloadu!
     const payload = {
+      name: contactData.name,
+      email: contactData.email,
+      message: contactData.message,
+      token,
       toYou: {
         to: "sekretariat@ceea.org.pl",
         subject: `Nowa wiadomość od ${contactData.name}`,
@@ -37,7 +40,6 @@ export const handleContactSubmit = async (
       },
     }
 
-    // Wysłanie zamówienia do API
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
@@ -48,16 +50,15 @@ export const handleContactSubmit = async (
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error("Błąd odpowiedzi z Google Cloud Functions:", errorText)
+      console.error("❌ Błąd odpowiedzi z Google Cloud Functions:", errorText)
       throw new Error(`HTTP status: ${response.status}`)
     }
 
-    // Sukces: przekierowanie na stronę sukcesu
     toast.success("Formularz pomyślnie wysłany!")
-    dispatch(clearForm()) // Usunięcie danych koszyka
-    navigate("/kontakt/wyslano")
+    dispatch(clearForm())
+    if (navigate) navigate("/kontakt/wyslano")
   } catch (error) {
-    console.error("Błąd podczas wysyłania zamówienia:", error)
-    toast.error("Wystąpił błąd podczas składania zamówienia. Spróbuj ponownie.")
+    console.error("❌ Błąd podczas wysyłania formularza:", error)
+    toast.error("Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.")
   }
 }

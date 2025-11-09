@@ -72,10 +72,6 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
       <div className="grid grid-cols-1 gap-x-20 gap-y-10 mx-auto py-10 px-4 items-center">
         <div className="flex-1  ">
         <ContactForm
-            // airtableSaveFn={saveToAirtable}
-           
-            // notification={{ show: (msg) => toast.success(msg) }}
-            // onSubmit={onSubmit}
           />
         </div>
       </div>

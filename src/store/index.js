@@ -22,11 +22,6 @@ const loadState = () => {
     const parsedCart = cart ? JSON.parse(cart) : undefined;
     const parsedDelivery = delivery ? JSON.parse(delivery) : undefined;
 
-
-    console.log("Stan koszyka po załadowaniu:", parsedCart);
-    console.log("Stan dostawy po załadowaniu:", parsedDelivery);
-
-
     // Domyślne ceny dostawy do domu
     const defaultHomeDeliveryPrices = {
       A: 19.99,
@@ -93,10 +88,6 @@ const loadState = () => {
 const saveState = (state) => {
   try {
     if (!isBrowser) return;
-
-    console.log("Zapisywanie stanu koszyka:", state.cart);
-    console.log("Zapisywanie stanu dostawy:", state.delivery);
-
     localStorage.setItem("cartState", JSON.stringify(state.cart));
     localStorage.setItem("userCartState", JSON.stringify(state.userCart));
     localStorage.setItem("delivery", JSON.stringify(state.delivery));
