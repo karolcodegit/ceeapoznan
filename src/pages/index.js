@@ -40,20 +40,26 @@ const IndexPage = ({ data }) => {
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section className="relative min-h-screen w-full overflow-hidden">
+        <section
+          className="relative w-full overflow-hidden md:min-h-[80vh] sm:min-h-[80vh] max-sm:min-h-[70vh] lg:min-h-screen"
+        >
           {/* 🔹 GatsbyImage jako tło */}
           {currentCourse?.backgroundimage?.gatsbyImageData && (
             <GatsbyImage
-            image={getImage(currentCourse.backgroundimage)}
-            alt={currentCourse.nameCourse || "Tło kursu"}
-            className="absolute inset-0 w-full h-full !important"
-            imgClassName="object-cover w-full h-full"
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          />
+              image={getImage(currentCourse.backgroundimage)}
+              alt={currentCourse.nameCourse || "Tło kursu"}
+              className="absolute inset-0 w-full h-full !important"
+              imgClassName="object-cover w-full h-full"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+              }}
+            />
           )}
-
-<div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
-
+          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
             className="absolute bottom-0 left-0 w-full"
@@ -78,81 +84,81 @@ const IndexPage = ({ data }) => {
           </svg>
 
           {/* 🔹 Zawartość */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-12 gap-10 items-center">
-              {/* Lewa kolumna: tekst */}
-              <motion.div
-                className="col-span-6 flex flex-col justify-center text-white space-y-6"
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-              >
-                <div className="flex">
-  <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
-    Kurs już dostępny
-  </div>
-</div>
-                <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
-                  {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
-                </h1>
-                <p className="text-lg text-gray-100 font-medium mt-4 drop-shadow-md">
-                  {currentCourse?.date
-                    ? `Data kursu: ${currentCourse.date}`
-                    : "Nowa edycja kursów CEEA już wkrótce!"}
-                </p>
-                <p className="text-gray-200 max-w-xl mx-auto leading-relaxed text-lg mt-6 drop-shadow-md">
-                  {currentCourse?.description2 ||
-                    "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
-                </p>
-                {currentCourse && (
-                  <motion.div whileHover={{ scale: 1.05 }}>
-                    <Link
-                      to={websiteRegister}
-                      className="inline-flex items-center mt-20 gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 12h14m-7-7l7 7-7 7"
-                        />
-                      </svg>
-                      Zapisz się na kurs
-                    </Link>
-                  </motion.div>
-                )}
-              </motion.div>
-          
-              {/* Prawa kolumna: obrazek kursu */}
-              <motion.div
-                className="col-span-6 relative max-lg:hidden"
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-              >
-                <motion.div
-                  className="relative group"
-                  whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
-                  transition={{ type: "spring", stiffness: 150, damping: 15 }}
-                >
-                  <Img
-                    fluid={
-                      currentCourse?.image?.fluid ||
-                      data.defaultImage.childImageSharp.fluid
-                    }
-                    alt={currentCourse?.nameCourse || "CEEA kurs"}
-                    className="rounded-[2.5rem] shadow-2xl border border-white/20 object-cover w-full"
-                  />
-                  <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
-                </motion.div>
-              </motion.div>
+          <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:pt-32  grid lg:grid-cols-12 gap-10 items-center">
+            {/* Lewa kolumna: tekst */}
+            <motion.div
+              className="col-span-6 flex flex-col justify-center text-white space-y-6"
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <div className="flex">
+                <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
+                  Kurs już dostępny
+                </div>
               </div>
+              <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
+                {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
+              </h1>
+              <p className="text-lg text-gray-100 font-medium mt-4 drop-shadow-md">
+                {currentCourse?.date
+                  ? `Data kursu: ${currentCourse.date}`
+                  : "Nowa edycja kursów CEEA już wkrótce!"}
+              </p>
+              <p className="text-gray-200 max-w-xl leading-relaxed text-lg mt-6 drop-shadow-md">
+                {currentCourse?.description2 ||
+                  "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
+              </p>
+              {currentCourse && (
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Link
+                    to={websiteRegister}
+                    className="inline-flex items-center lg:mt-20 md:mt-14 sm:mt-12 max-sm:mt-10  gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 12h14m-7-7l7 7-7 7"
+                      />
+                    </svg>
+                    Zapisz się na kurs
+                  </Link>
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Prawa kolumna: obrazek kursu */}
+            <motion.div
+              className="col-span-6 relative max-lg:hidden"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <motion.div
+                className="relative group"
+                whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 150, damping: 15 }}
+              >
+                <Img
+                  fluid={
+                    currentCourse?.image?.fluid ||
+                    data.defaultImage.childImageSharp.fluid
+                  }
+                  alt={currentCourse?.nameCourse || "CEEA kurs"}
+                  className="rounded-[2.5rem] shadow-2xl border border-white/20 object-cover w-full"
+                />
+                <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
+              </motion.div>
+            </motion.div>
+          </div>
         </section>
 
         {/* === NADCHODZĄCE KURSY === */}
@@ -449,7 +455,7 @@ const IndexPage = ({ data }) => {
               wyszkolił dziesiątki polskich anestezjologów.
             </motion.span>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mt-16">
+            <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-10 mt-16">
               {[
                 {
                   icon: "🤝",
@@ -489,232 +495,6 @@ const IndexPage = ({ data }) => {
           </div>
         </section>
       </div>
-
-      {/* <div className=" text-slate-900 dark:bg-slate-900 dark:text-gray-100 min-h-screen">
-        <div className="mx-auto max-w-6xl bg-white grid lg:grid-cols-12 max-lg:grid-cols-1 px-6 py-36 w-full h-full items-center justify-between gap-x-10 dark:bg-gray-800 ">
-          <div className="max-w-xl col-span-6">
-            <Title tag="h1">
-              Serdecznie zapraszamy do udziału w kolejnym kursie
-              <span className="text-[#002C7C] pl-3 font-bold">C</span>
-              <span className="text-[#016ABA] font-bold">E</span>
-              <span className="text-[#47AEE6] font-bold">E</span>
-              <span className="text-[#88C8EB] font-bold">A</span>
-            </Title>
-            <Paragraph>
-              {data.datoCmsMainsite.paragraph ||
-                "Ośrodek Poznański CEEA już od niespełna 30 lat organizuje kursy dla lekarzy specjalistów oraz lekarzy rezydentów anestezjologii i intensywnej terapii. Dzięki udziałowi w naszych cyklach kursów mają Państwo możliwość udziału w wykładach prowadzonych przez ekspertów w dziedzinie anestezjologii i intensywnej terapii, aktualizacji wiedzy medycznej w oparciu o Evidence Based Medicine oraz dyskusji w gronie praktyków, w której przeniesiemy wiedzę teoretyczną na realia naszej codziennej pracy, niejednokrotnie obfite w wyzwania organizacyjne."}
-            </Paragraph>
-            {data.allDatoCmsCourse.nodes
-              .filter(course => course.available === true)
-              .map(course => (
-                <>
-                  <Button
-                    key={course.id}
-                    variant="default"
-                    href={`/kursy/${getYearFromDate(
-                      data.allDatoCmsCourse.nodes[0].date
-                    )}/${slugify(
-                      data.allDatoCmsCourse.nodes[0].nameCourse
-                    )}/rejestracja`}
-                  >
-                    Zapisz się na kurs
-                  </Button>
-                </>
-              ))}
-          </div>
-
-          <div className="w-full lg:h-500 max-lg:hidden px-8 col-span-6">
-            {data.allDatoCmsCourse.nodes.filter(
-              course => course.available === true
-            ).length > 0 ? (
-              data.allDatoCmsCourse.nodes
-                .filter(course => course.available === true) // Filtrujemy kursy z available === true
-                .map(course => (
-                  <Img
-                    key={course.id}
-                    fluid={
-                      course.image?.fluid ||
-                      data.defaultImage.childImageSharp.fluid
-                    }
-                    className="rounded-3xl w-full h-full object-cover"
-                    alt={course.nameCourse}
-                    loading="eager"
-                  />
-                ))
-            ) : (
-              <Img
-                fluid={data.defaultImage.childImageSharp.fluid}
-                className="rounded-3xl w-full h-full object-cover"
-                alt="Default"
-                loading="eager"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full bg-vividTurquoise flex py-14 dark:bg-gray-900">
-        <div className="mx-auto max-w-7xl flex max-xl:flex-col items-center px-7 max-xl:text-center">
-          <div className="max-w-xl xl:mr-10 max-xl:mb-10">
-            <Title tag="h2" white>
-              Kształcenie ustawiczne w anestezjologii i intensywnej terapii
-            </Title>
-          </div>
-          <div className="flex text-white">
-            <div className="flex max-sm:flex-col items-center pr-4 ">
-              <div className="bg-darker p-3 rounded-full">
-                <BookOpenIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
-              </div>
-              <span className="md:px-3 max-md:px-2 max-md:text-base max-sm:py-3">
-                Kompleksowe kursy
-              </span>
-            </div>
-            <div className="flex items-center max-sm:flex-col">
-              <div className="bg-darker p-3 rounded-full">
-                <AcademicCapIcon className="w-10 h-10 max-md:w-7 max-md:h-7 object-cover" />
-              </div>
-              <span className="md:px-3 max-md:px-2 max-md:text-base max-sm:py-3">
-                Obszerna biblioteka
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full bg-darkBlueGreen py-36 dark:bg-gray-700">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-20">
-            <Title tag="h2" className="text-center text-white">
-              Sprawdź daty nadchodzących kursów i szkoleń
-            </Title>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
-            {data.allDatoCmsCourse.nodes
-              .filter(course => course.nextCourse === true) // Filtruje kursy
-              .sort((a, b) => {
-                const parseDate = dateString => {
-                  // Sprawdź, czy jest to tylko rok
-                  if (/^\d{4}$/.test(dateString)) {
-                    return { year: parseInt(dateString, 10), month: 0 }
-                  }
-
-                  // Sprawdź, czy jest to zakres dat, np. "23-25.05.2024"
-                  const match = dateString.match(
-                    /(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/
-                  )
-                  if (match) {
-                    return {
-                      year: parseInt(match[3], 10),
-                      month: parseInt(match[2] || "1", 10) - 1, // Domyślnie styczeń
-                    }
-                  }
-
-                  // Jeśli nie pasuje, zwróć null
-                  return null
-                }
-
-                const dateA = parseDate(a.date)
-                const dateB = parseDate(b.date)
-
-                if (!dateA || !dateB) {
-                  return 0 // Jeśli którejś daty brakuje, nie zmieniaj kolejności
-                }
-
-                // Najpierw sortuj po roku, a potem po miesiącu
-                return dateA.year - dateB.year || dateA.month - dateB.month
-              })
-              .slice(0, 2) // Pobierz maksymalnie dwa kursy
-              .map((course, index) => (
-                <div
-                  key={course.id}
-                  className="bg-white shadow-md rounded-lg overflow-hidden ease-in-out transform lg:hover:scale-105 transition duration-500"
-                >
-                  <div className="relative">
-                    <Img
-                      fluid={
-                        course.image?.fluid ||
-                        data.defaultImage.childImageSharp.fluid
-                      }
-                      alt={course?.nameCourse}
-                      className="h-56 w-full object-cover"
-                    />
-                    {course.newCourse && (
-                      <span className="absolute top-4 right-4 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-lg">
-                        Nowość
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-darkBlueGreen mb-4 leading-snug">
-                      {course?.nameCourse}
-                    </h3>
-                    <ul className="text-sm text-gray-700 space-y-2">
-                      <li>
-                        <span className="text-lg px-2">#️⃣</span>
-                        Numer kursu: {course?.numerCourse || "Brak numeru"}
-                      </li>
-                      <li>
-                        <span className="text-lg px-2">📅</span>
-                        Data: {course?.date || "Data wkrótce"}
-                      </li>
-                      <li>
-                        <span className="text-lg px-2">⏳</span>
-
-                        {course?.duration
-                          ? `Czas trwania: ${course.duration}`
-                          : "Czas trwania wkrótce"}
-                      </li>
-                      <li>
-                        <span className="text-lg px-2">🌐</span>
-                        Język: {course?.language === true ? "PL" : "EN"}
-                      </li>
-                      <li>
-                        <span className="text-lg px-2">🖥</span>
-                        Tryb:{" "}
-                        {course.type ||
-                          (course?.online ? "Online" : "Stacjonarny")}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full bg-white dark:bg-gray-800 z-0">
-        <div className="max-auto flex flex-col items-center px-6 py-32 ">
-          <div className="text-center grid gap-4">
-            <Title tag="h2" className="text-darkBlueGreen">
-              Dlaczego warto wziąć udział w kursach CEEA?
-            </Title>
-            <span className="text-darkBlueGreen">
-              Jesteśmy pierwszym w Polsce ośrodkiem CEEA, który od 1995 roku
-              wyszkolił dziesiątki polskich anestezjologów.
-            </span>
-          </div>
-          <div className="max-w-6xl py-10 grid grid-flow-row lg:grid-cols-3 max-lg:grid-cols-1 max-lg:w-full gap-x-12 gap-y-8  mt-10">
-            <Box
-              image={image1}
-              title="Wymiana doświadczeń między praktykami i ekspertami"
-              description="Każdorazowo w kursach CEEA uczestniczy grono kilkudziesięciu lekarzy – znakomitych ekspertów, doświadczonych praktyków a także początkujących rezydentów. Podczas wielu sesji wykładowych wywiązują się interesujące dyskusje i konfrontacje różnych doświadczeń i punktów widzenia.
-              "
-            />
-            <Box
-              image={image2}
-              title="Aktualna wiedza medyczna oparta o EBM oraz doświadczenie"
-              description="Wierzymy, że u podstaw nowoczesnej anestezjologii i intensywnej terapii stoją dowody naukowe wskazujące na skuteczność naszego postępowania, dlatego przedstawiana wiedza opiera się na aktualnych wytycznych i rekomendacjach, uzupełniona praktycznymi wskazówkami budowanymi na latach doświadczeń klinicznych naszych wykładowców.
-              "
-            />
-            <Box
-              image={image3}
-              title="Warsztaty praktyczne"
-              description="W programie bogatym w sesje teoretycznym musi znaleźć się miejsce na aspekt praktyczny. Podczas każdego kursu odbywa się spotkanie warsztatowe, np. poświęcone wykorzystaniu ultrasonografii w anestezji regionalnej wybranych okolic ciała. Z uwagi na ograniczone możliwości czasowe liczba miejsc na udział w warsztatach jest ograniczona.
-              "
-            />
-          </div>
-        </div>
-      </div> */}
     </>
   )
 }
