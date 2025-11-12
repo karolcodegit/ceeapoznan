@@ -1,6 +1,6 @@
 // store/cart/cartSlice.js
-import { createSlice } from "@reduxjs/toolkit";
-import { getParcelSize, getDeliveryCost } from "../../constants/shippingCosts";
+import { createSlice } from "@reduxjs/toolkit"
+import { getParcelSize, getDeliveryCost } from "../../constants/shippingCosts"
 
 const initialState = {
   items: [],
@@ -11,6 +11,7 @@ const initialState = {
     total: 0,
     subtotal: 0,
     parcelSize: "A",
+    token: "",
   },
   deliveryPrices: {
     A: 20.99,
@@ -22,192 +23,205 @@ const initialState = {
     B: 18.99,
     C: 20.99,
   },
-};
+}
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
     addToCart(state, action) {
-      const newItem = action.payload;
-    
+      const newItem = action.payload
+
       if (!Array.isArray(state.items)) {
-        state.items = [];
+        state.items = []
       }
-    
-      const existing = state.items.find(item => item.id === newItem.id);
+
+      const existing = state.items.find(item => item.id === newItem.id)
       if (existing) {
-        existing.quantity += newItem.quantity;
+        existing.quantity += newItem.quantity
       } else {
-        state.items.push({ ...newItem });
+        state.items.push({ ...newItem })
       }
-    
-      const newSubtotal = state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-      cartSlice.caseReducers.updateSubtotal(state, { payload: newSubtotal });
-      cartSlice.caseReducers.calculateDeliveryCosts(state);
+
+      const newSubtotal = state.items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      )
+      cartSlice.caseReducers.updateSubtotal(state, { payload: newSubtotal })
+      cartSlice.caseReducers.calculateDeliveryCosts(state)
     },
     removeFromCart(state, action) {
-      const id = action.payload;
-    
+      const id = action.payload
+
       if (!Array.isArray(state.items)) {
-        state.items = [];
+        state.items = []
       }
-    
-      state.items = state.items.filter(item => item.id !== id);
-    
-      const newSubtotal = state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-      cartSlice.caseReducers.updateSubtotal(state, { payload: newSubtotal });
-      cartSlice.caseReducers.updateTotal(state);
+
+      state.items = state.items.filter(item => item.id !== id)
+
+      const newSubtotal = state.items.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      )
+      cartSlice.caseReducers.updateSubtotal(state, { payload: newSubtotal })
+      cartSlice.caseReducers.updateTotal(state)
     },
     updateQuantity(state, action) {
-      const { id, quantity } = action.payload;
-      const item = state.items.find(item => item.id === id);
+      const { id, quantity } = action.payload
+      const item = state.items.find(item => item.id === id)
       if (item) {
-        item.quantity = quantity;
+        item.quantity = quantity
       }
 
       // Wywołaj obliczenie kosztów dostawy
-  cartSlice.caseReducers.calculateDeliveryCosts(state);
-  cartSlice.caseReducers.updateTotal(state);
+      cartSlice.caseReducers.calculateDeliveryCosts(state)
+      cartSlice.caseReducers.updateTotal(state)
 
+      // Aktualizuj koszt dostawy na podstawie metody dostawy
+      const deliveryMethod = state.deliveryMethod || "Kurier InPost"
+      const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0
+      const homeDeliveryCost = state.summary.homeDeliveryCost || 0
 
-  // Aktualizuj koszt dostawy na podstawie metody dostawy
-  const deliveryMethod = state.deliveryMethod || "Kurier InPost";
-  const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0;
-  const homeDeliveryCost = state.summary.homeDeliveryCost || 0;
-
-  cartSlice.caseReducers.updateDeliveryCost(state, {
-    payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
-  });
+      cartSlice.caseReducers.updateDeliveryCost(state, {
+        payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
+      })
     },
     incrementQuantity(state, action) {
-      const id = action.payload;
-      const item = state.items.find(item => item.id === id);
+      const id = action.payload
+      const item = state.items.find(item => item.id === id)
       if (item) {
-        item.quantity += 1;
+        item.quantity += 1
       }
       // Wywołaj obliczenie kosztów dostawy
-  cartSlice.caseReducers.calculateDeliveryCosts(state);
-  cartSlice.caseReducers.updateTotal(state);
+      cartSlice.caseReducers.calculateDeliveryCosts(state)
+      cartSlice.caseReducers.updateTotal(state)
 
-  // Aktualizuj koszt dostawy na podstawie metody dostawy
-  const deliveryMethod = state.deliveryMethod || "Kurier InPost";
-  const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0;
-  const homeDeliveryCost = state.summary.homeDeliveryCost || 0;
+      // Aktualizuj koszt dostawy na podstawie metody dostawy
+      const deliveryMethod = state.deliveryMethod || "Kurier InPost"
+      const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0
+      const homeDeliveryCost = state.summary.homeDeliveryCost || 0
 
-  cartSlice.caseReducers.updateDeliveryCost(state, {
-    payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
-  });
-
+      cartSlice.caseReducers.updateDeliveryCost(state, {
+        payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
+      })
     },
     decrementQuantity(state, action) {
-      const id = action.payload;
-      const item = state.items.find(item => item.id === id);
+      const id = action.payload
+      const item = state.items.find(item => item.id === id)
       if (item && item.quantity > 1) {
-        item.quantity -= 1;
+        item.quantity -= 1
       }
       // Wywołaj obliczenie kosztów dostawy
-  cartSlice.caseReducers.calculateDeliveryCosts(state);
-  cartSlice.caseReducers.updateTotal(state);
+      cartSlice.caseReducers.calculateDeliveryCosts(state)
+      cartSlice.caseReducers.updateTotal(state)
 
-  // Aktualizuj koszt dostawy na podstawie metody dostawy
-  const deliveryMethod = state.deliveryMethod || "Kurier InPost";
-  const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0;
-  const homeDeliveryCost = state.summary.homeDeliveryCost || 0;
+      // Aktualizuj koszt dostawy na podstawie metody dostawy
+      const deliveryMethod = state.deliveryMethod || "Kurier InPost"
+      const lockerDeliveryCost = state.summary.lockerDeliveryCost || 0
+      const homeDeliveryCost = state.summary.homeDeliveryCost || 0
 
-  cartSlice.caseReducers.updateDeliveryCost(state, {
-    payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
-  });
+      cartSlice.caseReducers.updateDeliveryCost(state, {
+        payload: { deliveryMethod, lockerDeliveryCost, homeDeliveryCost },
+      })
     },
     clearCart(state) {
-      state.items = [];
-      state.summary.subtotal = 0; // Zresetuj subtotal
-      state.summary.total = 0; // Zresetuj total
+      state.items = []
+      state.summary.subtotal = 0 // Zresetuj subtotal
+      state.summary.total = 0 // Zresetuj total
     },
     setLockerPrices(state, action) {
-      state.lockerPrices = action.payload;
-    
+      state.lockerPrices = action.payload
+
       // Automatyczne przeliczenie kosztów dostawy po aktualizacji lockerPrices
-      const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
-      const parcelSize = getParcelSize(totalItems);
-    
-      const lockerPricesArray = Object.entries(state.lockerPrices).map(([type, price]) => ({
-        type,
-        price,
-      }));
-    
-      const lockerPrice = getDeliveryCost("Paczkomat", parcelSize, lockerPricesArray, state.deliveryPrices);
-      const homePrice = getDeliveryCost("Kurier InPost", parcelSize, lockerPricesArray, state.deliveryPrices);
-    
-      state.summary.parcelSize = parcelSize;
-      state.summary.lockerDeliveryCost = lockerPrice;
-      state.summary.homeDeliveryCost = homePrice;
-    
-      console.log("Zaktualizowano koszty dostawy po zmianie lockerPrices:");
-      console.log("Locker price:", lockerPrice);
-      console.log("Home price:", homePrice);
+      const totalItems = state.items.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      )
+      const parcelSize = getParcelSize(totalItems)
+
+      const lockerPricesArray = Object.entries(state.lockerPrices).map(
+        ([type, price]) => ({
+          type,
+          price,
+        })
+      )
+
+      const lockerPrice = getDeliveryCost(
+        "Paczkomat",
+        parcelSize,
+        lockerPricesArray,
+        state.deliveryPrices
+      )
+      const homePrice = getDeliveryCost(
+        "Kurier InPost",
+        parcelSize,
+        lockerPricesArray,
+        state.deliveryPrices
+      )
+
+      state.summary.parcelSize = parcelSize
+      state.summary.lockerDeliveryCost = lockerPrice
+      state.summary.homeDeliveryCost = homePrice
+
     },
     updateSubtotal(state, action) {
       if (action.payload !== undefined) {
-        state.summary.subtotal = action.payload;
-        cartSlice.caseReducers.updateTotal(state);
+        state.summary.subtotal = action.payload
+        cartSlice.caseReducers.updateTotal(state)
       } else {
-        console.error("updateSubtotal: action.payload is undefined");
+        //console.error("updateSubtotal: action.payload is undefined")
       }
     },
 
-
     updateDeliveryCost: (state, action) => {
-      const { deliveryMethod, lockerDeliveryCost, homeDeliveryCost } = action.payload;
-    
+      const { deliveryMethod, lockerDeliveryCost, homeDeliveryCost } =
+        action.payload
+
       // Przypisz odpowiednią wartość do deliveryCost w obiekcie summary
       state.summary.deliveryCost =
-        deliveryMethod === "Paczkomat"
-          ? lockerDeliveryCost
-          : homeDeliveryCost;
-    
-      console.log("Updated deliveryCost in cartSlice:", state.summary.deliveryCost);
-      cartSlice.caseReducers.updateTotal(state);
+        deliveryMethod === "Paczkomat" ? lockerDeliveryCost : homeDeliveryCost
+      cartSlice.caseReducers.updateTotal(state)
     },
 
-
-    
     setDeliveryMethod(state, action) {
-      state.deliveryMethod = action.payload;
+      state.deliveryMethod = action.payload
     },
     calculateDeliveryCosts(state) {
-      const totalItems = state.items.reduce((acc, item) => acc + item.quantity, 0);
-      const parcelSize = getParcelSize(totalItems);
-    
+      const totalItems = state.items.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      )
+      const parcelSize = getParcelSize(totalItems)
 
-      console.log("Locker prices before conversion:", state.lockerPrices);
+      // Przekształć lockerPrices na tablicę obiektów
+      const lockerPricesArray = state.lockerPrices
+        ? Object.entries(state.lockerPrices).map(([type, price]) => ({
+            type,
+            price,
+          }))
+        : []
+      const lockerPrice = getDeliveryCost(
+        "Paczkomat",
+        parcelSize,
+        lockerPricesArray,
+        state.deliveryPrices
+      )
+      const homePrice = getDeliveryCost(
+        "Kurier InPost",
+        parcelSize,
+        lockerPricesArray,
+        state.deliveryPrices
+      )
 
- // Przekształć lockerPrices na tablicę obiektów
- const lockerPricesArray = state.lockerPrices
-  ? Object.entries(state.lockerPrices).map(([type, price]) => ({
-      type,
-      price,
-    }))
-  : [];
-
-  console.log("Converted lockerPricesArray:", lockerPricesArray);
-      const lockerPrice = getDeliveryCost("Paczkomat", parcelSize, lockerPricesArray, state.deliveryPrices);
-      const homePrice = getDeliveryCost("Kurier InPost", parcelSize, lockerPricesArray, state.deliveryPrices);
-    
-      console.log("Parcel size:", parcelSize);
-  console.log("Locker price:", lockerPrice);
-  console.log("Home price:", homePrice);
-    
-      state.summary.parcelSize = parcelSize;
-      state.summary.lockerDeliveryCost = lockerPrice;
-      state.summary.homeDeliveryCost = homePrice;
+      state.summary.parcelSize = parcelSize
+      state.summary.lockerDeliveryCost = lockerPrice
+      state.summary.homeDeliveryCost = homePrice
     },
     updateTotal(state) {
-      state.summary.total = state.summary.subtotal + state.summary.deliveryCost;
-      console.log("Updated total:", state.summary.total);
+      state.summary.total = state.summary.subtotal + state.summary.deliveryCost
     },
   },
-});
+})
 
 export const {
   addToCart,
@@ -223,8 +237,8 @@ export const {
   updateDeliveryMethod,
   calculateDeliveryCosts,
   updateDeliveryCost,
-  updateTotal
-  
-} = cartSlice.actions;
+  updateTotal,
+  setToken,
+} = cartSlice.actions
 
-export default cartSlice.reducer;
+export default cartSlice.reducer

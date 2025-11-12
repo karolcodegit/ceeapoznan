@@ -41,7 +41,7 @@ const IndexPage = ({ data }) => {
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
         <section
-          className="relative w-full overflow-hidden md:min-h-[80vh] sm:min-h-[80vh] max-sm:min-h-[70vh] lg:min-h-screen"
+          className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh]"
         >
           {/* 🔹 GatsbyImage jako tło */}
           {currentCourse?.backgroundimage?.gatsbyImageData && (
@@ -59,7 +59,7 @@ const IndexPage = ({ data }) => {
               }}
             />
           )}
-          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50"></div>
+          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50 "></div>
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
             className="absolute bottom-0 left-0 w-full"

@@ -46,6 +46,7 @@ const ContactForm = ({
 
   return (
     <Form
+      requireToken={true}
       name="contact"
       apiEndpoint={apiEndpoint}
       variant="submit"

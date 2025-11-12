@@ -39,8 +39,6 @@ const FormRegister = ({
     // 🧩 Dołącz token do wysyłanych danych
     const payload = { ...registerData, token };
 
-    console.log(payload);
-
     await handleRegisterSubmit(registerData, apiEndpoint, token);
     // navigate("/rejestracja/formularz-wyslany");
   };
@@ -119,6 +117,7 @@ const FormRegister = ({
           </span>
         </Title>
         <Form
+          requireToken={true}
           onSubmitOverride={(e) => handleSubmitOverride(e)}
           apiEndpoint={apiEndpoint}
           submitButtonText={buttonText}

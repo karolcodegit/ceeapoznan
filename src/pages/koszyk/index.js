@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { navigate } from "gatsby"
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -47,11 +47,11 @@ const KoszykPage = () => {
     acc[item.type] = item.price;
     return acc;
   }, {});
+  
 
  
   // Wywołaj updateSubtotal tylko wtedy, gdy zmieniają się dane w koszyku
   useEffect(() => {
-    
     dispatch(updateSubtotal(subtotal));
     dispatch(calculateDeliveryCosts());
     // Aktualizuj koszt dostawy na podstawie metody dostawy
@@ -64,11 +64,13 @@ const KoszykPage = () => {
 
   // Zapisz ceny paczkomatów w Redux
   useEffect(() => {
-    if (Array.isArray(paczkomatPrices) && paczkomatPrices.length > 0) {
-      console.log("Setting locker prices:", formattedLockerPrices);
+    if (!Array.isArray(paczkomatPrices)) return;
+  
+    if (paczkomatPrices.length > 0) {
+      //("✅ Ustawiam ceny paczkomatów:", formattedLockerPrices);
       dispatch(setLockerPrices(formattedLockerPrices));
     } else {
-      console.error("Paczkomat prices are undefined or empty:", paczkomatPrices);
+      //console.log("⏳ Oczekiwanie na pobranie cen paczkomatów...");
     }
   }, [paczkomatPrices, dispatch]);
 

@@ -26,7 +26,7 @@ const usePaczkomatPrices = () => {
                 };
               }),
             }));
-          console.log("Pobrane ceny paczkomatów:", costs)
+          //console.log("Pobrane ceny paczkomatów:", costs)
           setDeliveryCost(costs[0]?.packTypes || [])
         })
         .catch(error => {

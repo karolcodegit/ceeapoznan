@@ -8,6 +8,7 @@ import Title from "../components/Title/Title"
 
 const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
   const {
+    requireToken = true,
     nameCompany,
     street,
     numberHome,

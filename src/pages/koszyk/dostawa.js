@@ -43,13 +43,9 @@ const Dostawa = () => {
 
   const handleNext = () => {
     if (formRef.current) {
-      formRef.current.dispatchEvent(
-        new Event("submit", { cancelable: true, bubbles: true })
-      )
+      formRef.current?.submitForm();
     } else {
-      console.error(
-        "formRef.current is null. Upewnij się, że ref jest poprawnie przekazany."
-      )
+      console.error("formRef.current is null. Upewnij się, że ref jest poprawnie przypisany.");
     }
   }
 

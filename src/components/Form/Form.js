@@ -1,5 +1,5 @@
 // components/Form.js
-import React, { useState } from "react"
+import React, { useRef, useState, useImperativeHandle } from "react"
 import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "sonner"
@@ -7,19 +7,8 @@ import Button from "../Button/Button"
 import { selectDynamicState } from "../../utils/selectors"
 import { flattenObject } from "../../utils/flattenObject"
 
-// const flattenObject = (obj, prefix = "") =>
-//   Object.keys(obj).reduce((acc, key) => {
-//     const value = obj[key];
-//     const prefixedKey = prefix ? `${prefix}.${key}` : key;
-//     if (typeof value === "object" && value !== null) {
-//       Object.assign(acc, flattenObject(value, prefixedKey));
-//     } else {
-//       acc[prefixedKey] = value;
-//     }
-//     return acc;
-//   }, {});
-
 const Form = React.forwardRef(({
+  requireToken = false,
   prepareFormData,
   children,
   submitButtonText = "Wyślij",
@@ -40,13 +29,24 @@ const Form = React.forwardRef(({
   padding,
   ...props
 }, ref) => {
+  const formRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const formDataFromRedux = useSelector(state => state[formSliceKey] || {}); // Wywołanie useSelector na najwyższym poziomie
   const [errors, setErrors] = useState({});
   const dynamicState = useSelector(selectDynamicState);
   
-  
+  useImperativeHandle(ref, () => ({
+    submitForm: () => {
+      if (formRef.current) {
+        handleSubmit({ 
+          preventDefault: () => {}, 
+          target: formRef.current 
+        });
+      }
+    },
+  }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -67,7 +67,7 @@ const Form = React.forwardRef(({
     }
   
     // 🛑 3. Token JS — prosty test, czy formularz był renderowany po stronie użytkownika
-    if (!formDataHTML.get("token")) {
+    if (requireToken && !formDataHTML.get("token")) {
       console.warn("🚫 Spam wykryty (brak JS tokena).");
       return;
     }
@@ -134,7 +134,7 @@ const Form = React.forwardRef(({
     }
   };
   return (
-    <form ref={ref} onSubmit={handleSubmit} className={className} {...props}>
+    <form ref={formRef} onSubmit={handleSubmit} className={className} {...props}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, {

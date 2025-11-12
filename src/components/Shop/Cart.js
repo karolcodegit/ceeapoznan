@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, navigate } from 'gatsby';
+import { navigate } from 'gatsby';
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from 'react-redux';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
@@ -19,7 +19,7 @@ const Cart = () => {
         <motion.div
           key="cart"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity:  1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
           style={{ position: "fixed", bottom: 20, left: 20, zIndex: 1000 }}
