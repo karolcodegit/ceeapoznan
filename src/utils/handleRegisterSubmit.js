@@ -1,12 +1,12 @@
+import { navigate } from "gatsby"
 import { renderEmailTemplate } from "./renderEmailTemplate"
 import { generateOrderNumber } from "./generateOrderNumber";
 import { saveToAirtable } from "./airtable";
 
-
 export const handleRegisterSubmit = async (
   registerData,
-  apiEndpoint,
-  navigate
+  apiEndpoint, 
+  token
 ) => {
   try {
     const orderNumber = generateOrderNumber();
@@ -16,7 +16,7 @@ export const handleRegisterSubmit = async (
       ...registerData,
       orderNumber,
     };
-
+    
     // Natychmiastowe przekierowanie użytkownika
     navigate(`${currentPath}/formularz-wyslany`);
 
@@ -60,6 +60,7 @@ export const handleRegisterSubmit = async (
 
         // Przygotowanie payload do wysyłki do Google Cloud Functions
         const payload = {
+          token,
           toYou: {
             to: "sekretariat@ceea.org.pl",
             subject: `Zapisano na kurs ${registerData.courseTitle}`,

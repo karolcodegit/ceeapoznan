@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import { motion, useAnimation } from "framer-motion";
 import { navigate } from "gatsby"
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -17,6 +18,7 @@ import Title from "../../components/Title/Title"
 import usePaczkomatPrices from "../../hooks/usePaczkomatPrices"
 
 const KoszykPage = () => {
+
   const dispatch = useDispatch()
   const items = useSelector(state => state.cart.items)
   const summary = useSelector(state => state.cart.summary)
@@ -24,17 +26,34 @@ const KoszykPage = () => {
 
   const paczkomatPrices = usePaczkomatPrices();
 
+  useEffect(() => {
+    const scrollToTop = () => {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      });
+    };
+  
+    // najpierw natychmiastowy scroll
+    scrollToTop();
+  
+    // powtórz po krótkim czasie — po pełnym renderze
+    const timeout = setTimeout(scrollToTop, 300);
+  
+    return () => clearTimeout(timeout);
+  }, []);
+  
+
   const formattedLockerPrices = paczkomatPrices.reduce((acc, item) => {
     acc[item.type] = item.price;
     return acc;
   }, {});
 
-
+ 
   // Wywołaj updateSubtotal tylko wtedy, gdy zmieniają się dane w koszyku
   useEffect(() => {
+    
     dispatch(updateSubtotal(subtotal));
     dispatch(calculateDeliveryCosts());
-
     // Aktualizuj koszt dostawy na podstawie metody dostawy
   const deliveryMethod = summary.deliveryMethod || "Kurier InPost";
   const lockerDeliveryCost = summary.lockerDeliveryCost || 0;
@@ -65,6 +84,11 @@ const KoszykPage = () => {
   }
   
   return (
+
+    <motion.div
+   
+      style={{ overflow: "auto" }}
+    >
     <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-slate-800 rounded-lg shadow-md transition-colors duration-300">
       <CheckoutProgress currentStep="koszyk" />
       <Title tag="h4" className="pt-3 pb-5 text-gray-900 dark:text-gray-100">
@@ -131,6 +155,7 @@ const KoszykPage = () => {
         </Button>
       </div>
     </div>
+    </motion.div>
   )
 }
 

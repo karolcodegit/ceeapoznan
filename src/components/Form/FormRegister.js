@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { navigate } from "gatsby"
 import { useDispatch, useSelector } from "react-redux"
 import FormField from "./FormField/FormField"
@@ -26,9 +26,23 @@ const FormRegister = ({
   const dispatch = useDispatch()
   const registerData = useSelector(state => state.formRegister || {})
 
+
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(Math.random().toString(36).substring(2));
+  }, []);
+
   const handleSubmitOverride = async (e) => {
     e.preventDefault();
-    await handleRegisterSubmit(registerData, apiEndpoint, navigate);
+
+    // 🧩 Dołącz token do wysyłanych danych
+    const payload = { ...registerData, token };
+
+    console.log(payload);
+
+    await handleRegisterSubmit(registerData, apiEndpoint, token);
+    // navigate("/rejestracja/formularz-wyslany");
   };
 
   const checkboxFields =
@@ -132,6 +146,8 @@ const FormRegister = ({
             "lastcourse",
           ]}
         >
+          {/* Token JS */}
+      <input type="hidden" name="token" value={token} />
           <FormField
             type="text"
             label="Imię"

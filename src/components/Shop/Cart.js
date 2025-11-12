@@ -1,23 +1,18 @@
 import React from 'react';
+import { Link, navigate } from 'gatsby';
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from 'react-redux';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { selectTotalQuantity } from '../../store/cart/cartSelectors';
-import { navigate } from 'gatsby';
 
 const Cart = () => {
   const totalQuantity = useSelector(selectTotalQuantity);
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    navigate("/koszyk");
-
-    // Scroll to top after a short delay
+  const handleClick = () => {
+    navigate("/koszyk"); // Gatsby navigate
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 50);
   };
-
   return (
     <AnimatePresence>
       {totalQuantity > 0 && (
@@ -29,7 +24,7 @@ const Cart = () => {
           transition={{ duration: 0.3 }}
           style={{ position: "fixed", bottom: 20, left: 20, zIndex: 1000 }}
         >
-          <button
+          <button 
             onClick={handleClick}
             className="p-3 bg-sky-700 hover:bg-blue-700 text-white rounded-full shadow-lg flex items-center gap-2"
           >
