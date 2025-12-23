@@ -41,13 +41,14 @@ const Book = ({
                   : "bg-red-100 text-red-800"
               }`}
             >
-              {available && stockQuantity > 0 ? "Dostępny" : "Niedostępny"}
+              {available ? "Dostępny" : "Niedostępny"}
+              {/* {available && stockQuantity > 0 ? "Dostępny" : "Niedostępny"} */}
             </span>
-            {available && stockQuantity > 0 && (
+            {/* {available && stockQuantity > 0 && (
               <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-200">
                 Dostępność – {stockQuantity} szt.
               </span>
-            )}
+            )} */}
             {reprint && (
               <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-sky-900 rounded-full">
                 W dodruku
