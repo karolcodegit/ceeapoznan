@@ -18,7 +18,7 @@ export const FormList = ({
   const formErrors = useSelector(state => state[formSliceKey]?.formErrors || {})
   const formSubmitted = useSelector(state => state[formSliceKey]?.formSubmitted)
 
-  const isValid = value !== "" && value !== undefined && value !== null
+  // const isValid = value !== "" && value !== undefined && value !== null
 
   const handleChange = e => {
     const newValue = e.target.value

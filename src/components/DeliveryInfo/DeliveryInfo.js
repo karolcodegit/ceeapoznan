@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Tooltip } from "react-tooltip"
+// import { Tooltip } from "react-tooltip"
 import {
-  ClockIcon,
+  // ClockIcon,
   CurrencyDollarIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline"
 import Button from "../Button/Button"
 import DeliveryModal from "../Modal/DeliveryModal"
 // import { slugify } from "../../utils/slugify"
-import { addToCart, calculateSummary } from "../../store/cart/cartSlice"
+import { addToCart } from "../../store/cart/cartSlice"
 import { toast } from "sonner"
 import Form from "../Form/Form"
 import FormField from "../Form/FormField/FormField"

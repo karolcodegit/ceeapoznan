@@ -24,6 +24,7 @@ const Books = ({ data }) => {
     )
   }
   const filtredBooks = searchBooks(nodes, inputValue)
+
   return (
     <>
       <div>
@@ -49,7 +50,7 @@ const Books = ({ data }) => {
         />
       </div>
       {filtredBooks.map(book => (
-        <Book key={book.title} {...book} />
+        <Book key={book.originalId || book.id} {...book} />
       ))}
     </>
   )

@@ -6,7 +6,6 @@ import { Dialog } from "@headlessui/react"
 import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
-import RightArrow from "../RightArrow"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
 

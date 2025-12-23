@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { navigate } from "gatsby"
 import { useDispatch, useSelector } from "react-redux"
 import FormField from "./FormField/FormField"
 import {
@@ -40,7 +39,6 @@ const FormRegister = ({
     const payload = { ...registerData, token };
 
     await handleRegisterSubmit(registerData, apiEndpoint, token);
-    // navigate("/rejestracja/formularz-wyslany");
   };
 
   const checkboxFields =
