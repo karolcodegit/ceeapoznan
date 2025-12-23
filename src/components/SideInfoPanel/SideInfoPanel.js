@@ -9,7 +9,7 @@ const SideInfoPanel = ({ money, time, available, nameCourse, date }) => {
   const rejestraction = location.pathname.includes("/rejestracja")
   return (
     <div
-  className={`xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)] overflow-y-auto 
+  className={`xl:sticky xl:top-20 xl:right-0 xl:max-h-[calc(100vh-15vh)] overflow-y-auto 
     mt-10 md:mt-0 
     bg-white dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-700 
     dark:text-gray-100 rounded-2xl shadow-xl 

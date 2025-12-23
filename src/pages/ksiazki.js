@@ -61,6 +61,7 @@ export const query = graphql`
       nodes {
         originalId
         title
+        stockQuantity
         price
         publisher
         editor

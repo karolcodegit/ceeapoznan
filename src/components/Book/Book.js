@@ -17,6 +17,7 @@ const Book = ({
   additionalInformation,
   available,
   reprint,
+  stockQuantity
 }) => {
   return (
     <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row py-10 md:py-20 border-b last-of-type:border-none">
@@ -33,15 +34,20 @@ const Book = ({
         <div className="lg:px-10 w-full dark:text-gray-200">
           {/* Dostępność i tytuł */}
           <div className="flex space-x-4 align-middle items-center mb-10">
-            <span
-              className={`self-start px-4 py-2  text-xs sm:text-sm font-semibold rounded-full ${
-                available
+          <span
+              className={`self-start px-4 py-2 text-xs sm:text-sm font-semibold rounded-full ${
+                available && stockQuantity > 0
                   ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
               }`}
             >
-              {available ? "Dostępny" : "Niedostępny"}
+              {available && stockQuantity > 0 ? "Dostępny" : "Niedostępny"}
             </span>
+            {available && stockQuantity > 0 && (
+              <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-200">
+                Dostępność – {stockQuantity} szt.
+              </span>
+            )}
             {reprint && (
               <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-sky-900 rounded-full">
                 W dodruku

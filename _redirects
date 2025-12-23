@@ -1,4 +1,3 @@
-
 # @netlify/plugin-gatsby redirects start
 /api/* /.netlify/functions/__api 200
 # @netlify/plugin-gatsby redirects end
@@ -8,6 +7,3 @@
 # gatsby-adapter-netlify start
 
 # gatsby-adapter-netlify end
-
-http://ceea.org.pl/* https://ceea.org.pl/:splat 301!
-https://www.ceea.org.pl/* https://ceea.org.pl/:splat 301!

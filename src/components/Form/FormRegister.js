@@ -357,7 +357,7 @@ const FormRegister = ({
           </div>
         </Form>
       </div>
-      <div className="w-full xl:w-1/3 lg:w-2/3 mx-auto mt-10 xl:mt-0 xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)]">
+      <div className="w-full xl:w-1/3 lg:w-2/3 mx-auto mt-10 xl:mt-0 xl:sticky xl:top-20 xl:right-0 xl:max-h-[calc(100vh-15vh)]">
         <SideInfoPanel
           money={total}
           time={availableCourse?.courseDuration}

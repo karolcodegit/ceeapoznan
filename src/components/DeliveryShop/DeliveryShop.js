@@ -66,7 +66,7 @@ const DeliveryShop = ({
   return (
     <>
       <div
-        className={`${className} xl:sticky xl:top-0 xl:right-0 xl:max-h-[calc(100vh-15vh)] overflow-y-auto  mt-10 md:mt-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-100 rounded-lg shadow-lg flex flex-col self-start  w-96 mx-auto overflow-hidden z-10`}
+        className={`${className} xl:sticky xl:top-20 xl:right-0 xl:max-h-[calc(100vh-15vh)] overflow-y-auto  mt-10 md:mt-0 bg-gray-100 dark:bg-gray-800 dark:text-gray-100 rounded-lg shadow-lg flex flex-col self-start  w-96 mx-auto overflow-hidden z-10`}
       >
         <div className="leading-5">
           <div className="p-7 divide-y divide-gray-200">

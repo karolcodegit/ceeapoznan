@@ -95,6 +95,20 @@ export const handleOrderSubmit = async (
           throw new Error(`HTTP status: ${response.status}`)
         }
 
+        const stockUpdateResponse = await fetch('/.netlify/functions/update-stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: orderData.items }), // Przesyłamy tylko potrzebne items
+        });
+
+        if (!stockUpdateResponse.ok) {
+          const errorText = await stockUpdateResponse.text();
+          console.error('Błąd update stock via Netlify:', errorText);
+          // Opcjonalnie: toast.error, ale nie blokuj – użytkownik już widzi sukces
+        } else {
+          console.log('✅ Stock zaktualizowany w DatoCMS');
+        }
+
         //console.log("✅ E-maile zostały wysłane.")
         toast.success("Zamówienie zostało pomyślnie złożone!")
 
