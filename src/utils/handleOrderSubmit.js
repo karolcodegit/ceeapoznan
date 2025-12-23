@@ -38,7 +38,9 @@ export const handleOrderSubmit = async (
     const performBackgroundTasks = async () => {
       try {
         // Zapis zamówienia w Airtable
-        await saveAirableBookOrders(fullOrderData)
+        
+        
+        //await saveAirableBookOrders(fullOrderData)
 
         // Generowanie treści e-maili za pomocą szablonów
         const emailHtmlToYou = renderEmailTemplate("orderConfirmation", {
@@ -81,21 +83,21 @@ export const handleOrderSubmit = async (
         //console.log("📦 Payload wysyłany do Google Cloud Functions:", payload)
 
         // Wysłanie zamówienia do API
-        const response = await fetch(apiEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        })
+        // const response = await fetch(apiEndpoint, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(payload),
+        // })
 
-        if (!response.ok) {
-          const errorText = await response.text()
-          console.error("Błąd odpowiedzi z Google Cloud Functions:", errorText)
-          throw new Error(`HTTP status: ${response.status}`)
-        }
+        // if (!response.ok) {
+        //   const errorText = await response.text()
+        //   console.error("Błąd odpowiedzi z Google Cloud Functions:", errorText)
+        //   throw new Error(`HTTP status: ${response.status}`)
+        // }
 
-        const stockUpdateResponse = await fetch('/.netlify/functions/update-stock', {
+        const stockUpdateResponse = await fetch('/.netlify/functions/update-inventory', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items: orderData.items }), // Przesyłamy tylko potrzebne items
