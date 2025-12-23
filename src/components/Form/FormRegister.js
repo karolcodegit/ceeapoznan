@@ -41,17 +41,23 @@ const FormRegister = ({
     await handleRegisterSubmit(registerData, apiEndpoint, token);
   };
 
-  const checkboxFields =
-    data.allDatoCmsRegisterform.nodes[0].positioncheckbox.map(
-      (item, index) => ({
-        id: item.id,
-        name: `option${index + 1}`,
-        label: `${item.label} (${item.price} PLN)`,
-        price: item.price,
-        typ: "checkbox",
-        disabled: !item.available,
-      })
-    )
+  const registerFormNode = data?.allDatoCmsRegisterform?.nodes?.[0];
+
+if (!registerFormNode || !registerFormNode.positioncheckbox) {
+  // Fallback – brak danych formularza
+  return <div>Formularz rejestracyjny niedostępny – brak konfiguracji.</div>;
+}
+
+  const checkboxFields = registerFormNode.positioncheckbox
+  .filter(item => item && item.label && item.price !== undefined) // filtruj złe itemy
+  .map((item, index) => ({
+    id: item.id || `option-${index}`,
+    name: `option${index + 1}`,
+    label: `${item.label} (${item.price} PLN)`,
+    price: item.price,
+    typ: "checkbox",
+    disabled: !item.available,
+  }));
   const formData = useSelector(state => state.formRegister || {})
   const total = formData.total || 0;
   const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
@@ -61,8 +67,7 @@ const FormRegister = ({
     return sum
   }, 0)
 
-  const dishOptions =
-    data?.allDatoCmsRegisterform?.nodes?.[0]?.dish?.map(item => item.dish) || []
+  const dishOptions = registerFormNode?.dish?.filter(d => d?.dish)?.map(d => d.dish) || [];
 
     useEffect(() => {
       if (availableCourse?.courseCost) {
@@ -111,7 +116,7 @@ const FormRegister = ({
         <Title tag="h5" className="mt-4 text-lg sm:text-xl">
           Kurs:{" "}
           <span className="font-medium text-gray-800 dark:text-gray-200">
-            {availableCourse?.nameCourse}
+          {availableCourse ? availableCourse.nameCourse : "Brak aktywnego kursu"}
           </span>
         </Title>
         <Form
