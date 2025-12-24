@@ -14,6 +14,8 @@ const Rejestracja = ({ data }) => {
   const availableCourse = data.allDatoCmsCourse.nodes.find(
     course => course.available === true
   );
+
+  console.log(availableCourse)
   return (
     <>
       <div className="">

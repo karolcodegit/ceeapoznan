@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState,useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import FormField from "./FormField/FormField"
 import {
@@ -24,13 +24,90 @@ const FormRegister = ({
 }) => {
   const dispatch = useDispatch()
   const registerData = useSelector(state => state.formRegister || {})
-
-
+  const formData = useSelector(state => state.formRegister || {})
   const [token, setToken] = useState("");
 
   useEffect(() => {
     setToken(Math.random().toString(36).substring(2));
   }, []);
+
+  // Bezpieczny dostęp do danych z DatoCMS
+  const registerFormNode = data?.allDatoCmsRegisterform?.nodes?.[0];
+
+  const safeCourse = useMemo(() => {
+    return availableCourse || {
+      nameCourse: "Brak aktywnego kursu",
+      courseCost: 0,
+      courseDuration: "Nie określono",
+    };
+  }, [availableCourse]);
+
+  
+  // Bezpieczne tworzenie checkboxów
+  const checkboxFields = registerFormNode.positioncheckbox
+    .filter((item) => item && item.label && item.price !== undefined && item.price !== null)
+    .map((item, index) => ({
+      id: item.id || `option-${index}`,
+      name: `option${index + 1}`,
+      label: `${item.label} (${item.price} PLN)`,
+      price: item.price,
+      typ: "checkbox",
+      disabled: !item.available,
+    }));
+
+    const dishOptions = registerFormNode?.dish?.filter(d => d?.dish)?.map(d => d.dish) || [];
+
+
+  // useEffect do ustawiania danych kursu
+  useEffect(() => {
+    dispatch(
+      updateField({
+        form: "formRegister",
+        field: "baseCourseCost",
+        value: safeCourse.courseCost,
+      })
+    );
+    dispatch(
+      updateField({
+        form: "formRegister",
+        field: "courseTitle",
+        value: safeCourse.nameCourse,
+      })
+    );
+  }, [dispatch, safeCourse]);
+
+  // useEffect do liczenia total
+  useEffect(() => {
+    const base = parseFloat(safeCourse.courseCost || 0);
+    const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
+      return formData[field.name] ? sum + field.price : sum;
+    }, 0);
+    const total = base + selectedOptionsCost;
+
+    dispatch(
+      updateField({
+        form: "formRegister",
+        field: "total",
+        value: total,
+      })
+    );
+  }, [dispatch, formData, safeCourse, checkboxFields]);
+ 
+
+  // Early return – po wszystkich hookach!
+  if (!registerFormNode || !registerFormNode.positioncheckbox) {
+    return (
+      <div className="py-20 text-center max-w-6xl mx-auto">
+        <Title tag="h3" className="text-2xl font-bold">
+          Formularz rejestracyjny tymczasowo niedostępny
+        </Title>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">
+          Skontaktuj się z organizatorem kursu.
+        </p>
+      </div>
+    );
+  }
+
 
   const handleSubmitOverride = async (e) => {
     e.preventDefault();
@@ -40,73 +117,8 @@ const FormRegister = ({
 
     await handleRegisterSubmit(registerData, apiEndpoint, token);
   };
-
-  const registerFormNode = data?.allDatoCmsRegisterform?.nodes?.[0];
-
-if (!registerFormNode || !registerFormNode.positioncheckbox) {
-  // Fallback – brak danych formularza
-  return <div>Formularz rejestracyjny niedostępny – brak konfiguracji.</div>;
-}
-
-  const checkboxFields = registerFormNode.positioncheckbox
-  .filter(item => item && item.label && item.price !== undefined) // filtruj złe itemy
-  .map((item, index) => ({
-    id: item.id || `option-${index}`,
-    name: `option${index + 1}`,
-    label: `${item.label} (${item.price} PLN)`,
-    price: item.price,
-    typ: "checkbox",
-    disabled: !item.available,
-  }));
-  const formData = useSelector(state => state.formRegister || {})
   const total = formData.total || 0;
-  const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
-    if (formData[field.name]) {
-      return sum + field.price
-    }
-    return sum
-  }, 0)
 
-  const dishOptions = registerFormNode?.dish?.filter(d => d?.dish)?.map(d => d.dish) || [];
-
-    useEffect(() => {
-      if (availableCourse?.courseCost) {
-        dispatch(updateField({
-          form: "formRegister",
-          field: "baseCourseCost",
-          value: availableCourse.courseCost,
-        }))
-      }
-    
-      if (availableCourse?.nameCourse) {
-        dispatch(updateField({
-          form: "formRegister",
-          field: "courseTitle",
-          value: availableCourse?.nameCourse,
-        }))
-      }
-    }, [availableCourse])
-    
-    // liczenie total
-    useEffect(() => {
-      const base = parseFloat(availableCourse?.courseCost || 0)
-    
-      const selectedOptionsCost = checkboxFields.reduce((sum, field) => {
-        if (formData[field.name]) {
-          return sum + field.price
-        }
-        return sum
-      }, 0)
-    
-      const total = base + selectedOptionsCost
-    
-      dispatch(updateField({
-        form: "formRegister",
-        field: "total",
-        value: total,
-      }))
-    }, [formData, availableCourse, checkboxFields])
-    
   return (
     <div className="py-10 max-w-6xl mx-auto gap-12 flex flex-col xl:flex-row justify-between items-start">
       <div className="max-w-3xl w-full xl:w-2/3">
@@ -116,7 +128,7 @@ if (!registerFormNode || !registerFormNode.positioncheckbox) {
         <Title tag="h5" className="mt-4 text-lg sm:text-xl">
           Kurs:{" "}
           <span className="font-medium text-gray-800 dark:text-gray-200">
-          {availableCourse ? availableCourse.nameCourse : "Brak aktywnego kursu"}
+            {safeCourse.nameCourse}
           </span>
         </Title>
         <Form
