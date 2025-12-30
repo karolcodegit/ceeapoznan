@@ -55,7 +55,7 @@ exports.handler = async (event) => {
 
       const newStock = currentStock - quantity;
 
-      // PATCH z pełnym payloadem (id + type wymagane!)
+      // PATCH z pełnym payloadem
       await datoClient.patch(`/items/${bookId}`, {
         data: {
           id: bookId,
@@ -76,6 +76,25 @@ exports.handler = async (event) => {
 
       console.log(`Stock zaktualizowany: ${currentStock} → ${newStock}`);
     }
+
+    // <<< DODANY KOD – TRIGGER REBUILD NETLIFY >>>
+    const buildHookUrl = 'https://api.netlify.com/build_hooks/694be3eff2ba81cd03e821f1'; // ← Twój aktualny hook z screena
+
+    try {
+      const rebuildResponse = await fetch(buildHookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (rebuildResponse.ok) {
+        console.log('✅ Rebuild strony w Netlify uruchomiony pomyślnie');
+      } else {
+        console.error('❌ Błąd przy triggerowaniu rebuilda:', await rebuildResponse.text());
+      }
+    } catch (triggerErr) {
+      console.error('❌ Błąd sieci przy triggerowaniu rebuilda:', triggerErr);
+    }
+    // <<< KONIEC DODANEGO KODU >>>
 
     return { statusCode: 200, body: JSON.stringify({ message: 'Stock zaktualizowany!' }) };
   } catch (error) {
