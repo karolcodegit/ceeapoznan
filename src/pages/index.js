@@ -144,8 +144,8 @@ const IndexPage = ({ data }) => {
             >
               <motion.div
                 className="relative group"
-                whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
-                transition={{ type: "spring", stiffness: 150, damping: 15 }}
+                // whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
+                // transition={{ type: "spring", stiffness: 150, damping: 15 }}
               >
                 <Img
                   fluid={
@@ -476,8 +476,8 @@ const IndexPage = ({ data }) => {
               ].map((item, i) => (
                 <motion.div
                   key={i}
-                  className="bg-white dark:bg-slate-800/70 backdrop-blur-sm p-10 rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border border-slate-200 dark:border-slate-700"
-                  initial={{ opacity: 0, y: 30 }}
+                  className="bg-white dark:bg-slate-800/70 backdrop-blur-sm p-10 rounded-3xl shadow-lg  transform hover:-translate-y-2 transition-all duration-300 border border-slate-200 dark:border-slate-700"
+                  initial={{ opacity: 0, y: 0 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 0.6, delay: 0.2 + i * 0.15 }}
