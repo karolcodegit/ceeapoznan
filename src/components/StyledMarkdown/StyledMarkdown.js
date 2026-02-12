@@ -11,7 +11,7 @@ const markdownStyles = ({ theme }) => css`
     font-size: 0.9rem;
     line-height: 1.5;
     margin-bottom: 0.5rem;
-    color: ${theme.mode === 'dark' ? "#d1d5db" : "black"};
+    color: ${theme.mode === 'dark' ? "#000" : "black"};
     line-height: 3rem;
   }
 

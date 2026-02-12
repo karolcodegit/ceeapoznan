@@ -112,6 +112,7 @@ const courseDetails = ({ data }) => {
               <Line />
             </div>
             <div className="">
+              <Paragraph>
               <StyledMarkdown>
                 {course?.detailedInformationAboutTheCourse &&
                 course?.detailedInformationAboutTheHotel
@@ -120,6 +121,7 @@ const courseDetails = ({ data }) => {
                       .conditionsOfParticipation
                   : ""}
               </StyledMarkdown>
+              </Paragraph>
             </div>
             <div className="py-12">
               <div className="flex lg:flex-row max-lg:flex-col items-start gap-8">

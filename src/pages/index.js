@@ -250,7 +250,7 @@ const IndexPage = ({ data }) => {
                         <span>
                           Tryb:{" "}
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course.type ||
+                            {course?.type?.label ??
                               (course?.online ? "Online" : "Stacjonarny")}
                           </span>
                         </span>
