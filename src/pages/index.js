@@ -315,7 +315,7 @@ const IndexPage = ({ data }) => {
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6 }}
             >
-              Nasi sponsorzy i partnerzy
+              Współpracujemy z
             </motion.h2>
 
             <div
