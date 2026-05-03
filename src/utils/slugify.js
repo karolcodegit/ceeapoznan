@@ -13,7 +13,7 @@ const slugify = (text) => {
     'ń': 'n'
   };
 
-    return text
+    return (text || "")
       .toString()
       .toLowerCase()
       .trim()  // Usuwamy początkowe i końcowe spacje

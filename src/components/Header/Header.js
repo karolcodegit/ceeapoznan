@@ -65,36 +65,40 @@ const Header = () => {
           </button>
         </div>
         {/* Navigation desktop */}
-        <div className="hidden h-full lg:flex text-white w-full relative z-50 2xl:col-span-3 justify-between">
-      {menuLinks.map(link => (
-        <Link
-          key={link.title}
-          to={link.to}
-          activeClassName="text-navyBlue dark:text-[#6b91c0] font-bold"
-          className='relative whitespace-nowrap px-4 flex items-center xl:px-7 md:px-5 font-semibold xl:text-lg md:text-base justify-end
-            before:absolute before:content-[""] before:inset-0 before:bg-gradient-to-r before:from-vividTurquoise before:to-deepTurquoise before:opacity-0 before:skew-x-40 before:transition-all before:duration-300
-            hover:before:opacity-100 before:-z-10
-            hover:text-white hover:scale-[1.05] transition duration-300 ease-in-out
-            dark:before:from-[#3fa7d6] dark:before:to-[#257ca3]
-          '
+        <div
+          className={`hidden h-full lg:flex text-white w-full relative z-50 justify-between ${
+            activeCourse ? "2xl:col-span-3" : "2xl:col-span-4"
+          }`}
         >
-          {link.title}
-        </Link>
-      ))}
-    </div>
+          {menuLinks.map(link => (
+            <Link
+              key={link.title}
+              to={link.to}
+              activeClassName="text-navyBlue dark:text-[#6b91c0] font-bold"
+              className='relative whitespace-nowrap px-4 flex items-center xl:px-7 md:px-5 font-semibold xl:text-lg md:text-base justify-end
+        before:absolute before:content-[""] before:inset-0 before:bg-gradient-to-r before:from-vividTurquoise before:to-deepTurquoise before:opacity-0 before:skew-x-40 before:transition-all before:duration-300
+        hover:before:opacity-100 before:-z-10
+        hover:text-white hover:scale-[1.05] transition duration-300 ease-in-out
+        dark:before:from-[#3fa7d6] dark:before:to-[#257ca3]
+      '
+            >
+              {link.title}
+            </Link>
+          ))}
+        </div>
         {activeCourse && (
           <div className="hidden 2xl:flex justify-end relative">
             <Button
-            margines="mt-0"
-            variant="submit"
-              href={`/kursy/${getYearFromDate(data.activeCourse.nodes[0].date)}/${slugify(data.activeCourse.nodes[0].nameCourse)}/szczegoly`}
+              margines="mt-0"
+              variant="submit"
+              href={`/kursy/${getYearFromDate(
+                data.activeCourse.nodes[0].date
+              )}/${slugify(data.activeCourse.nodes[0].nameCourse)}/szczegoly`}
             >
-              
               Informacje o kursie
             </Button>
           </div>
         )}
-
       </nav>
 
       {/* Mobile */}
@@ -106,12 +110,12 @@ const Header = () => {
       >
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel
-  className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto 
+          className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto 
   bg-gradient-to-b from-cyan-500 to-dark 
   text-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 
   dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 
   transition-colors duration-300"
->
+        >
           <div className="flex items-center justify-between relative">
             <Link to="/" className="p-1.5">
               <span className="sr-only">CEEA - Ośrodek Poznański</span>
@@ -139,7 +143,7 @@ const Header = () => {
             <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50 ml-5">
               <div className="space-y-2 py-6 flex flex-col">
                 {menuLinks.map(link => (
-                  <Link 
+                  <Link
                     key={link.title}
                     to={link.to}
                     className="dark:text-white py-4 "
@@ -150,7 +154,11 @@ const Header = () => {
                 ))}
                 {activeCourse && (
                   <Link
-                    to={`/kursy/${getYearFromDate(data.activeCourse.nodes[0].date)}/${slugify(data.activeCourse.nodes[0].nameCourse)}/szczegoly`}
+                    to={`/kursy/${getYearFromDate(
+                      data.activeCourse.nodes[0].date
+                    )}/${slugify(
+                      data.activeCourse.nodes[0].nameCourse
+                    )}/szczegoly`}
                     className="dark:text-white py-4 "
                     onClick={() => setMobileMenuOpen(false)}
                   >

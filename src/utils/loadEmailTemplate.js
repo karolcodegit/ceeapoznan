@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 export const loadEmailTemplate = (templateName, data) => {
-  const templatePath = path.resolve(`src/templates/emails/${templateName}.html`);
+  const templatePath = path.resolve(`src/utils/emails/${templateName}.html`);
   console.log("Ścieżka do szablonu:", templatePath); // Debug: sprawdź, czy ścieżka jest poprawna
 
   let template;

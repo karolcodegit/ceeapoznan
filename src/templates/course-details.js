@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Title from "../components/Title/Title"
 import Paragraph from "../components/Paragraph/Paragraph"
 import Line from "../components/Line/Line"
@@ -21,18 +21,15 @@ const courseDetails = ({ data }) => {
               <Line />
             </div>
             <div>
-              <Img
+              <GatsbyImage
                 className="float-right w-full lg:w-6/12 rounded-lg shadow-lg lg:mx-5 lg:my-4 max-lg:my-8"
-                fluid={
+                image={
                   data.datoCmsCourse &&
                   data.datoCmsCourse.detailedInformationAboutTheCourse &&
                   data.datoCmsCourse.detailedInformationAboutTheCourse
-                    .imageHotel &&
-                  data.datoCmsCourse.detailedInformationAboutTheCourse
-                    .imageHotel.fluid
-                    ? data.datoCmsCourse.detailedInformationAboutTheCourse
-                        .imageHotel.fluid
-                    : ""
+                    .imageHotel
+                    ? getImage(data.datoCmsCourse.detailedInformationAboutTheCourse.imageHotel)
+                    : undefined
                 }
                 alt="Hotel Ilonn"
               />
@@ -128,14 +125,11 @@ const courseDetails = ({ data }) => {
                 {data.datoCmsCourse &&
                   data.datoCmsCourse.detailedInformationAboutTheHotel &&
                   data.datoCmsCourse.detailedInformationAboutTheHotel
-                    .pictureHotel &&
-                  data.datoCmsCourse.detailedInformationAboutTheHotel
-                    .pictureHotel.fluid && (
-                    <Img
+                    .pictureHotel && (
+                    <GatsbyImage
                       className="float-left w-full rounded-lg shadow-lg lg:mx-5 "
-                      fluid={
-                        data.datoCmsCourse.detailedInformationAboutTheHotel
-                          .pictureHotel.fluid
+                      image={
+                        getImage(data.datoCmsCourse.detailedInformationAboutTheHotel.pictureHotel)
                       }
                       alt="Hotel Ilonn"
                     />
@@ -190,9 +184,7 @@ export const courseAndCompanyQuery = graphql`
       numerCourse
       detailedInformationAboutTheCourse {
         imageHotel {
-          fluid(maxWidth: 800) {
-            ...GatsbyDatoCmsFluid
-          }
+          gatsbyImageData(width: 800)
         }
 
         additionalInformation
@@ -206,9 +198,7 @@ export const courseAndCompanyQuery = graphql`
       detailedInformationAboutTheHotel {
         conditionsOfParticipation
         pictureHotel {
-          fluid(maxWidth: 800) {
-            ...GatsbyDatoCmsFluid
-          }
+          gatsbyImageData(width: 800)
         }
         extras
       }

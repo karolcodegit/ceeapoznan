@@ -1,6 +1,6 @@
 import React from "react"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Paragraph from "../components/Paragraph/Paragraph"
 import Seo from "../components/seo"
 import {OfficialLetter} from '../components/OfficialLetter/OfficialLetter'
@@ -12,31 +12,63 @@ const AboutUs = ({ data }) => {
 
       <div className="my-20 border-t border-gray-200 dark:border-gray-800" />
 
-      {data.allDatoCmsAboutCompany.nodes[0].paragraph.map((para, index) => (
-        <Paragraph
-          key={index}
-          firstLetter
-          className={`relative pb-8 ${
-            index % 2 === 0 ? "sm:pr-12" : "sm:pl-12"
-          }`}
-        >
-          {para.picture && (
-            <Img
-              fluid={para.picture.fluid}
-              className={`${
-                index === 2
-                  ? "mt-9 max-w-2xl max-md:max-w-xl max-sm:max-w-lg mx-auto mb-8"
-                  : "sm:float-right max-sm:hidden w-60 md:w-72 lg:w-80 h-auto mx-4 py-4"
-              } object-cover rounded-lg shadow-lg`}
-              alt={para.picture.alt}
-              loading="eager"
-            />
-          )}
-          <span className="text-base leading-7 text-gray-700 dark:text-gray-300">
-            {para.description}
-          </span>
-        </Paragraph>
-      ))}
+      {data.allDatoCmsAboutCompany.nodes[0].paragraph.map((para, index) => {
+        const isFullWidth = index === 2;
+
+        return (
+          <div
+            key={index}
+            className={`mb-16
+              ${isFullWidth 
+                ? "flex flex-col gap-6 items-center" 
+                : "grid gap-6 lg:gap-10 items-center md:grid-cols-2"
+              }
+            `}
+          >
+            {/* Obrazek */}
+            {para.picture && (
+              <div className={`
+                ${isFullWidth 
+                  ? "w-full order-1" 
+                  : index % 2 === 0 
+                    ? "md:order-2 flex justify-center" 
+                    : "md:order-1 flex justify-center"
+                }
+              `}>
+                <GatsbyImage
+                  image={getImage(para.picture)}
+                  className={`
+                    rounded-xl shadow-lg
+                    ${isFullWidth 
+                      ? "w-full max-h-[500px] object-cover" 
+                      : "w-full max-w-md object-cover"
+                    }
+                  `}
+                  alt={para.picture.alt || "Zdjęcie"}
+                  loading={index < 2 ? "eager" : "lazy"}
+                />
+              </div>
+            )}
+
+            {/* Tekst */}
+            <div className={`
+              ${isFullWidth 
+                ? "order-2 w-full" 
+                : index % 2 === 0 
+                  ? "md:order-1" 
+                  : "md:order-2"
+              }
+            `}>
+              <Paragraph 
+                firstLetter
+                className="text-base leading-7 text-gray-700 dark:text-gray-300"
+              >
+                {para.description}
+              </Paragraph>
+            </div>
+          </div>
+        );
+      })}
     </div>
   )
 }
@@ -49,9 +81,7 @@ export const query = graphql`
           description
           picture {
             alt
-            fluid(maxWidth: 800) {
-              ...GatsbyDatoCmsFluid
-            }
+            gatsbyImageData(width: 800)
           }
         }
       }

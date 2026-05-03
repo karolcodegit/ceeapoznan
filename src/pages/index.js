@@ -1,14 +1,8 @@
 import * as React from "react"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { graphql } from "gatsby"
-import Img from "gatsby-image"
 import Seo from "../components/seo"
-import Title from "../components/Title/Title"
-import Button from "../components/Button/Button"
-import Box from "../components/Box/Box"
-import Paragraph from "../components/Paragraph/Paragraph"
 import { slugify } from "../utils/slugify"
-import { AcademicCapIcon, BookOpenIcon } from "@heroicons/react/24/outline"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
@@ -16,13 +10,15 @@ import { Link } from "gatsby"
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
     edge => edge.node.name === "Collaborative_learning_environment"
-  ).node.childImageSharp.fluid
+  )?.node?.childImageSharp?.fluid
+
   const image2 = data.allFile.edges.find(
     edge => edge.node.name === "rozwoj-umiejetnosci"
-  ).node.childImageSharp.fluid
+  )?.node?.childImageSharp?.fluid
+
   const image3 = data.allFile.edges.find(
     edge => edge.node.name === "Creativity_and_innovation"
-  ).node.childImageSharp.fluid
+  )?.node?.childImageSharp?.fluid
 
   const currentCourse = data.allDatoCmsCourse.nodes.find(
     c => c.available === true
@@ -31,24 +27,26 @@ const IndexPage = ({ data }) => {
     .filter(c => c.nextCourse === true)
     .slice(0, 3)
 
-  const sponsors = data.datoCmsSponsor.sponsor
-  const websiteRegister = `/kursy/${getYearFromDate(
-    data.allDatoCmsCourse.nodes[0].date
-  )}/${slugify(data.allDatoCmsCourse.nodes[0].nameCourse)}/rejestracja`
+  const sponsors = data?.datoCmsSponsor?.sponsor || []
+  const firstCourse = data?.allDatoCmsCourse?.nodes?.[0]
+
+  const websiteRegister = firstCourse
+    ? `/kursy/${getYearFromDate(firstCourse.date)}/${slugify(
+        firstCourse.nameCourse
+      )}/rejestracja`
+    : "#"
 
   return (
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section
-          className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh]"
-        >
+        <section className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh]">
           {/* 🔹 GatsbyImage jako tło */}
-          {currentCourse?.backgroundimage?.gatsbyImageData && (
+          {currentCourse?.backgroundimage?.gatsbyImageData ? (
             <GatsbyImage
               image={getImage(currentCourse.backgroundimage)}
               alt={currentCourse.nameCourse || "Tło kursu"}
-              className="absolute inset-0 w-full h-full !important"
+              className="absolute inset-0 w-full h-full"
               imgClassName="object-cover w-full h-full"
               style={{
                 position: "absolute",
@@ -58,6 +56,98 @@ const IndexPage = ({ data }) => {
                 height: "100%",
               }}
             />
+          ) : (
+            /* 🔹 Gradient mesh z ruchem - wersja działająca */
+            <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0b1120]">
+              {/* Gradient bazowy */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e293b]" />
+
+              {/* Blob 1 - niebieski, pływa w lewo-górę */}
+              <div
+                className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse"
+                style={{
+                  background:
+                    "radial-gradient(circle, #0077FF 0%, transparent 70%)",
+                  top: "-10%",
+                  left: "-15%",
+                  animation:
+                    "pulse 4s ease-in-out infinite, float 20s ease-in-out infinite",
+                }}
+              />
+
+              {/* Blob 2 - turkusowy, pływa w prawo-dół */}
+              <div
+                className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse"
+                style={{
+                  background:
+                    "radial-gradient(circle, #00C6FF 0%, transparent 70%)",
+                  bottom: "-15%",
+                  right: "-10%",
+                  animation:
+                    "pulse 5s ease-in-out infinite, drift 25s ease-in-out infinite reverse",
+                  animationDelay: "1s, 0s",
+                }}
+              />
+
+              {/* Blob 3 - zielony, pływa centralnie */}
+              <div
+                className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse"
+                style={{
+                  background:
+                    "radial-gradient(circle, #00C896 0%, transparent 70%)",
+                  top: "40%",
+                  left: "50%",
+                  animation:
+                    "pulse 6s ease-in-out infinite, drift 22s ease-in-out infinite",
+                  animationDelay: "2s, 0s",
+                }}
+              />
+
+              {/* Blob 4 - fioletowy akcent */}
+              <div
+                className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse"
+                style={{
+                  background:
+                    "radial-gradient(circle, #6366f1 0%, transparent 70%)",
+                  top: "20%",
+                  right: "30%",
+                  animation:
+                    "pulse 7s ease-in-out infinite, float 18s ease-in-out infinite",
+                  animationDelay: "3s, 5s",
+                }}
+              />
+
+              {/* Center glow - subtelne światło w centrum */}
+              <div
+                className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  animation: "pulse-glow 8s ease-in-out infinite",
+                }}
+              />
+
+              {/* Siatka dla struktury */}
+              <div
+                className="absolute inset-0 opacity-[0.025]"
+                style={{
+                  backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+                  backgroundSize: "40px 40px",
+                }}
+              />
+
+              {/* Winietowanie - ciemniejsze brzegi */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%)",
+                }}
+              />
+            </div>
           )}
           <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50 "></div>
           {/* 🔹 Dekoracyjna fala SVG */}
@@ -84,80 +174,94 @@ const IndexPage = ({ data }) => {
           </svg>
 
           {/* 🔹 Zawartość */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:pt-32  grid lg:grid-cols-12 gap-10 items-center">
-            {/* Lewa kolumna: tekst */}
-            <motion.div
-              className="col-span-6 flex flex-col justify-center text-white space-y-6"
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <div className="flex">
-                <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
-                  Kurs już dostępny
-                </div>
-              </div>
-              <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-xl mt-6">
-                {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
-              </h1>
-              <p className="text-lg text-gray-100 font-medium mt-4 drop-shadow-md">
-                {currentCourse?.date
-                  ? `Data kursu: ${currentCourse.date}`
-                  : "Nowa edycja kursów CEEA już wkrótce!"}
-              </p>
-              <p className="text-gray-200 max-w-xl leading-relaxed text-lg mt-6 drop-shadow-md">
-                {currentCourse?.description2 ||
-                  "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
-              </p>
-              {currentCourse && (
-                <motion.div whileHover={{ scale: 1.05 }}>
-                  <Link
-                    to={websiteRegister}
-                    className="inline-flex items-center lg:mt-20 md:mt-14 sm:mt-12 max-sm:mt-10  gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 12h14m-7-7l7 7-7 7"
-                      />
-                    </svg>
-                    Zapisz się na kurs
-                  </Link>
-                </motion.div>
-              )}
-            </motion.div>
-
-            {/* Prawa kolumna: obrazek kursu */}
-            <motion.div
-              className="col-span-6 relative max-lg:hidden"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-            >
+          <div className="relative z-10 max-w-7xl mx-auto px-6 min-h-[90vh] flex items-center">
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+              {/* Lewa kolumna: tekst */}
               <motion.div
-                className="relative group"
-                // whileHover={{ rotateY: 8, rotateX: -3, scale: 1.03 }}
-                // transition={{ type: "spring", stiffness: 150, damping: 15 }}
+                className="lg:col-span-5 flex flex-col justify-center text-white space-y-6"
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}
               >
-                <Img
-                  fluid={
-                    currentCourse?.image?.fluid ||
-                    data.defaultImage.childImageSharp.fluid
-                  }
-                  alt={currentCourse?.nameCourse || "CEEA kurs"}
-                  className="rounded-[2.5rem] shadow-2xl border border-white/20 object-cover w-full"
-                />
-                <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-black/30 to-transparent"></div>
+                {currentCourse?.available && (
+                  <div className="flex">
+                    <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
+                      Kurs już dostępny
+                    </div>
+                  </div>
+                )}
+
+                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.1] drop-shadow-xl">
+                  {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
+                </h1>
+
+                <p className="text-xl text-gray-100 font-medium drop-shadow-md">
+                  {currentCourse?.date
+                    ? `Data kursu: ${currentCourse.date}`
+                    : "Nowa edycja kursów CEEA już wkrótce!"}
+                </p>
+
+                <p className="text-gray-200 max-w-lg leading-relaxed text-lg drop-shadow-md">
+                  {currentCourse?.description2 ||
+                    "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
+                </p>
+
+                {currentCourse && (
+                  <motion.div whileHover={{ scale: 1.05 }} className="pt-2">
+                    <Link
+                      to={websiteRegister}
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 12h14m-7-7l7 7-7 7"
+                        />
+                      </svg>
+                      Zapisz się na kurs
+                    </Link>
+                  </motion.div>
+                )}
               </motion.div>
-            </motion.div>
+
+              {/* Prawa kolumna: obrazek */}
+              <motion.div
+                className="lg:col-span-7 relative max-lg:hidden flex items-center justify-center"
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.3 }}
+              >
+                <div className="relative w-full max-w-2xl">
+                  {/* Glow za zdjęciem */}
+                  <div className="absolute -inset-4 bg-gradient-to-r from-[#0077FF]/20 to-[#00C6FF]/20 rounded-[3rem] blur-2xl opacity-60" />
+
+                  <motion.div className="relative group">
+                    <GatsbyImage
+                      image={getImage(
+                        currentCourse?.image || data.defaultImage
+                      )}
+                      alt={currentCourse?.nameCourse || "CEEA kurs"}
+                      className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full"
+                      imgClassName="object-cover"
+                    />
+
+                    {/* Gradient overlay - subtelniejszy */}
+                    <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-black/20 via-transparent to-transparent" />
+
+                    {/* Dekoracyjna ramka */}
+                    <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10" />
+                  </motion.div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </section>
 
@@ -169,13 +273,15 @@ const IndexPage = ({ data }) => {
             </h2>
             <div
               className={`
-        grid gap-10
-        ${
-          futureCourses.length <= 2
-            ? "md:grid-cols-2 sm:grid-col-1 justify-items-center"
-            : "md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-1"
-        } 
-      `}
+                grid gap-10
+                ${
+                  futureCourses.length === 1
+                    ? "grid-cols-1 max-w-xl mx-auto"
+                    : futureCourses.length === 2
+                    ? "md:grid-cols-2 sm:grid-cols-1 justify-items-center"
+                    : "md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-1"
+                } 
+              `}
             >
               {futureCourses.map((course, i) => (
                 <motion.div
@@ -190,11 +296,8 @@ const IndexPage = ({ data }) => {
                     ease: "easeOut",
                   }}
                 >
-                  <Img
-                    fluid={
-                      course.image?.fluid ||
-                      data.defaultImage.childImageSharp.fluid
-                    }
+                  <GatsbyImage
+                    image={getImage(course.image || data.defaultImage)}
                     alt={course.nameCourse}
                     className="rounded-t-3xl h-56 object-cover"
                   />
@@ -264,46 +367,48 @@ const IndexPage = ({ data }) => {
         </section>
 
         {/* === KRÓTKA INFORMACJA O NADCHODZĄCYM KURSIE === */}
-        <section className="bg-[#016ABA] dark:bg-sky-900 py-20 text-white">
-          <div className="max-w-6xl mx-auto text-center px-6">
-            <motion.h2
-              className="text-3xl font-bold mb-4"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6 }}
-            >
-              {currentCourse
-                ? "Kurs już dostępny"
-                : "Najbliższy kurs już wkrótce!"}
-            </motion.h2>
-
-            <motion.p
-              className="text-lg mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-            >
-              Rejestracja otwarta! Zdobądź praktyczną wiedzę, doświadczenie i
-              certyfikat CEEA.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <Link
-                to={websiteRegister}
-                className="bg-white text-[#016ABA] font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition"
+        {currentCourse?.available && (
+          <section className="bg-[#016ABA] dark:bg-sky-900 py-20 text-white">
+            <div className="max-w-6xl mx-auto text-center px-6">
+              <motion.h2
+                className="text-3xl font-bold mb-4"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
               >
-                Zarejestruj się teraz
-              </Link>
-            </motion.div>
-          </div>
-        </section>
+                {currentCourse
+                  ? "Kurs już dostępny"
+                  : "Najbliższy kurs już wkrótce!"}
+              </motion.h2>
+
+              <motion.p
+                className="text-lg mb-6"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+              >
+                Rejestracja otwarta! Zdobądź praktyczną wiedzę, doświadczenie i
+                certyfikat CEEA.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <Link
+                  to={websiteRegister}
+                  className="bg-white text-[#016ABA] font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition"
+                >
+                  Zarejestruj się teraz
+                </Link>
+              </motion.div>
+            </div>
+          </section>
+        )}
 
         {/* === SPONSORZY === */}
         <section className="py-24 bg-gray-50 dark:bg-slate-800">
@@ -319,11 +424,12 @@ const IndexPage = ({ data }) => {
             </motion.h2>
 
             <div
-              className={`grid gap-8 items-center justify-center opacity-80
-      ${sponsors.length === 1 ? "grid-cols-1" : ""}
-      ${sponsors.length === 2 ? "grid-cols-2 place-content-center" : ""}
-      ${sponsors.length >= 3 ? "grid-cols-2 md:grid-cols-4" : ""}
-      `}
+              className={`grid gap-8 items-center justify-center opacity-80 place-items-center
+                ${sponsors.length === 1 ? "grid-cols-1 max-w-xs mx-auto" : ""}
+                ${sponsors.length === 2 ? "grid-cols-2 max-w-2xl mx-auto" : ""}
+                ${sponsors.length === 3 ? "grid-cols-2 md:grid-cols-3 max-w-4xl mx-auto" : ""}
+                ${sponsors.length >= 4 ? "grid-cols-2 md:grid-cols-4" : ""}
+              `}
             >
               {sponsors.map((sponsor, idx) => {
                 const image = getImage(sponsor.gatsbyImageData)
@@ -370,66 +476,67 @@ const IndexPage = ({ data }) => {
           </div>
         </section>
 
-        {data.datoCmsDetailedInformationAboutTheCourse && (
-          <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(2,132,199,0.15),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.15),transparent_70%)]"></div>
+        {currentCourse?.available &&
+          !!data?.datoCmsDetailedInformationAboutTheCourse && (
+            <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(2,132,199,0.15),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.15),transparent_70%)]"></div>
 
-            <div className="relative max-w-5xl mx-auto px-6">
-              <motion.h2
-                className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-              >
-                Dodatkowe informacje o kursie
-              </motion.h2>
-
-              <motion.p
-                className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-              >
-                {currentCourse.additionalInfo ||
-                  "Więcej szczegółowych informacji o tym kursie znajdziesz na stronie poświęconej danej edycji."}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <Link
-                  to={`/kursy/${getYearFromDate(
-                    data.activeCourse.nodes[0].date
-                  )}/${slugify(
-                    data.activeCourse.nodes[0].nameCourse
-                  )}/szczegoly`}
-                  className="inline-flex items-center gap-2 bg-[#016ABA] hover:bg-[#0157A1] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+              <div className="relative max-w-5xl mx-auto px-6">
+                <motion.h2
+                  className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.6 }}
                 >
-                  Przejdź do strony kursu
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="w-5 h-5"
+                  Dodatkowe informacje o kursie
+                </motion.h2>
+
+                <motion.p
+                  className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                >
+                  {currentCourse?.additionalInfo ||
+                    "Więcej szczegółowych informacji o tym kursie znajdziesz na stronie poświęconej danej edycji."}
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <Link
+                    to={`/kursy/${getYearFromDate(
+                      data.activeCourse?.nodes[0]?.date
+                    )}/${slugify(
+                      data.activeCourse?.nodes[0]?.nameCourse
+                    )}/szczegoly`}
+                    className="inline-flex items-center gap-2 bg-[#016ABA] hover:bg-[#0157A1] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-7-7l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </motion.div>
-            </div>
-          </section>
-        )}
+                    Przejdź do strony kursu
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 12h14m-7-7l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </motion.div>
+              </div>
+            </section>
+          )}
 
         {/* === DLACZEGO WARTO === */}
         <section className="py-24 bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
@@ -517,9 +624,7 @@ export const query = graphql`
           gatsbyImageData(width: 1600, placeholder: BLURRED)
         }
         image {
-          fluid(maxWidth: 800) {
-            ...GatsbyDatoCmsFluid
-          }
+          gatsbyImageData(width: 800, placeholder: BLURRED)
         }
       }
     }
@@ -529,9 +634,7 @@ export const query = graphql`
         date
         nameCourse
         backgroundimage {
-          fluid(maxWidth: 800) {
-            ...GatsbyDatoCmsFluid
-          }
+          gatsbyImageData(width: 800, placeholder: BLURRED)
         }
       }
     }
@@ -541,18 +644,14 @@ export const query = graphql`
         node {
           name
           childImageSharp {
-            fluid(maxWidth: 800) {
-              ...GatsbyImageSharpFluid
-            }
+            gatsbyImageData(width: 800, placeholder: BLURRED)
           }
         }
       }
     }
     defaultImage: file(relativePath: { eq: "onas3.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 800) {
-          ...GatsbyImageSharpFluid
-        }
+        gatsbyImageData(width: 800, placeholder: BLURRED)
       }
     }
     datoCmsMainsite {

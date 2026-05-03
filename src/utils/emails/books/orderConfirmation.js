@@ -7,6 +7,14 @@ const OrderConfirmation = ({
   deliveryCost,
   total,
 }) => {
+  const safeFirstName = firstName ?? ""
+  const safeLastName = lastName ?? ""
+  const safeOrderNumber = orderNumber ?? ""
+  const safeDeliveryMethod = deliveryMethod ?? ""
+  const safeTotal = total ?? 0
+  const safeDeliveryCost = deliveryCost ?? 0
+  const safeItems = Array.isArray(items) ? items : []
+
   const rawHtml = `
   <!DOCTYPE html>
 <html lang="pl">
@@ -92,10 +100,10 @@ const OrderConfirmation = ({
       <!-- Header -->
 
       <!-- Content -->
-      <h1 style="color: #004aad; margin-bottom: 30px; margin-top: 20px; text-align:center">Zamówienie od: ${firstName} ${lastName}!</h1>
-      <p>Numer zamówienia: <strong>${orderNumber}</strong></p>
-      <p>Metoda dostawy: <strong>${deliveryMethod}</strong></p>
-      <p>Całkowita kwota: <strong>${total} zł</strong></p>
+      <h1 style="color: #004aad; margin-bottom: 30px; margin-top: 20px; text-align:center">Zamówienie od: ${safeFirstName} ${safeLastName}!</h1>
+      <p>Numer zamówienia: <strong>${safeOrderNumber}</strong></p>
+      <p>Metoda dostawy: <strong>${safeDeliveryMethod}</strong></p>
+      <p>Całkowita kwota: <strong>${safeTotal} zł</strong></p>
 
       <h2 style="color: #004aad; margin-top:50px;">Podsumowanie zamówienia</h2>
       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; margin-bottom: 20px;">
@@ -107,22 +115,21 @@ const OrderConfirmation = ({
           </tr>
         </thead>
         <tbody>
-          ${(Array.isArray(items) ? items : [])
-            .map(
-              (item) => `
-              <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;">${item.title}</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">${item.price} zł</td>
-              </tr>
-            `
-            )
-            .join("")}
+        ${safeItems
+          .filter(item => item)
+          .map((item) => `
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item?.title ?? ""}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item?.quantity ?? 0}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${item?.price ?? 0} zł</td>
+            </tr>
+          `)
+          .join("")}
         </tbody>
       </table>
 
-      <p style="text-align: right; font-weight: bold;">Koszt dostawy: ${deliveryCost} zł</p>
-      <p style="text-align: right; font-weight: bold;">Razem do zapłaty: ${total} zł</p>
+      <p style="text-align: right; font-weight: bold;">Koszt dostawy: ${safeDeliveryCost} zł</p>
+      <p style="text-align: right; font-weight: bold;">Razem do zapłaty: ${safeTotal} zł</p>
 
       <!-- Footer -->
       <div class="footer">

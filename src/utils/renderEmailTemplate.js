@@ -2,12 +2,12 @@ import React from "react"
 import ReactDOMServer from "react-dom/server" // Import ReactDOMServer
 import juice from "juice"
 import he from "he"
-import OrderConfirmation from "../templates/emails/books/orderConfirmation"
-import orderConfirmationUser from "../templates/emails/books/orderConfirmationUser"
-import ContactConfirmation from "../templates/emails/contact/contactConfirmation"
-import ContactConfirmationUser from "../templates/emails/contact/contactConfirmationUser"
-import CourseConfirmation from "../templates/emails/course/courseConfirmation"
-import CourseConfirmationUser from "../templates/emails/course/courseConfirmationUser"
+import OrderConfirmation from "../utils/emails/books/orderConfirmation"
+import orderConfirmationUser from "../utils/emails/books/orderConfirmationUser"
+import ContactConfirmation from "../utils/emails/contact/contactConfirmation"
+import ContactConfirmationUser from "../utils/emails/contact/contactConfirmationUser"
+import CourseConfirmation from "../utils/emails/course/courseConfirmation"
+import CourseConfirmationUser from "../utils/emails/course/courseConfirmationUser"
 
 
 export const renderEmailTemplate = (templateName, data) => {
