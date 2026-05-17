@@ -10,13 +10,13 @@ const Breadcrumbs = () => {
   const links = allLinks.filter(link => currentPath.includes(link.to))
 
   return (
-    <nav className="flex" aria-label="Breadcrumb">
+    <nav className="inline-block bg-slate-300 py-2 px-3 rounded-lg" aria-label="Breadcrumb">
       <ol className="flex items-center space-x-1">
         {links.map((link, index) => (
           <li key={index} className="flex items-center dark:text-gray-200">
             {index !== 0 && (
               <ChevronRightIcon
-                className="h-5 w-5 text-gray-400 dark:text-gray-500 mx-2"
+                className="h-5 w-5 text-gray-600 dark:text-gray-500 mx-1"
                 aria-hidden="true"
               />
             )}
@@ -27,7 +27,7 @@ const Breadcrumbs = () => {
             ) : (
               <a
                 href={link.to}
-                className="text-gray-700 hover:text-blue-800 dark:text-blue-400 font-medium transition"
+                className="text-slate-600 hover:text-blue-900 dark:text-blue-400 font-medium transition"
               >
                 {link.title}
               </a>
