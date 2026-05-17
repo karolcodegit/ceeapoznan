@@ -3,13 +3,18 @@ import { graphql } from "gatsby"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import Paragraph from "../components/Paragraph/Paragraph"
 import Seo from "../components/seo"
-import {OfficialLetter} from '../components/OfficialLetter/OfficialLetter'
+import { OfficialLetterAnnaKluzik } from "../components/OfficialLetter/OfficialLetterAnnaKluzik"
+import { OfficialLetterKrzysztofKusza } from "../components/OfficialLetter/OfficialLetterKrzysztofKusza"
+
 
 const AboutUs = ({ data }) => {
   return (
     <div className="max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <OfficialLetter />
+      <OfficialLetterKrzysztofKusza />
 
+      <div className="my-20 border-t border-gray-200 dark:border-gray-800" />
+
+      <OfficialLetterAnnaKluzik />
       <div className="my-20 border-t border-gray-200 dark:border-gray-800" />
 
       {data.allDatoCmsAboutCompany.nodes[0].paragraph.map((para, index) => {
