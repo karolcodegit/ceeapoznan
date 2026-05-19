@@ -6,7 +6,7 @@ import Paragraph from "../components/Paragraph/Paragraph"
 import Line from "../components/Line/Line"
 import Button from "../components/Button/Button"
 import SideInfoPanel from "../components/SideInfoPanel/SideInfoPanel"
-import { MarkdownText } from "../utils/markdownText"
+import { MarkdownText } from '../utils/markdownText.jsx'
 import { slugify } from "../utils/slugify"
 import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 import { FaFacebook } from "react-icons/fa"
@@ -145,9 +145,7 @@ const Course = ({ data }) => {
                   {/* Nagłówek dnia */}
                   <div className="flex items-center gap-4 mb-6">
                     <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
-                      <span className="text-primary font-bold text-lg">
-                        {index + 1}
-                      </span>
+                      
                     </div>
                     <div>
                       <Title
@@ -178,13 +176,7 @@ const Course = ({ data }) => {
                               ? "bg-blue-50 dark:bg-blue-900/20 -ml-10 pl-10 pr-4 rounded-r-lg border-l-4 border-blue-500"
                               : ""
                           }`}
-                          variants={timelineItem}
                         >
-                          {/* Kropka na timeline */}
-                          {!isWorkshop && (
-                            <div className="absolute -left-[21px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600" />
-                          )}
-
                           {isFacebookLink ? (
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                               <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
