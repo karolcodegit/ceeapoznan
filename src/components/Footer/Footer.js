@@ -200,7 +200,7 @@ const Footer = () => {
                 </div>
                 <div className="mb-4">
                   <span className="max-md:mt-2">
-                    <Link to="/sitemap-0.xml">Sitemap</Link>
+                    <Link to="/sitemap-index.xml">Sitemap</Link>
                     <span className="px-1">|</span>
                     <Link to="/polityka-prywatnosci">Polityka prywatności</Link>
                   </span>

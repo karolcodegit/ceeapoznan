@@ -1,17 +1,24 @@
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
+
 /**
  * @type {import('gatsby').GatsbyConfig}
  */
-
-
 module.exports = {
   siteMetadata: {
-    title: `CEEA Poznań`,
-    description: `Ceea - Ośrodek Poznański. Szkolenia, kursy z certyfikatem. `,
+    title: `CEEA Poznań – Kursy Anestezjologii i Medycyny Okołooperacyjnej`,
+    description: `CEEA Poznań – kursy i szkolenia dla anestezjologów od 1995 roku. Medycyna okołooperacyjna, neurologia, znieczulenie regionalne. Certyfikowane szkolenia stacjonarne. Zapisz się na kurs!`,
+    keywords: `kurs anestezjologii, szkolenia medyczne, medycyna okołooperacyjna, znieczulenie regionalne, CEEA Poznań, kursy dla lekarzy, anestezjologia`,
     author: `Karol Znojkiewicz`,
-    siteUrl: process.env.GATSBY_SITE_URL,
+    lang: `pl`,
+    locale: `pl_PL`,
+    siteUrl: process.env.GATSBY_SITE_URL || `https://ceea.org.pl/`,
+    organization: {
+      name: `CEEA – Centrum Edukacji w Anestezjologii`,
+      url: `https://ceea.org.pl/`,
+      logo: `https://ceea.org.pl/logo-ceea.png`,
+    },
   },
   plugins: [
     {
@@ -35,12 +42,63 @@ module.exports = {
         ],
       },
     },
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
         siteUrl: `https://ceea.org.pl/`,
+        changefreq: `weekly`,
+        priority: 0.7,
+        query: `
+          {
+            site {
+              siteMetadata {
+                siteUrl
+              }
+            }
+            allSitePage {
+              nodes {
+                path
+                pageContext
+              }
+            }
+          }
+        `,
+        resolveSiteUrl: ({ site }) => site.siteMetadata.siteUrl,
+        serialize: ({ path, pageContext }) => {
+          return {
+            url: path,
+            lastmod: pageContext?.lastmod,
+            changefreq: pageContext?.changefreq || `weekly`,
+            priority: pageContext?.priority || 0.7,
+          }
+        },
       }
+    },
+    {
+      resolve: `gatsby-plugin-robots-txt`,
+      options: {
+        host: `https://ceea.org.pl/`,
+        sitemap: `https://ceea.org.pl/sitemap-index.xml`,
+        policy: [
+          {
+            userAgent: `*`,
+            allow: `/`,
+            disallow: [
+              `/kurs-nr-6-2024/`,
+              `/kurs-nr-1-2024/`,
+              `/kurs-nr-5-2023/`,
+              `/kurs-nr-5/`,
+              `/aktualnosci.html`,
+              `/kursy-ceea.html`,
+              `/*?from=xiaodiaomao.com`,
+              `/*?from=www.xiaodiaomao.com`,
+              `/*?from=192.168.1.19:9090`,
+              `/feed/`,
+              `/contact/`,
+            ],
+          },
+        ],
+      },
     },
     `gatsby-plugin-layout`,
     'gatsby-plugin-postcss',
@@ -57,7 +115,6 @@ module.exports = {
       resolve: 'gatsby-plugin-playground',
       options: {
         disableNetlify: false,
-        // Możesz dostosować inne opcje w zależności od potrzeb
       },
     },
     `gatsby-transformer-sharp`,
@@ -65,22 +122,34 @@ module.exports = {
     {
       resolve: `gatsby-source-datocms`,
       options: {
-        apiToken: 
-          process.env.GATSBY_DATOCMS_API,
+        apiToken: process.env.GATSBY_DATOCMS_API,
       },
     },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Ceea - Ośrodek Poznański`,
-        short_name: `Ceea`,
+        name: `CEEA Poznań – Kursy Anestezjologii i Medycyny Okołooperacyjnej`,
+        short_name: `CEEA Poznań`,
         start_url: `/`,
-        background_color: `#fff`,
-        // This will impact how browsers show your PWA/website
-        // https://css-tricks.com/meta-theme-color-and-trickery/
-        // theme_color: `#663399`,
+        background_color: `#ffffff`,
+        theme_color: `#00499A`,
         display: `minimal-ui`,
-        icon: `src/assets/images/Icon-logo.png`, // This path is relative to the root of the site.
+        icon: `src/assets/images/Icon-logo.png`,
+        crossOrigin: `use-credentials`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl: `https://ceea.org.pl/`,
+        stripQueryString: true,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-schema-snapshot`,
+      options: {
+        path: `./src/graphql/schema.graphql`,
+        update: false,
       },
     },
   ],
