@@ -145,12 +145,5 @@ module.exports = {
         stripQueryString: true,
       },
     },
-    {
-      resolve: `gatsby-plugin-schema-snapshot`,
-      options: {
-        path: `./src/graphql/schema.graphql`,
-        update: false,
-      },
-    },
   ],
 }

@@ -36,7 +36,6 @@
     "gatsby-plugin-playground": "^1.0.6",
     "gatsby-plugin-postcss": "^6.13.1",
     "gatsby-plugin-robots-txt": "^1.8.0",
-    "gatsby-plugin-schema-snapshot": "^4.16.0",
     "gatsby-plugin-sharp": "^5.12.0",
     "gatsby-plugin-sitemap": "^6.12.3",
     "gatsby-plugin-smoothscroll": "^1.2.0",
