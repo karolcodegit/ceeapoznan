@@ -654,9 +654,6 @@ export const query = graphql`
         gatsbyImageData(width: 800, placeholder: BLURRED)
       }
     }
-    // datoCmsMainsite {
-    //   paragraph
-    // }
     datoCmsSponsor {
       sponsor {
         title

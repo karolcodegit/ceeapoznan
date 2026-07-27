@@ -60,7 +60,8 @@ const viewportSettings = {
 // --- Komponent ---
 
 const Faq = ({ data }) => {
-  const faqItems = data?.faq?.questionanswerfaq || []
+  const faqItems = data?.allDatoCmsFaq?.edges?.[0]?.node?.questionanswerfaq || []
+
 
   return (
     <motion.div
@@ -98,7 +99,7 @@ const Faq = ({ data }) => {
           variants={staggerContainer}
         >
           <dl>
-            {faqItems.map((item, index) => (
+          {faqItems.map((item, index) => (
               <motion.div key={index} variants={faqItemAnim}>
                 <FaqItem
                   question={item.question}
@@ -115,10 +116,14 @@ const Faq = ({ data }) => {
 
 export const query = graphql`
   query Faq {
-    faq {
-      questionanswerfaq {
-        question
-        answer
+    allDatoCmsFaq {
+      edges {
+        node {
+          questionanswerfaq {
+            question
+            answer
+          }
+        }
       }
     }
   }
