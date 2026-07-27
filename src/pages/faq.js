@@ -60,6 +60,8 @@ const viewportSettings = {
 // --- Komponent ---
 
 const Faq = ({ data }) => {
+  const faqItems = data?.faq?.questionanswerfaq || []
+
   return (
     <motion.div
       className="mx-auto px-4 md:px-0"
@@ -96,11 +98,8 @@ const Faq = ({ data }) => {
           variants={staggerContainer}
         >
           <dl>
-            {data.faq.questionanswerfaq.map((item, index) => (
-              <motion.div
-                key={index}
-                variants={faqItemAnim}
-              >
+            {faqItems.map((item, index) => (
+              <motion.div key={index} variants={faqItemAnim}>
                 <FaqItem
                   question={item.question}
                   answer={item.answer}
@@ -118,10 +117,8 @@ export const query = graphql`
   query Faq {
     faq {
       questionanswerfaq {
-        ... on DatoCmsQuetionsanswerfaq {
-          question
-          answer
-        }
+        question
+        answer
       }
     }
   }
