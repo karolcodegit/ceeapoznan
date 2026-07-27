@@ -118,11 +118,13 @@ export const query = graphql`
   query Faq {
     faq {
       questionanswerfaq {
-        question
-        answer
+        ... on DatoCmsQuetionsAnswerFaq {
+          question
+          answer
+        }
       }
     }
-  }
+}
 `
 
 export const Head = () => <Seo title="Faq" />
