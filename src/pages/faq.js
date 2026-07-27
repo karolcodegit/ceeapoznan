@@ -1,6 +1,5 @@
 import React from "react"
 import { motion } from "framer-motion"
-
 import { graphql } from "gatsby"
 import Title from "../components/Title/Title"
 import Paragraph from "../components/Paragraph/Paragraph"
@@ -97,14 +96,14 @@ const Faq = ({ data }) => {
           variants={staggerContainer}
         >
           <dl>
-            {data.allDatoCmsFaq.nodes[0].questionanswer.map((faq, index) => (
+            {data.faq.questionanswerfaq.map((item, index) => (
               <motion.div
                 key={index}
                 variants={faqItemAnim}
               >
                 <FaqItem
-                  question={faq.question}
-                  answer={faq.answer}
+                  question={item.question}
+                  answer={item.answer}
                 />
               </motion.div>
             ))}
@@ -116,13 +115,11 @@ const Faq = ({ data }) => {
 }
 
 export const query = graphql`
-  query faq {
-    allDatoCmsFaq {
-      nodes {
-        questionanswer {
-          question
-          answer
-        }
+  query Faq {
+    faq {
+      questionanswerfaq {
+        question
+        answer
       }
     }
   }
