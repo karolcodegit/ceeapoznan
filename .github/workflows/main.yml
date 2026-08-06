@@ -40,7 +40,7 @@ jobs:
     - run: npm run build  # or gatsby build
       env:
         GATSBY_DATOCMS_API: ${{ secrets.GATSBY_DATOCMS_API }}
-        GATSBY_AIRTABLE_ACCESS_TOKEN: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
+        AIRTABLE_ACCESS_TOKEN: ${{ secrets.AIRTABLE_ACCESS_TOKEN }}
         GATSBY_AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
         GATSBY_AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME }}
         GATSBY_AIRTABLE_TABLE_NAME_ORDER: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_ORDER }}

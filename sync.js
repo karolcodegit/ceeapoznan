@@ -29,7 +29,7 @@ async function getDatoCmsData() {
 async function updateAirtableRecords(book) {
   const response = await axios.get(`https://api.airtable.com/v0/${process.env.GATSBY_AIRTABLE_BASE_ID}/${process.env.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK}`, {
     headers: {
-      Authorization: `Bearer ${process.env.GATSBY_AIRTABLE_ACCESS_TOKEN}`
+      Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`
     }
   });
 
@@ -46,7 +46,7 @@ async function updateAirtableRecords(book) {
         },
         {
           headers: {
-            Authorization: `Bearer ${process.env.GATSBY_AIRTABLE_ACCESS_TOKEN}`
+            Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`
           }
         }
       );

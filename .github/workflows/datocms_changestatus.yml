@@ -1,5 +1,5 @@
 name: DatoCMS to Airtable Sync
-
+  
 on:
   push:
     branches:
@@ -24,7 +24,7 @@ jobs:
     - name: Run script to sync DatoCMS and Airtable
       env:
         DATO_CMS_API_KEY: ${{ secrets.GATSBY_DATOCMS_API }}
-        AIRTABLE_API_KEY: ${{ secrets.GATSBY_AIRTABLE_ACCESS_TOKEN }}
+        AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_ACCESS_TOKEN }}
         AIRTABLE_BASE_ID: ${{ secrets.GATSBY_AIRTABLE_BASE_ID }}
         AIRTABLE_TABLE_NAME: ${{ secrets.GATSBY_AIRTABLE_TABLE_NAME_NOTIFICATIONBOOK }}
       run: node sync.js

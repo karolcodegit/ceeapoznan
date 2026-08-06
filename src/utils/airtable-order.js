@@ -1,6 +1,6 @@
 import Airtable from 'airtable';
 
-const base = new Airtable({apiKey: process.env.GATSBY_AIRTABLE_ACCESS_TOKEN}).base(process.env.GATSBY_AIRTABLE_BASE_ID);
+const base = new Airtable({apiKey: process.env.AIRTABLE_ACCESS_TOKEN}).base(process.env.GATSBY_AIRTABLE_BASE_ID);
 const table = base(process.env.GATSBY_AIRTABLE_TABLE_NAME_ORDER);
 
 export function saveAirableOrderBook(enrichedForm) {
