@@ -34,7 +34,7 @@ const ContactForm = ({
       console.warn("🚫 Spam wykryty (honeypot/fake field).");
       return;
     }
-  
+  // dkmsakmd
     // 🧩 Dołącz token do wysyłanych danych
     const payload = { ...contactData, token };
 
