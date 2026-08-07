@@ -15,7 +15,6 @@ const Rejestracja = ({ data }) => {
     course => course.available === true
   );
 
-  console.log(availableCourse)
   return (
     <>
       <div className="">
