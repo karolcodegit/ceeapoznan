@@ -44,9 +44,9 @@ const FormRegister = ({
 
   
   // Bezpieczne tworzenie checkboxów
-  const checkboxFields = registerFormNode.positioncheckbox
-    .filter((item) => item && item.label && item.price !== undefined && item.price !== null)
-    .map((item, index) => ({
+  const checkboxFields = (registerFormNode?.positioncheckbox || [])
+  .filter((item) => item && item.label && item.price !== undefined && item.price !== null)
+  .map((item, index) => ({
       id: item.id || `option-${index}`,
       name: `option${index + 1}`,
       label: `${item.label} (${item.price} PLN)`,
