@@ -74,6 +74,13 @@ const FormRegister = ({
         value: safeCourse.nameCourse,
       })
     );
+    dispatch(
+      updateField({
+        form: "formRegister",
+        field: "courseId",
+        value: safeCourse.originalId,
+      })
+    );
   }, [dispatch, safeCourse]);
 
   // useEffect do liczenia total

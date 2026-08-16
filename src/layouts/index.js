@@ -88,13 +88,6 @@ focus:ring-4 focus:ring-blue-300 focus:outline-none"
                     )}
                   </button>
                   <Cart />
-                  {/* <SlidePanel
-                  isOpen={isPanelOpen}
-                  toggle={togglePanel}
-                  darkMode={darkMode}
-                  setDarkMode={setDarkMode}
-                  setFontSize={setFontSize}
-                /> */}
                 </div>
                 <div
                   id="top"

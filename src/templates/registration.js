@@ -13,13 +13,18 @@ const Rejestracja = ({ data }) => {
 
   const availableCourse = data.allDatoCmsCourse.nodes.find(
     course => course.available === true
-  );
+  )
 
   return (
     <>
       <div className="">
         <div className="max-w-6xl mx-auto ">
-          <FormRegister data={data} availableCourse={availableCourse || { nameCourse: "Bez nazwy kursu" }} />
+          <FormRegister
+            data={data}
+            availableCourse={
+              availableCourse || { nameCourse: "Bez nazwy kursu" }
+            }
+          />
         </div>
       </div>
     </>
@@ -36,13 +41,14 @@ export const query = graphql`
           id
           available
         }
-           dish{
-      dish
-    }
+        dish {
+          dish
+        }
       }
     }
     allDatoCmsCourse {
       nodes {
+        originalId
         courseCost
         available
         courseDuration

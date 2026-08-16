@@ -38,6 +38,7 @@ export function saveToAirtable(enrichedForm) {
         'CourseTitle': enrichedForm.courseTitle,
         'Total': enrichedForm.total,
         'Order Number': enrichedForm.orderNumber,
+        'CourseID': enrichedForm.courseId || '',
         }
       },
     ], function(err, records) {
