@@ -24,6 +24,7 @@ export const handleContactSubmit = async (
 
     // ✅ UWAGA: Dodajemy token do payloadu!
     const payload = {
+      formType: "contact",
       name: contactData.name,
       email: contactData.email,
       message: contactData.message,

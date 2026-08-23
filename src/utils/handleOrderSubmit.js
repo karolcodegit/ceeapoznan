@@ -70,6 +70,7 @@ export const handleOrderSubmit = async (
         const payload = {
           toYou: {
             to: "sekretariat@ceea.org.pl",
+            formType: "order",
             subject: `Nowe zamówienie od ${orderData.customer.firstName} ${orderData.customer.lastName}`,
             html: emailHtmlToYou,
           },
