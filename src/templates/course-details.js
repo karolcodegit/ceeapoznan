@@ -168,7 +168,7 @@ const courseDetails = ({ data }) => {
               </Paragraph>
               <Paragraph>
                 Liczba miejsc na kursie ograniczona, dlatego też prosimy o jak
-                najszybsze dokonanie wpłaty.
+                najszybsze dokonanie wpłaty..
               </Paragraph>
             </div>
           </section>
