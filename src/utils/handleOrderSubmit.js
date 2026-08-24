@@ -76,7 +76,7 @@ export const handleOrderSubmit = async (
           },
           toUser: {
             to: orderData.customer.email,
-            subject: "Dziękujemy za przesłanie formularza",
+            subject: `Potwierdzenie zamówienia nr ${orderNumber} – CEEA Poznań`,
             html: emailHtmlToUser,
           },
         }
