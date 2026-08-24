@@ -61,7 +61,7 @@ const MainLayout = ({ children }) => {
             <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
               <Header />
               <Toaster richColors position="top-right" closeButton />
-              <div className="bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800">
+              <div className={`bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 ${isHomePage ? "" : "pt-20 lg:pt-24"}`}>
                 <div className="flex flex-col items-end justify-end relative">
                   <button
                     onClick={toggleDarkMode}
@@ -90,13 +90,13 @@ focus:ring-4 focus:ring-blue-300 focus:outline-none"
                   <Cart />
                 </div>
                 <div
-                  id="top"
-                  className={`${
-                    isHomePage
-                      ? ""
-                      : "max-w-6xl py-12 sm:py-20 lg:py-28 mx-auto px-4 sm:px-6 lg:px-8"
-                  }`}
-                >
+    id="top"
+    className={`${
+      isHomePage
+        ? ""
+        : "max-w-6xl pb-12 sm:pb-20 lg:pb-28 mx-auto px-4 sm:px-6 lg:px-8"
+    }`}
+  >
                   {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
                   {!isHomePage && !is404Page && <TopHeader />}
                   {children}
