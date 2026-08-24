@@ -3,6 +3,8 @@ import { renderEmailTemplate } from "./renderEmailTemplate"
 import { generateOrderNumber } from "./generateOrderNumber";
 import { saveToAirtable } from "./airtable";
 
+import { CourseConfirmationUserText } from "../utils/emails/course/courseConfirmationUser"
+
 export const handleRegisterSubmit = async (
   registerData,
   apiEndpoint, 
@@ -58,20 +60,28 @@ export const handleRegisterSubmit = async (
           orderNumber,
         });
 
+        const emailTextToUser = CourseConfirmationUserText({
+          courseTitle: registerData.courseTitle,
+          total: registerData.total,
+          orderNumber,
+        })
+
         // Przygotowanie payload do wysyłki do Google Cloud Functions
         const payload = {
+          formType: "course",
           token,
           toYou: {
             to: "sekretariat@ceea.org.pl",
-            subject: `Zapisano na kurs ${registerData.courseTitle}`,
+            subject: `Nowe zgłoszenie na kurs: ${registerData.courseTitle} (nr ${orderNumber})`,
             html: emailHtmlToYou,
           },
           toUser: {
             to: registerData.email,
-            subject: "Serdecznie dziękujemy za zainteresowanie naszym kursem",
+            subject: `Potwierdzenie zgłoszenia na kurs "${registerData.courseTitle}" – CEEA Poznań`,
             html: emailHtmlToUser,
+            text: emailTextToUser, // ← CourseConfirmationUserText({ courseTitle, total, orderNumber })
           },
-        };
+        }
 
         console.log("📦 Payload wysyłany do API:", payload);
 

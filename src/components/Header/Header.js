@@ -1,13 +1,32 @@
-import React from "react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { useStaticQuery, graphql, Link } from "gatsby"
 import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
+import {
+  HomeIcon,
+  InformationCircleIcon,
+  AcademicCapIcon,
+  BookOpenIcon,
+  EnvelopeIcon,
+  QuestionMarkCircleIcon,
+  UserCircleIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/solid"
 import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
+
+const linkIcons = {
+  "Strona główna": HomeIcon,
+  "O nas": InformationCircleIcon,
+  "Kursy": AcademicCapIcon,
+  "Książki": BookOpenIcon,
+  "Kontakt": EnvelopeIcon,
+  "FAQ": QuestionMarkCircleIcon,
+  "Panel kursanta": UserCircleIcon,
+}
 
 const Header = () => {
   const data = useStaticQuery(graphql`
@@ -25,29 +44,48 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const handleClick = () => {
     if (mobileMenuOpen) {
-      setTimeout(() => setMobileMenuOpen(false), 100) // 500ms delay
+      setTimeout(() => setMobileMenuOpen(false), 100)
     } else {
       setMobileMenuOpen(true)
     }
   }
 
+  const courseDetailsPath = `/kursy/${getYearFromDate(
+    data.activeCourse.nodes[0].date
+  )}/${slugify(data.activeCourse.nodes[0].nameCourse)}/szczegoly`
+
+  const courseRegistrationPath = `/kursy/${getYearFromDate(
+    activeCourse.date
+  )}/${slugify(activeCourse.nameCourse)}/rejestracja`
+
+  // Dodajemy Panel kursanta lokalnie (nie modyfikując menuLinks w innych miejscach)
+  const allMenuLinks = [
+    ...menuLinks,
+    { title: "Panel kursanta", to: "https://panel.ceea.org.pl" },
+  ]
+
   return (
-    <header className="relative bg-medium px-10 h-28 shadow-sm shadow-slate-900/10 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:shadow-slate-800/60 transition-colors duration-500 z-50">
+    <header className="relative bg-medium px-6 sm:px-8 xl:px-10 h-28 shadow-sm shadow-slate-900/10 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:shadow-slate-800/60 transition-colors duration-500 z-50">
       <nav
-        className="mx-auto lg:grid flex justify-between 2xl:grid-cols-6 grid-cols-5 h-full items-center text-center  max-lg:py-9"
+        className="mx-auto lg:grid flex justify-between 2xl:grid-cols-6 grid-cols-5 h-full items-center text-center max-lg:py-9"
         aria-label="Global"
       >
-        <div className="absolute max-lg:hidden top-0 left-0 right-0 w-27 h-36 bg-gradient-to-r bg-dark skew-x-40 scale-x-150	to-dark  dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"></div>
+        {/* Skewed background - desktop only */}
+        <div className="absolute max-lg:hidden top-0 left-0 right-0 w-27 h-36 bg-gradient-to-r bg-dark skew-x-40 scale-x-150 to-dark dark:from-slate-900 dark:via-slate-800 dark:to-slate-900"></div>
+
+        {/* Logo */}
         <div className="z-50 col-span-2">
           <Link to="/" className="-m-1.5 p-1.5 flex lg:pt-10">
             <span className="sr-only">CEEA - Ośrodek Poznański</span>
             <img
-              className="w-auto 2xl:h-12 xl:h-10 lg:h-9 md:h-12 max-md:h-11 max-sm:h-10 max-xl:pr-0 grow z-50 lg:pr-10 object-contain self-center mr-8"
+              className="w-auto 2xl:h-12 xl:h-10 lg:h-9 md:h-12 max-md:h-11 max-sm:h-10 max-xl:pr-0 grow z-50 lg:pr-4 xl:pr-8 2xl:pr-10 object-contain self-center mr-4 xl:mr-6 2xl:mr-8"
               src={Logo}
               alt="Logo CEEA"
             />
           </Link>
         </div>
+
+        {/* Mobile hamburger */}
         <div className="lg:hidden">
           <button
             aria-label="Open menu"
@@ -56,7 +94,6 @@ const Header = () => {
             onClick={handleClick}
           >
             <span className="sr-only">Open main menu</span>
-            {/* {mobileMenuOpen ? <Bars3Icon/> : <XMarkIcon/>} */}
             <Hamburger
               size={26}
               toggled={mobileMenuOpen}
@@ -64,7 +101,8 @@ const Header = () => {
             />
           </button>
         </div>
-        {/* Navigation desktop */}
+
+        {/* Desktop Navigation */}
         <div
           className={`hidden h-full lg:flex text-white w-full relative z-50 justify-between ${
             activeCourse ? "2xl:col-span-3" : "2xl:col-span-4"
@@ -75,7 +113,7 @@ const Header = () => {
               key={link.title}
               to={link.to}
               activeClassName="text-navyBlue dark:text-[#6b91c0] font-bold"
-              className='relative whitespace-nowrap px-4 flex items-center xl:px-7 md:px-5 font-semibold xl:text-lg md:text-base justify-end
+              className='relative whitespace-nowrap px-2 lg:px-3 xl:px-5 2xl:px-6 flex items-center font-semibold text-sm lg:text-sm xl:text-base 2xl:text-lg justify-end
         before:absolute before:content-[""] before:inset-0 before:bg-gradient-to-r before:from-vividTurquoise before:to-deepTurquoise before:opacity-0 before:skew-x-40 before:transition-all before:duration-300
         hover:before:opacity-100 before:-z-10
         hover:text-white hover:scale-[1.05] transition duration-300 ease-in-out
@@ -86,6 +124,8 @@ const Header = () => {
             </Link>
           ))}
         </div>
+
+        {/* Desktop CTA */}
         {activeCourse && (
           <div className="hidden 2xl:flex justify-end relative">
             <Button
@@ -101,7 +141,7 @@ const Header = () => {
         )}
       </nav>
 
-      {/* Mobile */}
+      {/* Mobile Menu */}
       <Dialog
         as="div"
         className="lg:hidden z-50"
@@ -111,16 +151,20 @@ const Header = () => {
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel
           className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto 
-  bg-gradient-to-b from-cyan-500 to-dark 
-  text-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 
-  dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 
-  transition-colors duration-300"
+                      bg-gradient-to-b from-cyan-500 to-dark 
+                      text-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 
+                      dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 
+                      transition-colors duration-300"
         >
           <div className="flex items-center justify-between relative">
-            <Link to="/" className="p-1.5">
+            <Link
+              to="/"
+              className="p-1.5"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <span className="sr-only">CEEA - Ośrodek Poznański</span>
               <img
-                className="h-8 w-auto mr-5 max-sm:hidden"
+                className="h-8 w-auto mr-5 max-sm:hidden brightness-0 invert"
                 src={Logo}
                 alt=""
               />
@@ -128,10 +172,10 @@ const Header = () => {
             <button
               aria-label="Close menu"
               type="button"
-              className=" rounded-md pr-4 pt-2 text-gray-200 dark:text-gray-50 text-sm"
+              className="rounded-md pr-4 pt-2 text-gray-200 dark:text-gray-50 text-sm"
               onClick={handleClick}
             >
-              <span className="sr-only ">Close menu</span>
+              <span className="sr-only">Close menu</span>
               <Hamburger
                 size={20}
                 toggled={mobileMenuOpen}
@@ -139,46 +183,71 @@ const Header = () => {
               />
             </button>
           </div>
-          <div className="mt-20 flow">
-            <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50 ml-5">
-              <div className="space-y-2 py-6 flex flex-col">
-                {menuLinks.map(link => (
-                  <Link
-                    key={link.title}
-                    to={link.to}
-                    className="dark:text-white py-4 "
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.title}
-                  </Link>
-                ))}
+
+          <div className="mt-12 flow">
+            <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50 ml-2 sm:ml-5">
+              <div className="space-y-1 py-6 flex flex-col">
+                {allMenuLinks.map(link => {
+                  const Icon = linkIcons[link.title] || InformationCircleIcon
+                  const isStudentPanel = link.title === "Panel kursanta"
+
+                  return (
+                    <Link
+                      key={link.title}
+                      to={link.to}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium transition-all duration-200 ${
+                        isStudentPanel
+                          ? "bg-amber-500/15 text-amber-300 border border-amber-500/20 hover:bg-amber-500/25 mb-2"
+                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      <div
+                        className={`p-2 rounded-lg ${
+                          isStudentPanel ? "bg-amber-500/20" : "bg-white/10"
+                        }`}
+                      >
+                        <Icon
+                          className={`w-5 h-5 ${
+                            isStudentPanel ? "text-amber-400" : "text-cyan-300"
+                          }`}
+                        />
+                      </div>
+                      <span>{link.title}</span>
+                      {isStudentPanel && (
+                        <ArrowRightIcon className="w-4 h-4 ml-auto text-amber-400" />
+                      )}
+                    </Link>
+                  )
+                })}
+
                 {activeCourse && (
                   <Link
-                    to={`/kursy/${getYearFromDate(
-                      data.activeCourse.nodes[0].date
-                    )}/${slugify(
-                      data.activeCourse.nodes[0].nameCourse
-                    )}/szczegoly`}
-                    className="dark:text-white py-4 "
+                    to={courseDetailsPath}
                     onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium text-white/90 hover:bg-white/10 hover:text-white transition-all duration-200 mt-2 border-t border-white/10 pt-4"
                   >
-                    Informacje o kursie
+                    <div className="p-2 rounded-lg bg-white/10">
+                      <InformationCircleIcon className="w-5 h-5 text-cyan-300" />
+                    </div>
+                    <span>Informacje o kursie</span>
                   </Link>
                 )}
               </div>
-              <div className="py-6">
-                {activeCourse && (
+
+              {/* Mobile CTA */}
+              {activeCourse && (
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/30 to-transparent">
                   <Link
-                    to={`/kursy/${getYearFromDate(activeCourse.date)}/${slugify(
-                      activeCourse.nameCourse
-                    )}/rejestracja`}
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white"
+                    to={courseRegistrationPath}
                     onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                   >
+                    <AcademicCapIcon className="w-5 h-5" />
                     Zapisz się na kurs
                   </Link>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </Dialog.Panel>

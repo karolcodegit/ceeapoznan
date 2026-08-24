@@ -1,6 +1,7 @@
 import { toast } from "react-toastify"
 import { clearForm } from "../store/contact/contactSlice"
 import { renderEmailTemplate } from "./renderEmailTemplate"
+import { ContactConfirmationUserText } from "../utils/emails/contact/contactConfirmationUser"
 
 export const handleContactSubmit = async (
   contactData,
@@ -21,6 +22,9 @@ export const handleContactSubmit = async (
       email: contactData.email,
       message: contactData.message,
     })
+    const emailTextToUser = ContactConfirmationUserText({
+      name: contactData.name,
+    })
 
     // ✅ UWAGA: Dodajemy token do payloadu!
     const payload = {
@@ -31,13 +35,14 @@ export const handleContactSubmit = async (
       token,
       toYou: {
         to: "sekretariat@ceea.org.pl",
-        subject: `Nowa wiadomość od ${contactData.name}`,
+        subject: `Nowa wiadomość od ${contactData.name} – formularz kontaktowy`,
         html: emailHtmlToYou,
       },
       toUser: {
         to: contactData.email,
-        subject: "Dziękujemy za przesłanie formularza",
+        subject: "Dziękujemy za kontakt – CEEA Poznań",
         html: emailHtmlToUser,
+        text: emailTextToUser, // ← ContactConfirmationUserText({ name: contactData.name })
       },
     }
 

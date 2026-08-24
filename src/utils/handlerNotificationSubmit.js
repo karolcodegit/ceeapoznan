@@ -3,6 +3,7 @@ import { toast } from "react-toastify"
 import { renderEmailTemplate } from "./renderEmailTemplate"
 import { saveAirableNotificationBook } from "./airtable-notificationBook";
 import { clearForm } from "../store/notificationBook/notificationSlice";
+import { BookNotificationUserText } from "../utils/emails/notification/NotificationConfirmationUser"
 
 
 export const handleNotificationSubmit = async (
@@ -21,21 +22,22 @@ const payloadData = {
   };
 
 
-    // Generowanie treści e-maili za pomocą szablonów
-    // const emailHtmlToYou = renderEmailTemplate("ContactConfirmation", {
-
-    //     bookTitle: bookInfo.title,
-    // })
-    const emailHtmlToUser = renderEmailTemplate("ContactConfirmationUser", {
-        bookTitle: bookInfo.title,
+    const emailHtmlToUser = renderEmailTemplate("bookNotificationUser", {
+      title_book: bookInfo.title,
     })
+    
+    const emailTextToUser = BookNotificationUserText({
+      title_book: bookInfo.title,
+    })
+    
 
     // Przygotowanie payload do wysyłki do Google Cloud Functions
     const payload = {
       toUser: {
         to: formData.email,
-        subject: "Dziękujemy za zainteresowanie książką!",
+        subject: `Zapisaliśmy Cię na listę oczekujących – "${formData.title_book}"`,
         html: emailHtmlToUser,
+        text: emailTextToUser, // ← BookNotificationUserText({ title_book: formData.title_book })
       },
     }
 
