@@ -11,6 +11,7 @@ import {
   QuestionMarkCircleIcon,
   UserCircleIcon,
   ArrowRightIcon,
+  XMarkIcon
 } from "@heroicons/react/24/solid"
 import Button from "../Button/Button"
 import Logo from "../../assets/images/logo-header.png"
@@ -21,10 +22,10 @@ import { getYearFromDate } from "../../utils/getYearFromDate"
 const linkIcons = {
   "Strona główna": HomeIcon,
   "O nas": InformationCircleIcon,
-  "Kursy": AcademicCapIcon,
-  "Książki": BookOpenIcon,
-  "Kontakt": EnvelopeIcon,
-  "FAQ": QuestionMarkCircleIcon,
+  Kursy: AcademicCapIcon,
+  Książki: BookOpenIcon,
+  Kontakt: EnvelopeIcon,
+  FAQ: QuestionMarkCircleIcon,
   "Panel kursanta": UserCircleIcon,
 }
 
@@ -149,107 +150,92 @@ const Header = () => {
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-10" />
-        <Dialog.Panel
-          className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto 
-                      bg-gradient-to-b from-cyan-500 to-dark 
-                      text-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 
-                      dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 
-                      transition-colors duration-300"
-        >
-          <div className="flex items-center justify-between relative">
-            <Link
-              to="/"
-              className="p-1.5"
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-gradient-to-b from-cyan-600 via-cyan-700 to-blue-900 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 text-white shadow-2xl flex flex-col">
+          {/* Header mobilny */}
+          <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 flex-shrink-0">
+            <img
+              className="h-8 w-auto brightness-0 invert"
+              src={Logo}
+              alt="CEEA"
+            />
+            <button
+              aria-label="Zamknij menu"
+              type="button"
+              className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <span className="sr-only">CEEA - Ośrodek Poznański</span>
-              <img
-                className="h-8 w-auto mr-5 max-sm:hidden brightness-0 invert"
-                src={Logo}
-                alt=""
-              />
-            </Link>
-            <button
-              aria-label="Close menu"
-              type="button"
-              className="rounded-md pr-4 pt-2 text-gray-200 dark:text-gray-50 text-sm"
-              onClick={handleClick}
-            >
-              <span className="sr-only">Close menu</span>
-              <Hamburger
-                size={20}
-                toggled={mobileMenuOpen}
-                toggle={setMobileMenuOpen}
-              />
+              <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
 
-          <div className="mt-12 flow">
-            <div className="-my-6 divide-y divide-gray-900/10 dark:divide-gray-100/50 ml-2 sm:ml-5">
-              <div className="space-y-1 py-6 flex flex-col">
-                {allMenuLinks.map(link => {
-                  const Icon = linkIcons[link.title] || InformationCircleIcon
-                  const isStudentPanel = link.title === "Panel kursanta"
+          {/* Scrollowalna lista linków */}
+          <div className="flex-1 overflow-y-auto px-4 py-6">
+            <div className="space-y-1">
+              {allMenuLinks.map(link => {
+                const Icon = linkIcons[link.title] || InformationCircleIcon
+                const isStudentPanel = link.title === "Panel kursanta"
 
-                  return (
-                    <Link
-                      key={link.title}
-                      to={link.to}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium transition-all duration-200 ${
-                        isStudentPanel
-                          ? "bg-amber-500/15 text-amber-300 border border-amber-500/20 hover:bg-amber-500/25 mb-2"
-                          : "text-white/90 hover:bg-white/10 hover:text-white"
+                return (
+                  <Link
+                    key={link.title}
+                    to={link.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium transition-all duration-200 ${
+                      isStudentPanel
+                        ? "bg-amber-500/15 text-amber-300 border border-amber-500/20 hover:bg-amber-500/25"
+                        : "text-white/90 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <div
+                      className={`p-2 rounded-lg ${
+                        isStudentPanel ? "bg-amber-500/20" : "bg-white/10"
                       }`}
                     >
-                      <div
-                        className={`p-2 rounded-lg ${
-                          isStudentPanel ? "bg-amber-500/20" : "bg-white/10"
+                      <Icon
+                        className={`w-5 h-5 ${
+                          isStudentPanel ? "text-amber-400" : "text-cyan-300"
                         }`}
-                      >
-                        <Icon
-                          className={`w-5 h-5 ${
-                            isStudentPanel ? "text-amber-400" : "text-cyan-300"
-                          }`}
-                        />
-                      </div>
-                      <span>{link.title}</span>
-                      {isStudentPanel && (
-                        <ArrowRightIcon className="w-4 h-4 ml-auto text-amber-400" />
-                      )}
-                    </Link>
-                  )
-                })}
-
-                {activeCourse && (
-                  <Link
-                    to={courseDetailsPath}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium text-white/90 hover:bg-white/10 hover:text-white transition-all duration-200 mt-2 border-t border-white/10 pt-4"
-                  >
-                    <div className="p-2 rounded-lg bg-white/10">
-                      <InformationCircleIcon className="w-5 h-5 text-cyan-300" />
+                      />
                     </div>
-                    <span>Informacje o kursie</span>
+                    <span>{link.title}</span>
+                    {isStudentPanel && (
+                      <ArrowRightIcon className="w-4 h-4 ml-auto text-amber-400" />
+                    )}
                   </Link>
-                )}
-              </div>
-
-              {/* Mobile CTA */}
-              {activeCourse && (
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/30 to-transparent">
-                  <Link
-                    to={courseRegistrationPath}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-                  >
-                    <AcademicCapIcon className="w-5 h-5" />
-                    Zapisz się na kurs
-                  </Link>
-                </div>
-              )}
+                )
+              })}
             </div>
+
+            {/* Informacje o kursie (jeśli aktywny) */}
+            {activeCourse && (
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <Link
+                  to={courseDetailsPath}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-4 px-4 py-4 rounded-xl text-base font-medium text-white/90 hover:bg-white/10 hover:text-white transition-all duration-200"
+                >
+                  <div className="p-2 rounded-lg bg-white/10">
+                    <InformationCircleIcon className="w-5 h-5 text-cyan-300" />
+                  </div>
+                  <span>Informacje o kursie</span>
+                </Link>
+              </div>
+            )}
           </div>
+
+          {/* CTA na dole – w normalnym flow, nie absolute */}
+          {activeCourse && (
+            <div className="flex-shrink-0 p-6 border-t border-white/10 bg-gradient-to-t from-black/20 to-transparent">
+              <Link
+                to={courseRegistrationPath}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+              >
+                <AcademicCapIcon className="w-5 h-5" />
+                Zapisz się na kurs
+              </Link>
+            </div>
+          )}
         </Dialog.Panel>
       </Dialog>
     </header>
