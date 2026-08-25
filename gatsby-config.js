@@ -45,9 +45,6 @@ module.exports = {
     {
       resolve: `gatsby-plugin-sitemap`,
       options: {
-        siteUrl: `https://ceea.org.pl/`,
-        changefreq: `weekly`,
-        priority: 0.7,
         query: `
           {
             site {

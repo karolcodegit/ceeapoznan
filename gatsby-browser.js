@@ -22,6 +22,8 @@ export const onClientEntry = () => {
 
 const track = path => {
   try {
+    const host = window.location.hostname
+    if (host !== "ceea.org.pl" && host !== "www.ceea.org.pl") return
     const data = JSON.stringify({ path, referrer: document.referrer || null })
     navigator.sendBeacon(
       "https://panel.ceea.org.pl/api/track",
@@ -30,11 +32,11 @@ const track = path => {
   } catch {}
 }
 
-exports.onInitialClientRender = () => {
+export const onInitialClientRender = () => {
   track(window.location.pathname + window.location.search)
 }
 
-exports.onRouteUpdate = ({ location }) => {
+export const onRouteUpdate = ({ location }) => {
   track(location.pathname + location.search)
 }
 
