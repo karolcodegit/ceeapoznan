@@ -211,7 +211,7 @@ const Footer = () => {
                       {company.nameCompany}
                     </p>
                     <p className="text-sm mt-1">
-                      ul. {company.street} {company.numberHome}
+                      {company.street} {company.numberHome}
                     </p>
                     <p className="text-sm">
                       {company.zipCode} {company.city}
