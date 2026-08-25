@@ -42,7 +42,7 @@ export const przydatneLinki = [
       "Zanurz się w naszym bogatym archiwum kursów, które stanowią skarbnicę wiedzy i doświadczeń. Nasze archiwum kursów to miejsce, gdzie możesz odkryć różnorodność i głębię tematów, które oferujemy.",
   },
   {
-    title: "Panel uczestnika",
+    title: "Panel kursanta",
     to: "https://panel.ceea.org.pl/",
     description:
       "Zanurz się w naszym bogatym archiwum kursów, które stanowią skarbnicę wiedzy i doświadczeń. Nasze archiwum kursów to miejsce, gdzie możesz odkryć różnorodność i głębię tematów, które oferujemy.",

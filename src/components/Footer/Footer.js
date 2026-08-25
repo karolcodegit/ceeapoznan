@@ -2,7 +2,15 @@ import React from "react"
 import { Link, useStaticQuery, graphql, navigate } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import scrollTo from "gatsby-plugin-smoothscroll"
-import Logo from "../../assets/images/Logo.png"
+import { FaFacebookF, FaYoutube } from "react-icons/fa"
+import {
+  MapPinIcon,
+  EnvelopeIcon,
+  BuildingLibraryIcon,
+  AcademicCapIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/solid"
+import Logo from "../../assets/images/logo-header.png"
 import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
 import { slugify } from "../../utils/slugify"
@@ -43,195 +51,239 @@ const Footer = () => {
     }
   `)
   const company = data.datoCmsCompany
+  const activeCourse = data.allDatoCmsCourse.nodes[0]
 
   const handleClick = (to, event) => {
     event.preventDefault()
-    // navigate to the page first
     navigate(to)
-    // then scroll to the element after a delay
     setTimeout(() => {
       scrollTo("#top")
-    }, 100) // adjust delay as needed);
+    }, 100)
   }
+
+  const footerMenuLinks = [...menuLinks]
+
   return (
-    <footer className="relative min-w-full bg-gradient-to-r bg-dark dark:from-gray-800 dark:to-gray-900 text-gray-100 dark:text-gray-300 flex flex-col md:flex-row justify-between bottom-0 left-0 right-0 overflow-hidden">
-      <svg
-        className="absolute top-0 left-0 w-full rotate-180 -translate-y-px"
-        viewBox="0 0 1440 320"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          {/* 🔹 Gradient dla trybu jasnego */}
-          <linearGradient id="footerWaveLight" x1="1" y1="1" x2="1" y2="1">
-            <stop offset="0%" stopColor="#F1FAFF" />
-            <stop offset="100%" stopColor="#f0f9ff" /> {/* to-sky-50 */}
-          </linearGradient>
+    <footer className="relative bg-dark text-gray-100 overflow-hidden">
+      {/* Wave */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
+        <svg
+          className="relative block w-full h-[40px] sm:h-[60px] md:h-[80px] lg:h-[100px]"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="footerWaveLight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#F1FAFF" />
+              <stop offset="100%" stopColor="#f0f9ff" />
+            </linearGradient>
+            <linearGradient id="footerWaveDark" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#0f172a" />
+              <stop offset="100%" stopColor="#1e293b" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
+            fill="url(#footerWaveLight)"
+            className="dark:fill-[url(#footerWaveDark)]"
+          />
+        </svg>
+      </div>
 
-          {/* 🔹 Gradient dla trybu ciemnego */}
-          <linearGradient id="footerWaveDark" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="100%" stopColor="#1e293b" /> {/* slate-900 */}
-            <stop offset="0%" stopColor="#0f172a" /> {/* slate-800 */}
-          </linearGradient>
-        </defs>
-        <path
-          d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
-          fill="url(#footerWaveLight)"
-          className="dark:fill-[url(#footerWaveDark)]"
-        ></path>
-      </svg>
+      <div className="relative pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-8">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          {/* Grid: 1 col → 2 cols → 12 cols */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-8">
+            
+            {/* Brand – separator na mobile/tablet */}
+            <div className="lg:col-span-4 lg:pr-10 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+              <Link to="/" className="inline-flex items-center gap-3 mb-5">
+                <img
+                  className="h-9 w-auto object-contain brightness-0 invert"
+                  src={Logo}
+                  alt="CEEA - Ośrodek Poznański"
+                />
+              </Link>
+              <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                {company.description}
+              </p>
 
-      <div className="min-w-full md:mx-auto 2xl:pt-80 xl:pt-72 md:pt-40 sm:pt-32 pt-36 xl:px-20 max-xl:px-5">
-        <div className="grid grid-cols-2 max-xl:grid-cols-1 justify-between md:gap-12 max-md:gap-0">
-          <div className="max-w-md mb-10 md:mb-0">
-            <div className="flex items-center">
-              <img className="h-10 max-w-full" src={Logo} alt="" />
-              <h1 className="font-bold ml-5 ">CEEA - Ośrodek Poznański</h1>
-            </div>
-            <p className="leading-6	pt-5">{data.datoCmsCompany.description}</p>
-            <div className="flex mt-8">
-              <a
-                href={`https://www.facebook.com/${data.datoCmsCompany.facebook}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <svg
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  className="w-8 bg-text-300 mr-2"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </a>
-              {data.datoCmsCompany.youtube && (
-                <a
-                  href="https://www.youtube.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="YouTube"
-                >
-                  <svg
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    className="w-8 bg-text-300"
-                    aria-hidden="true"
+              <div className="flex items-center gap-3">
+                {company.facebook && (
+                  <a
+                    href={`https://www.facebook.com/${company.facebook}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#1877F2] hover:scale-110 transition-all duration-300"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </a>
-              )}
+                    <FaFacebookF className="w-4 h-4" />
+                  </a>
+                )}
+                {company.youtube && (
+                  <a
+                    href="https://www.youtube.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="YouTube"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#FF0000] hover:scale-110 transition-all duration-300"
+                  >
+                    <FaYoutube className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-8">
-            <div className="">
-              <>
-                <h3 className="uppercase font-bold">Menu</h3>
-                <ul className="mt-6">
-                  {menuLinks.map(link => (
-                    <li key={link.title} className="py-1">
-                      <Link
-                        to={link.to}
-                        onClick={event => handleClick(link.to, event)}
-                      >
-                        {link.title}
-                      </Link>{" "}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            </div>
-            <div>
-              <h3 className="uppercase font-bold">Przydatne linki</h3>
-              <ul className="mt-6">
-                {przydatneLinki.map(link => (
-                  <li key={link.title} className="py-1">
+
+            {/* Menu – separator na mobile/tablet */}
+            <div className="lg:col-span-2 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+                Menu
+              </h3>
+              <ul className="space-y-3">
+                {footerMenuLinks.map(link => (
+                  <li key={link.title}>
                     <Link
                       to={link.to}
-                      onClick={event => handleClick(link.to, event)}
+                      onClick={e => handleClick(link.to, e)}
+                      className="block text-sm text-gray-300 hover:text-white transition-colors duration-200 py-0.5"
                     >
                       {link.title}
                     </Link>
                   </li>
                 ))}
-                <li className="py-1">
-                  {data.allDatoCmsCourse.nodes[0]?.nameCourse && (
-                    <Link
-                      to={`/kursy/${getYearFromDate(
-                        data.allDatoCmsCourse.nodes[0].date
-                      )}/${slugify(
-                        data.allDatoCmsCourse.nodes[0].nameCourse
-                      )}/rejestracja`}
-                    >
-                      Zapis na kurs
-                    </Link>
-                  )}
-                </li>
               </ul>
             </div>
-            <div className="flex flex-col">
-              <p className="pb-4 font-bold">{company.nameCompany}</p>
-              <span className="py-2">
-                ul. {company.street} {company.numberHome}
-              </span>
-              <span className="">
-                {company.zipCode} {company.city}
-              </span>
+
+            {/* Przydatne linki – separator na mobile/tablet */}
+            <div className="lg:col-span-3 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+                Przydatne linki
+              </h3>
+              <ul className="space-y-3">
+                {przydatneLinki.map(link => {
+                  const isStudent = link.title === "Panel kursanta"
+                  return (
+                    <li key={link.title}>
+                      <Link
+                        to={link.to}
+                        onClick={e => handleClick(link.to, e)}
+                        className={`inline-flex items-center gap-2 text-sm transition-colors duration-200 py-0.5 ${
+                          isStudent
+                            ? "text-amber-300 hover:text-amber-200 font-medium"
+                            : "text-gray-300 hover:text-white"
+                        }`}
+                      >
+                        {isStudent && (
+                          <UserCircleIcon className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                        )}
+                        <span>{link.title}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+                {activeCourse?.nameCourse && (
+                  <li className="pt-1">
+                    <Link
+                      to={`/kursy/${getYearFromDate(
+                        activeCourse.date
+                      )}/${slugify(activeCourse.nameCourse)}/rejestracja`}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-amber-300 hover:text-amber-200 transition-colors py-0.5"
+                    >
+                      <AcademicCapIcon className="w-4 h-4 flex-shrink-0" />
+                      <span>Zapis na kurs</span>
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            {/* Kontakt – bez separatora, ostatnia sekcja */}
+            <div className="lg:col-span-3">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+                Kontakt
+              </h3>
+              <div className="space-y-4 text-sm text-gray-300">
+                <div className="flex items-start gap-3">
+                  <MapPinIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-white text-sm leading-tight">
+                      {company.nameCompany}
+                    </p>
+                    <p className="text-sm mt-1">
+                      ul. {company.street} {company.numberHome}
+                    </p>
+                    <p className="text-sm">
+                      {company.zipCode} {company.city}
+                    </p>
+                  </div>
+                </div>
+
+                {company.mail && (
+                  <div className="flex items-center gap-3">
+                    <EnvelopeIcon className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                    <a
+                      href={`mailto:${company.mail}`}
+                      className="hover:text-white transition-colors text-sm"
+                    >
+                      {company.mail}
+                    </a>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-3 pt-1">
+                  <BuildingLibraryIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[11px] text-gray-300 mb-1 uppercase tracking-wide">
+                      {company.bankAccountName}
+                    </p>
+                    <CopyToClipboardWithNotification text={company.bankAccount}>
+                      <span className="inline-block font-mono text-xs bg-white/5 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors border border-white/5">
+                        {company.bankAccount}
+                      </span>
+                    </CopyToClipboardWithNotification>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex md:justify-between flex-row max-lg:flex-col py-6 gap-4 mt-16 border-t border-slate-50 text-xs mx-auto">
-          <div className="flex-col">
-            <div className="flex">
-              <div>
-                <div className="mb-4 flex items-center">
-                  <span>
-                    © 2023 - {new Date().getFullYear()} CEEA. Wszelkie prawa
-                    zastrzeżone.
-                  </span>
-                </div>
-                <div className="mb-4">
-                  <span className="max-md:mt-2">
-                    <Link to="/sitemap-index.xml">Sitemap</Link>
-                    <span className="px-1">|</span>
-                    <Link to="/polityka-prywatnosci">Polityka prywatności</Link>
-                  </span>
-                </div>
-                <span className="flex items-center">
-                  Projekt i wykonanie:
-                  <a
-                    href="https://karolznojkiewicz.pl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <StaticImage
-                      alt="Karol Znojkiewicz"
-                      width={36}
-                      className="ml-2"
-                      src="../../assets/images/LogoKarolZnojkiewicz.svg"
-                    />
-                  </a>
+
+          {/* Bottom bar */}
+          <div className="mt-12 pt-6 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center sm:items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs text-gray-400">
+                <span>
+                  © 2023 – {new Date().getFullYear()} CEEA. Wszelkie prawa zastrzeżone.
+                </span>
+                <span className="hidden sm:inline text-gray-600">|</span>
+                <span className="flex gap-5">
+                  <Link to="/sitemap-index.xml" className="hover:text-white transition-colors">
+                    Sitemap
+                  </Link>
+                  <span className="hidden sm:inline text-gray-600">|</span>
+                  <Link to="/polityka-prywatnosci" className="hover:text-white transition-colors">
+                    Polityka prywatności
+                  </Link>
                 </span>
               </div>
-              <div></div>
+
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="text-nowrap text-gray-200">Projekt i wykonanie:</span>
+                <a
+                  href="https://karolznojkiewicz.pl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-100 opacity-60 transition-opacity"
+                >
+                  <StaticImage
+                    alt="Karol Znojkiewicz"
+                    width={30}
+                    className="brightness-0 invert"
+                    src="../../assets/images/LogoKarolZnojkiewicz.svg"
+                  />
+                </a>
+              </div>
             </div>
-          </div>
-          <div className="mb-4">
-            <span>Konto bankowe: {company.bankAccountName}</span>
-            <span className="px-1 max-sm:hidden">|</span>
-            <CopyToClipboardWithNotification text={company.bankAccount}>
-              <span className="font-bold cursor-pointer max-sm:block">
-                {company.bankAccount}
-              </span>
-            </CopyToClipboardWithNotification>
           </div>
         </div>
       </div>
