@@ -64,7 +64,7 @@ const Footer = () => {
   const footerMenuLinks = [...menuLinks]
 
   return (
-    <footer className="relative bg-dark text-gray-100 overflow-hidden">
+    <footer className="relative bg-dark dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-100 overflow-hidden transition-colors duration-500">
       {/* Wave */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
         <svg
@@ -96,7 +96,7 @@ const Footer = () => {
           {/* Grid: 1 col → 2 cols → 12 cols */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-8">
             
-            {/* Brand – separator na mobile/tablet */}
+            {/* Brand */}
             <div className="lg:col-span-4 lg:pr-10 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
               <Link to="/" className="inline-flex items-center gap-3 mb-5">
                 <img
@@ -105,7 +105,7 @@ const Footer = () => {
                   alt="CEEA - Ośrodek Poznański"
                 />
               </Link>
-              <p className="text-gray-300 text-sm leading-relaxed mb-6">
+              <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed mb-6">
                 {company.description}
               </p>
 
@@ -135,7 +135,7 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Menu – separator na mobile/tablet */}
+            {/* Menu */}
             <div className="lg:col-span-2 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
                 Menu
@@ -155,7 +155,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Przydatne linki – separator na mobile/tablet */}
+            {/* Przydatne linki */}
             <div className="lg:col-span-3 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
                 Przydatne linki
@@ -198,12 +198,12 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Kontakt – bez separatora, ostatnia sekcja */}
+            {/* Kontakt */}
             <div className="lg:col-span-3">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
                 Kontakt
               </h3>
-              <div className="space-y-4 text-sm text-gray-300">
+              <div className="space-y-4 text-sm text-gray-300 dark:text-gray-400">
                 <div className="flex items-start gap-3">
                   <MapPinIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   <div>
@@ -234,7 +234,7 @@ const Footer = () => {
                 <div className="flex items-start gap-3 pt-1">
                   <BuildingLibraryIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[11px] text-gray-300 mb-1 uppercase tracking-wide">
+                    <p className="text-[11px] text-gray-400 mb-1 uppercase tracking-wide">
                       {company.bankAccountName}
                     </p>
                     <CopyToClipboardWithNotification text={company.bankAccount}>
@@ -268,7 +268,7 @@ const Footer = () => {
               </div>
 
               <div className="flex items-center gap-2 text-xs text-gray-400">
-                <span className="text-nowrap text-gray-200">Projekt i wykonanie:</span>
+                <span className="whitespace-nowrap">Projekt i wykonanie:</span>
                 <a
                   href="https://karolznojkiewicz.pl"
                   target="_blank"
