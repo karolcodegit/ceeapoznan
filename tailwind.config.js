@@ -37,6 +37,8 @@ module.exports = {
         },
       },
       skew: {
+        '20': '25deg',
+        '30': '30deg',
         '40': '40deg',
       },
       width: {
