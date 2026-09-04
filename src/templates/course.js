@@ -115,7 +115,7 @@ const Course = ({ data }) => {
         >
           <motion.div className="py-6" variants={slideLeft}>
             <Title tag="h2" className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-              Program ramowy
+              Program kursu
             </Title>
             <Line />
           </motion.div>

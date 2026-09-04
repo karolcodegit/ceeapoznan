@@ -1,9 +1,7 @@
 import React from "react"
 import { motion } from "framer-motion"
-import { FaFlask, FaClipboardList, FaFilePdf, FaExternalLinkAlt } from "react-icons/fa"
+import { FaFlask, FaClipboardList } from "react-icons/fa"
 import { MarkdownText } from "../utils/markdownText.jsx"
-
-// --- Animacje ---
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -27,26 +25,28 @@ const viewportSettings = {
   margin: "-60px",
 }
 
-// --- Parser ---
-
 const parseCourseProgram = (text) => {
   if (!text) return { intro: [], program: [], workshops: [] }
 
   const lines = text.split('\n').map(l => l.trim())
   let section = 'intro'
+  const intro = []
   const program = []
   const workshops = []
-  const intro = []
-
+  
   for (const line of lines) {
     if (!line) continue
 
     const lower = line.toLowerCase()
 
-    if (lower.includes('program ramowy') || lower.includes('program kursu')) {
+    const isProgramHeader = /^(program ramowy|program kursu)\s*[:=\-—]?$/i.test(line) || 
+                           /^#{1,3}\s*(program ramowy|program kursu)/i.test(line)
+
+    if (isProgramHeader) {
       section = 'program'
       continue
     }
+
     if (lower.includes('warsztaty')) {
       section = 'workshops'
       const colonIndex = line.indexOf(':')
@@ -74,89 +74,6 @@ const parseCourseProgram = (text) => {
   return { intro, program, workshops }
 }
 
-// --- Custom Markdown Components (stały rozmiar zdjęć + PDF jako przycisk) ---
-
-const CustomMarkdownComponents = {
-  img: ({ node, ...props }) => (
-    <div className="my-4 flex justify-center">
-      <img
-        {...props}
-        className="rounded-lg shadow-md object-cover"
-        style={{
-          width: '320px',
-          height: '320px',
-          maxWidth: '100%',
-        }}
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-  ),
-  a: ({ node, href, children, ...props }) => {
-    const isPdf = href && href.toLowerCase().endsWith('.pdf')
-
-    if (isPdf) {
-      return (
-        <a
-          {...props}
-          href={href}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300 font-medium text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors my-2"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FaFilePdf className="text-lg" />
-          <span>{children}</span>
-          <FaExternalLinkAlt className="text-xs opacity-60" />
-        </a>
-      )
-    }
-
-    return (
-      <a
-        {...props}
-        href={href}
-        className="text-primary underline underline-offset-2 hover:opacity-80 transition-opacity font-medium"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {children}
-      </a>
-    )
-  },
-  p: ({ node, ...props }) => (
-    <p {...props} className="mb-4 text-gray-700 dark:text-gray-300 leading-7" />
-  ),
-  ul: ({ node, ...props }) => (
-    <ul {...props} className="list-disc list-inside mb-4 space-y-1 text-gray-700 dark:text-gray-300" />
-  ),
-  ol: ({ node, ...props }) => (
-    <ol {...props} className="list-decimal list-inside mb-4 space-y-1 text-gray-700 dark:text-gray-300" />
-  ),
-  li: ({ node, ...props }) => (
-    <li {...props} className="leading-7" />
-  ),
-  h1: ({ node, ...props }) => (
-    <h1 {...props} className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100" />
-  ),
-  h2: ({ node, ...props }) => (
-    <h2 {...props} className="text-2xl font-semibold mb-3 text-gray-900 dark:text-gray-100" />
-  ),
-  h3: ({ node, ...props }) => (
-    <h3 {...props} className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100" />
-  ),
-  h4: ({ node, ...props }) => (
-    <h4 {...props} className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100" />
-  ),
-  strong: ({ node, ...props }) => (
-    <strong {...props} className="font-semibold text-gray-900 dark:text-gray-100" />
-  ),
-  blockquote: ({ node, ...props }) => (
-    <blockquote {...props} className="border-l-4 border-primary pl-4 italic my-4 text-gray-600 dark:text-gray-400" />
-  ),
-}
-
-// --- Komponent ---
-
 const CourseProgram = ({ text }) => {
   const { intro, program, workshops } = parseCourseProgram(text)
 
@@ -165,7 +82,6 @@ const CourseProgram = ({ text }) => {
 
   return (
     <div className="space-y-10">
-      {/* Intro – zdjęcia 320x320 + PDF jako przyciski */}
       {intro.length > 0 && (
         <motion.div
           initial="hidden"
@@ -173,14 +89,10 @@ const CourseProgram = ({ text }) => {
           viewport={viewportSettings}
           variants={slideUp}
         >
-          <MarkdownText
-            text={intro.join('\n')}
-            components={CustomMarkdownComponents}
-          />
+          <MarkdownText text={intro.join('\n')} />
         </motion.div>
       )}
 
-      {/* Program ramowy */}
       {hasProgram && (
         <motion.div
           initial="hidden"
@@ -207,16 +119,15 @@ const CourseProgram = ({ text }) => {
                     {item.number}
                   </span>
                 )}
-                <span className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                  {item.text}
-                </span>
+                <div className="min-w-0 text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                  <MarkdownText text={item.text} />
+                </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
       )}
 
-      {/* Warsztaty – zdjęcia 320x320 + PDF jako przyciski */}
       {hasWorkshops && (
         <motion.div
           className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6"
@@ -234,10 +145,7 @@ const CourseProgram = ({ text }) => {
           <div className="space-y-2">
             {workshops.map((line, i) => (
               <motion.div key={i} variants={slideUp}>
-                <MarkdownText
-                  text={line}
-                  components={CustomMarkdownComponents}
-                />
+                <MarkdownText text={line} />
               </motion.div>
             ))}
           </div>

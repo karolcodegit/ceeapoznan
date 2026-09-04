@@ -1,61 +1,32 @@
 import React from "react"
-import { css } from "@emotion/react"
-import styled from "@emotion/styled"
 import Markdown from "react-markdown"
-import rehypeRaw from "rehype-raw";
+import rehypeRaw from "rehype-raw"
 
-const markdownStyles = ({ theme }) => css`
-  ol > li {
-    list-style: decimal;
-    margin-left: 2rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-    color: ${theme.mode === 'dark' ? "#f0f0f0" : "black"};
-    line-height: 3rem;
-  }
-
-  ul > li {
-    list-style: disc;
-    margin-left: 2rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 0.5rem;
-    color: ${theme.mode === "dark" ? "#d1d5db" : "black"} !important;
-    line-height: 3rem;
-  }
-
-  p {
-    line-height: 3rem;
-  }
-
-  a {
-    font-weight: bold;
-    color: ${theme.mode === 'dark' ? '#4267B2' : 'black'};
-    text-decoration: underline;
-  }
-`;
-
-const MarkdownStyles = styled.div`
-  ${markdownStyles}
-`
+const liClass = "ml-8 text-[0.9rem] leading-[3rem] mb-2 text-gray-900 dark:text-gray-100"
 
 const StyledMarkdown = ({ children }) => (
-  <MarkdownStyles>
+  <div>
     <Markdown
-      className="dark:text-gray-200"
+      className="dark:text-gray-200 text-gray-900"
       rehypePlugins={[rehypeRaw]}
       components={{
+        ol: ({ node, ...props }) => <ol className="list-decimal" {...props} />,
+        ul: ({ node, ...props }) => <ul className="list-disc" {...props} />,
+        li: ({ node, ...props }) => <li className={liClass} {...props} />,
         a: ({ node, ...props }) => (
-          <a {...props} target="_blank" rel="noopener noreferrer">
-            {props.children}
-          </a>
+          <a
+            className="font-bold underline text-blue-700 dark:text-blue-400"
+            target="_blank"
+            rel="noopener noreferrer"
+            {...props}
+          />
         ),
+        p: ({ node, ...props }) => <p className="leading-[3rem]" {...props} />,
       }}
     >
       {children}
     </Markdown>
-  </MarkdownStyles>
+  </div>
 )
 
 export default StyledMarkdown
