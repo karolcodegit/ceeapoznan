@@ -1,32 +1,34 @@
 import React from "react"
-import Markdown from "react-markdown"
-import rehypeRaw from "rehype-raw"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
-const liClass = "ml-8 text-[0.9rem] leading-[3rem] mb-2 text-gray-900 dark:text-gray-100"
+const StyledMarkdown = ({ children }) => {
+  if (!children) return null
 
-const StyledMarkdown = ({ children }) => (
-  <div>
-    <Markdown
-      className="dark:text-gray-200 text-gray-900"
-      rehypePlugins={[rehypeRaw]}
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
       components={{
-        ol: ({ node, ...props }) => <ol className="list-decimal" {...props} />,
-        ul: ({ node, ...props }) => <ul className="list-disc" {...props} />,
-        li: ({ node, ...props }) => <li className={liClass} {...props} />,
-        a: ({ node, ...props }) => (
-          <a
-            className="font-bold underline text-blue-700 dark:text-blue-400"
-            target="_blank"
-            rel="noopener noreferrer"
-            {...props}
-          />
+        p: ({ node, ...props }) => (
+          <p {...props} className="mb-3 text-gray-700 dark:text-gray-300 leading-7 last:mb-0" />
         ),
-        p: ({ node, ...props }) => <p className="leading-[3rem]" {...props} />,
+        ul: ({ node, ...props }) => (
+          <ul {...props} className="list-disc list-inside mb-3 space-y-1 text-gray-700 dark:text-gray-300" />
+        ),
+        ol: ({ node, ...props }) => (
+          <ol {...props} className="list-decimal list-inside mb-3 space-y-1 text-gray-700 dark:text-gray-300" />
+        ),
+        li: ({ node, ...props }) => (
+          <li {...props} className="leading-7" />
+        ),
+        strong: ({ node, ...props }) => (
+          <strong {...props} className="font-semibold text-gray-900 dark:text-gray-100" />
+        ),
       }}
     >
       {children}
-    </Markdown>
-  </div>
-)
+    </ReactMarkdown>
+  )
+}
 
 export default StyledMarkdown

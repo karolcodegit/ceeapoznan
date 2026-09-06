@@ -72,9 +72,9 @@ const Header = () => {
           Wystaje w dół poza prostokąt (h-28)
           ========================================================= */}
       <div
-        className="absolute max-lg:hidden top-0 left-0 h-36 w-[400px] xl:w-[460px] 2xl:w-[520px] bg-dark dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center z-50"
-        style={{ clipPath: "polygon(0 0, 80% 0, 100% 100%, 0% 100%)" }}
-      >
+  className="absolute max-lg:hidden top-0 left-0 h-36 w-[400px] xl:w-[460px] 2xl:w-[520px] bg-blue-600 dark:bg-slate-800 flex items-center justify-center z-50"
+  style={{ clipPath: "polygon(0 0, 80% 0, 100% 100%, 0% 100%)" }}
+>
         <Link to="/" className="flex items-center p-1.5">
           <span className="sr-only">CEEA - Ośrodek Poznański</span>
           <img

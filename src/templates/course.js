@@ -113,7 +113,7 @@ const Course = ({ data }) => {
           viewport={viewportSettings}
           variants={staggerContainer}
         >
-          <motion.div className="py-6" variants={slideLeft}>
+          <motion.div className="py-10" variants={slideLeft}>
             <Title tag="h2" className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
               Program kursu
             </Title>
@@ -143,8 +143,8 @@ const Course = ({ data }) => {
                   variants={slideUp}
                 >
                   {/* Nagłówek dnia */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+                  <div className="flex items-center md:gap-4 mb-6">
+                    <div className="flex-shrink-0 md:w-12 md:h-12  rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
                       
                     </div>
                     <div>
@@ -163,7 +163,7 @@ const Course = ({ data }) => {
                   </div>
 
                   {/* Lista wydarzeń */}
-                  <div className="ml-6 pl-10 border-l-2 border-gray-200 dark:border-gray-700 space-y-1">
+                  <div className="md:ml-6 md:pl-10 md:border-l-2 md:border-gray-200 dark:border-gray-700 space-y-1">
                     {day.event.map((event, eventIndex) => {
                       const isFacebookLink = event.event.includes("facebook.com")
                       const isWorkshop = event.event.toLowerCase().includes("warsztat")
@@ -273,7 +273,6 @@ export const courseQuery = graphql`
           url
         }
         additionalInformation
-        costHotel
         description
         emailHotel
         password

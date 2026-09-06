@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
-import { FaImage, FaFilePdf, FaExternalLinkAlt, FaAward } from "react-icons/fa"
+import { FaImage, FaFilePdf, FaExternalLinkAlt } from "react-icons/fa"
 
 // --- Responsywny obrazek ---
 
@@ -72,40 +72,11 @@ const MarkdownImage = ({ node, src, alt, title }) => {
 export const MarkdownText = ({ text, components: externalComponents = {} }) => {
   if (!text) return null
 
-  // Połącz linki akcji (PDF/SOWE) z osobnych linii w jedną linię
-  // dzięki temu trafią do jednego paragrafu i będą obok siebie na desktopie
-  let processedText = text
-  let prev = ''
-  while (processedText !== prev) {
-    prev = processedText
-    processedText = processedText.replace(
-      /(\[.*?\]\([^)]*?(?:\.pdf|sowe\.org\.pl)[^)]*?\))(?:\s*\n\s*)(\[.*?\]\([^)]*?(?:\.pdf|sowe\.org\.pl)[^)]*?\))/g,
-      '$1 $2'
-    )
-  }
-
   const defaultComponents = {
     img: MarkdownImage,
     
     a: ({ node, href, children, ...props }) => {
       const isPdf = href && href.toLowerCase().endsWith('.pdf')
-      const isSowe = href && href.includes('sowe.org.pl')
-      
-      if (isSowe) {
-        return (
-          <a
-            {...props}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 h-10 mt-5 rounded-lg text-sm font-medium transition-colors no-underline whitespace-nowrap bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-100 dark:hover:bg-emerald-900/30"
-          >
-            <FaAward className="text-lg text-emerald-600 dark:text-emerald-400" />
-            <span className="font-semibold">Certyfikat zgodności SOWE</span>
-            <FaExternalLinkAlt className="text-xs opacity-60" />
-          </a>
-        )
-      }
       
       if (isPdf) {
         return (
@@ -136,35 +107,9 @@ export const MarkdownText = ({ text, components: externalComponents = {} }) => {
       )
     },
     
-    // Paragraf zawierający TYLKO linki akcji → pełna szerokość, wyśrodkowane
-    p: ({ node, children, ...props }) => {
-      const childArray = React.Children.toArray(children)
-      
-      const isActionElement = (child) => {
-        if (!React.isValidElement(child)) return false
-        const href = child.props?.href || ''
-        return href.toLowerCase().endsWith('.pdf') || href.includes('sowe.org.pl')
-      }
-      
-      const hasActions = childArray.some(isActionElement)
-      const hasOnlyActionsAndWhitespace = childArray.every(child => {
-        if (typeof child === 'string') return child.trim() === ''
-        return React.isValidElement(child) && child.props?.href !== undefined
-      })
-      
-      const isActionsRow = hasActions && hasOnlyActionsAndWhitespace
-
-      return (
-        <p 
-          {...props} 
-          className={`mb-4 text-gray-700 dark:text-gray-300 leading-7 last:mb-0 ${
-            isActionsRow ? 'flex flex-wrap justify-center gap-3 items-center w-full py-2' : ''
-          }`}
-        >
-          {children}
-        </p>
-      )
-    },
+    p: ({ node, ...props }) => (
+      <p {...props} className="mb-4 text-gray-700 dark:text-gray-300 leading-7 last:mb-0" />
+    ),
     
     ul: ({ node, ...props }) => (
       <ul {...props} className="list-disc list-inside mb-4 space-y-1 text-gray-700 dark:text-gray-300" />
@@ -211,7 +156,7 @@ export const MarkdownText = ({ text, components: externalComponents = {} }) => {
       rehypePlugins={[rehypeRaw]}
       components={mergedComponents}
     >
-      {processedText}
+      {text}
     </ReactMarkdown>
   )
 }
