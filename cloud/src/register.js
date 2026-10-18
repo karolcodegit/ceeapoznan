@@ -3,7 +3,7 @@
 const supabase = require("./supabase");
 const { getPaymentFee } = require("./fees");
 const { sendMail } = require("./mailer");
-const emails = require("./emails");
+const emails = require("./email/templates");
 const { createTransaction } = require("./tpay");
 
 const MAX_SEATS = Number(process.env.MAX_SEATS_PER_COURSE || 100);
@@ -80,12 +80,9 @@ async function registerHandler(req, res) {
   // Emaile (fire & forget – nie blokują odpowiedzi)
   const p = { ...d, amount, paymentFee };
   if (method === "transfer") {
-    // Jeden mail: potwierdzenie + dane do przelewu (Twój szablon)
     sendMail({ ...emails.courseConfirmationTransfer(p, d.orderNumber), to: d.email })
       .catch(e => console.error("mail:", e.message));
   }
-  // Online: mail potwierdzający pochodzi z webhooka (paymentSuccess)
-  // (sendMail sam wysyła kopię do sekretariatu – bez dodatkowego wywołania)
 
   return res.json({ ok: true, orderNumber: d.orderNumber, transactionUrl });
 }

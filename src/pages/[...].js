@@ -17,10 +17,9 @@ import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 import { FaFacebook } from "react-icons/fa"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import CourseProgram from "../templates/CourseProgram"
-
 import FormRegister from "../components/Form/FormRegister"
 import Seo from "../components/seo"
-import CourseDetails from "../templates/course-details"
+import CourseDetails from "../components/CourseDetails/CourseDetails"
 
 // --- API ---
 
@@ -55,9 +54,11 @@ const viewportSettings = { once: true, margin: "-60px" }
 
 const CourseClient = ({ location }) => {
   const segments = location.pathname.split("/").filter(Boolean)
-  // ["kursy", rok, slug, (sub)]
+  // ["kursy", rok, slug, sub?, ...] – rozpoznajemy po OSTATNIM segmencie
   const slug = segments[2] || ""
-  const sub = (segments[3] || "").toLowerCase() // "" | "szczegoly" | "rejestracja" | "formularz-wyslany"
+  const last = (segments[segments.length - 1] || "").toLowerCase()
+  const sub =
+    last === "formularz-wyslany" ? "formularz-wyslany" : (segments[3] || "").toLowerCase()
 
   const [course, setCourse] = useState(undefined) // undefined = ładowanie, null = nie znaleziono
   const [company, setCompany] = useState(null)

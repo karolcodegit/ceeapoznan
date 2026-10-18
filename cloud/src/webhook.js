@@ -3,7 +3,7 @@
 const supabase = require("./supabase");
 const { verifyWebhook, MODE } = require("./tpay");
 const { sendMail } = require("./mailer");
-const emails = require("./emails");
+const emails = require("./email/templates");
 const { notify } = require("./notify");
 
 const RANK = { canceled: 0, awaiting_transfer: 1, awaiting_payment: 1, paid: 2 };
