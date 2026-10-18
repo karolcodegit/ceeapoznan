@@ -79,7 +79,7 @@ const Header = () => {
         <Link to="/" className="flex items-center p-1.5">
           <span className="sr-only">CEEA - Ośrodek Poznański</span>
           <img
-            className="w-auto h-6 xl:h-9 2xl:h-10 mr-10 object-contain"
+            className="w-auto h-8 xl:h-9 2xl:h-10 mr-10 object-contain"
             src={Logo}
             alt="Logo CEEA"
           />
@@ -139,7 +139,7 @@ const Header = () => {
             <Link to="/" className="-m-1.5 p-1.5 flex">
               <span className="sr-only">CEEA - Ośrodek Poznański</span>
               <img
-                className="w-auto h-11 max-sm:h-10 object-contain"
+                className="w-auto h-8 max-sm:h-7 object-contain"
                 src={Logo}
                 alt="Logo CEEA"
               />
@@ -177,7 +177,7 @@ const Header = () => {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-gradient-to-b from-cyan-600 via-cyan-700 to-blue-900 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 text-white shadow-2xl flex flex-col">
           <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 flex-shrink-0">
             <img
-              className="h-6 w-auto brightness-0 invert"
+              className="h-8 w-auto brightness-0 invert"
               src={Logo}
               alt="CEEA"
             />

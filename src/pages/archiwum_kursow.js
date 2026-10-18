@@ -15,6 +15,7 @@ const ArchiwumKursow = () => {
 
   useEffect(() => {
     if (typeof window === "undefined") return
+    let cancelled = false
     let t
     const handleResize = () => {
       clearTimeout(t)
@@ -22,6 +23,23 @@ const ArchiwumKursow = () => {
     }
     setWindowWidth(window.innerWidth)
     window.addEventListener("resize", handleResize)
+
+    // ── Archiwum z Supabase ──
+    fetch(`${API_URL}/courses`)
+      .then(r => {
+        if (!r.ok) throw new Error("courses")
+        return r.json()
+      })
+      .then(({ courses }) => {
+        if (!cancelled) {
+          setCourses((courses || []).filter(c => c.is_archive === true))
+        }
+      })
+      .catch(err => {
+        console.error("[archiwum] fetch error:", err.message)
+        if (!cancelled) setCourses([])
+      })
+
     return () => {
       window.removeEventListener("resize", handleResize)
       clearTimeout(t)

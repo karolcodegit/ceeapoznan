@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { graphql } from "gatsby"
 import Seo from "../components/seo"
@@ -7,9 +7,15 @@ import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
-import SponsorsSection from "../components/Sponsors/SponsorsSection"
+const SponsorsSection = React.lazy(() => import("../components/Sponsors/SponsorsSection"))
 
 // --- API ---
+
+// obrazy z Cloudinary w rozmiarze pod ekran (bez megabajtowych oryginałów)
+const cld = (url, w) =>
+  url && url.includes("res.cloudinary.com")
+    ? url.replace("/upload/", `/upload/w_${w},q_auto,f_auto/`)
+    : url
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
@@ -29,24 +35,27 @@ const IndexPage = ({ data }) => {
   // ── Kursy ze Supabase (zamiast allDatoCmsCourse) ──
   const [courses, setCourses] = useState([])
 
-
   useEffect(() => {
     let cancelled = false
-    fetch(`${API_URL}/courses?scope=home`)
-      .then(r => {
-        if (!r.ok) throw new Error("courses")
-        return r.json()
-      })
-      .then(({ courses }) => {
-        if (!cancelled) setCourses(courses || [])
-      })
-      .catch(() => {})
+    const start = () =>
+      fetch(`${API_URL}/courses?scope=home`)
+        .then(r => {
+          if (!r.ok) throw new Error("courses")
+          return r.json()
+        })
+        .then(({ courses }) => {
+          if (!cancelled) setCourses(courses || [])
+        })
+        .catch(() => {})
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(start, { timeout: 2500 })
+    } else {
+      setTimeout(start, 800)
+    }
     return () => { cancelled = true }
   }, [])
 
-  const currentCourse =
-  courses.find(c => c.available === true) ||
-  courses.find(c => c.is_active === true)
+  const currentCourse = courses.find(c => c.available === true)
   const futureCourses = courses.filter(c => c.is_next === true).slice(0, 3)
 
   // Link rejestracji: dotychczasowy format URL (strony kursów jeszcze z DatoCMS)
@@ -66,7 +75,7 @@ const IndexPage = ({ data }) => {
           {currentCourse?.background_image_url ? (
             <>
               <img
-                src={currentCourse.background_image_url}
+                src={cld(currentCourse.background_image_url, 1600)}
                 alt={currentCourse.title || "Tło kursu"}
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -261,7 +270,7 @@ const IndexPage = ({ data }) => {
                   <motion.div className="relative group">
                     {currentCourse?.image_url ? (
                       <img
-                        src={currentCourse.image_url}
+                        src={cld(currentCourse.image_url, 800)}
                         alt={currentCourse.title || "CEEA kurs"}
                         className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full object-cover"
                       />
@@ -319,7 +328,7 @@ const IndexPage = ({ data }) => {
                 >
                   {course.image_url ? (
                     <img
-                      src={course.image_url}
+                      src={cld(course.image_url, 600)}
                       alt={course.title}
                       className="rounded-t-3xl h-56 w-full object-cover"
                       loading="lazy"
@@ -423,7 +432,9 @@ const IndexPage = ({ data }) => {
         )}
 
         {/* === SPONSORZY === */}
-        <SponsorsSection />
+        <Suspense fallback={null}>
+          <SponsorsSection />
+        </Suspense>
 
         {currentCourse?.available && !!currentCourse?.info_description && (
           <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">

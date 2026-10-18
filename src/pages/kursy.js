@@ -75,6 +75,29 @@ const Courses = () => {
     }
   }, [])
 
+  // ── Kursy z Supabase ──
+  useEffect(() => {
+    let cancelled = false
+    console.log("[kursy] API_URL =", API_URL)
+    fetch(`${API_URL}/courses?scope=home`)
+      .then(r => {
+        if (!r.ok) throw new Error("courses")
+        return r.json()
+      })
+      .then(({ courses }) => {
+        console.log("[kursy] otrzymano:", (courses || []).length, "kursów")
+        if (!cancelled) {
+          // sort jak w DatoCMS: po numerze kursu rosnąco
+          setCourses((courses || []).slice().sort((a, b) => (a.course_number ?? 999) - (b.course_number ?? 999)))
+        }
+      })
+      .catch(err => {
+        console.error("[kursy] fetch error:", err.message)
+        if (!cancelled) setCourses([])
+      })
+    return () => { cancelled = true }
+  }, [])
+
   if (courses === null) {
     return (
       <motion.div
@@ -92,6 +115,16 @@ const Courses = () => {
     )
   }
 
+  if (courses.length === 0) {
+    return (
+      <div className="py-24 text-center">
+        <p className="text-gray-500 dark:text-gray-400">
+          Brak kursów do wyświetlenia. (sprawdź konsolę – [kursy])
+        </p>
+      </div>
+    )
+  }
+
   const nodes = courses
 
   const gridCols = windowWidth < 840
@@ -101,12 +134,9 @@ const Courses = () => {
     : `repeat(${Math.min(nodes.length, 3)}, 1fr)`
 
   return (
-    <motion.div
+    <div
       className="grid gap-4 py-24 relative"
       style={{ gridTemplateColumns: gridCols }}
-      initial="hidden"
-      animate="visible"
-      variants={staggerContainer}
     >
       {nodes.map((course, index) => {
         const courseSlug = slugify(course.title)
@@ -121,7 +151,10 @@ const Courses = () => {
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
             }}
-            variants={cardFadeUp}
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             whileHover={{
               scale: 1.05,
               zIndex: 10,
@@ -176,7 +209,7 @@ const Courses = () => {
           </motion.div>
         )
       })}
-    </motion.div>
+    </div>
   )
 }
 
