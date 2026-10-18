@@ -79,7 +79,7 @@ const Header = () => {
         <Link to="/" className="flex items-center p-1.5">
           <span className="sr-only">CEEA - Ośrodek Poznański</span>
           <img
-            className="w-auto h-8 xl:h-9 2xl:h-10 mr-10 object-contain"
+            className="w-auto h-6 xl:h-9 2xl:h-10 mr-10 object-contain"
             src={Logo}
             alt="Logo CEEA"
           />

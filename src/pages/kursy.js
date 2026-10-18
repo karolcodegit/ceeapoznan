@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { motion } from "framer-motion"
+
 import Seo from "../components/seo"
 import Title from "../components/Title/Title"
 import { slugify } from "../utils/slugify"
@@ -59,35 +60,18 @@ const Courses = () => {
   // Kursy ze Supabase (zamiast allDatoCmsCourse)
   const [courses, setCourses] = useState(null) // null = ładowanie
 
-  console.log(courses)
-
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-
-    if (typeof window !== "undefined") {
-      setWindowWidth(window.innerWidth)
-      window.addEventListener("resize", handleResize)
+    if (typeof window === "undefined") return
+    let t
+    const handleResize = () => {
+      clearTimeout(t)
+      t = setTimeout(() => setWindowWidth(window.innerWidth), 150)
     }
-
-    let cancelled = false
-    fetch(`${API_URL}/courses?scope=home`)
-      .then(r => {
-        if (!r.ok) throw new Error("courses")
-        return r.json()
-      })
-      .then(({ courses }) => {
-        if (!cancelled) {
-          // sort jak w DatoCMS: po numerze kursu ASC
-          setCourses((courses || []).slice().sort((a, b) => (a.course_number ?? 999) - (b.course_number ?? 999)))
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setCourses([])
-      })
-
+    setWindowWidth(window.innerWidth)
+    window.addEventListener("resize", handleResize)
     return () => {
-      if (typeof window !== "undefined") window.removeEventListener("resize", handleResize)
-      cancelled = true
+      window.removeEventListener("resize", handleResize)
+      clearTimeout(t)
     }
   }, [])
 
@@ -117,12 +101,6 @@ const Courses = () => {
     : `repeat(${Math.min(nodes.length, 3)}, 1fr)`
 
   return (
-    <>
-    {nodes.length === 0 && (
-      <p className="col-span-full text-center py-24 text-gray-500 dark:text-gray-400">
-        Brak kursów do wyświetlenia.
-      </p>
-    )}
     <motion.div
       className="grid gap-4 py-24 relative"
       style={{ gridTemplateColumns: gridCols }}
@@ -132,9 +110,8 @@ const Courses = () => {
     >
       {nodes.map((course, index) => {
         const courseSlug = slugify(course.title)
+
         return (
-          <>
-          
           <motion.div
             key={course.course_id}
             className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 z-0 overflow-hidden group"
@@ -197,11 +174,9 @@ const Courses = () => {
               </div>
             </Link>
           </motion.div>
-          </>
         )
       })}
     </motion.div>
-    </>
   )
 }
 

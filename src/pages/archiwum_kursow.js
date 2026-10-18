@@ -7,43 +7,24 @@ import { getYearFromDate } from "../utils/getYearFromDate"
 
 // --- API ---
 
-const API_URL =
-  process.env.GATSBY_CLOUD_API_URL ||
-  process.env.GATSBY_REGISTER_ENDPOINT ||
-  "https://ceea-registration-course-XXXXX.run.app" // ← podmień, jeśli nie masz env
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const ArchiwumKursow = () => {
   const [windowWidth, setWindowWidth] = useState(0)
   const [courses, setCourses] = useState(null) // null = ładowanie
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleResize = () => setWindowWidth(window.innerWidth)
-      setWindowWidth(window.innerWidth)
-      window.addEventListener("resize", handleResize)
-
-      let cancelled = false
-      fetch(`${API_URL}/courses`)
-        .then(r => {
-          if (!r.ok) throw new Error("courses")
-          return r.json()
-        })
-        .then(({ courses }) => {
-          if (cancelled) return
-          const archived = (courses || [])
-            .filter(c => c.is_archive === true)
-            // sort rosnąco po dacie (jak dotychczas: najstarsze pierwsze)
-            .sort((a, b) => (a.start_date || "").localeCompare(b.start_date || ""))
-          setCourses(archived)
-        })
-        .catch(() => {
-          if (!cancelled) setCourses([])
-        })
-
-      return () => {
-        window.removeEventListener("resize", handleResize)
-        cancelled = true
-      }
+    if (typeof window === "undefined") return
+    let t
+    const handleResize = () => {
+      clearTimeout(t)
+      t = setTimeout(() => setWindowWidth(window.innerWidth), 150)
+    }
+    setWindowWidth(window.innerWidth)
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      clearTimeout(t)
     }
   }, [])
 
