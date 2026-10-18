@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useStaticQuery, graphql, Link } from "gatsby"
+import React, { useState, useEffect } from "react"
+import { Link } from "gatsby"
 import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
 import {
@@ -29,20 +29,27 @@ const linkIcons = {
   "Panel kursanta": UserCircleIcon,
 }
 
+const API_URL =
+  process.env.GATSBY_CLOUD_API_URL ||
+  process.env.GATSBY_REGISTER_ENDPOINT ||
+  "https://ceea-registration-course-559160331745.europe-central2.run.app"
+
 const Header = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      activeCourse: allDatoCmsCourse(filter: { available: { eq: true } }) {
-        nodes {
-          id
-          nameCourse
-          date
-        }
-      }
-    }
-  `)
-  const activeCourse = data.activeCourse.nodes[0]
+  const [activeCourse, setActiveCourse] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${API_URL}/courses?scope=home`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(j => {
+        if (cancelled || !j) return
+        const found = (j.courses || []).find(c => c.available === true)
+        setActiveCourse(found || null)
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
 
   const handleClick = () => {
     if (mobileMenuOpen) {
@@ -52,13 +59,13 @@ const Header = () => {
     }
   }
 
-  const courseDetailsPath = `/kursy/${getYearFromDate(
-    data.activeCourse.nodes[0].date
-  )}/${slugify(data.activeCourse.nodes[0].nameCourse)}/szczegoly`
+  const courseDetailsPath = activeCourse
+    ? `/kursy/${getYearFromDate(activeCourse.start_date || activeCourse.date_label)}/${slugify(activeCourse.title)}/szczegoly`
+    : "#"
 
-  const courseRegistrationPath = `/kursy/${getYearFromDate(
-    activeCourse.date
-  )}/${slugify(activeCourse.nameCourse)}/rejestracja`
+  const courseRegistrationPath = activeCourse
+    ? `/kursy/${getYearFromDate(activeCourse.start_date || activeCourse.date_label)}/${slugify(activeCourse.title)}/rejestracja`
+    : "#"
 
   const allMenuLinks = [
     ...menuLinks,
