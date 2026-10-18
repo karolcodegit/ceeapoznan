@@ -1,113 +1,52 @@
+// src/utils/handleRegisterSubmit.js
+// Wysyła TYLKO dane do /register; emaile wysyła chmura.
+// Online (tpay) → redirect do bramki; Transfer → formularz-wyslany.
 import { navigate } from "gatsby"
-import { renderEmailTemplate } from "./renderEmailTemplate"
-import { generateOrderNumber } from "./generateOrderNumber";
-import { saveToAirtable } from "./airtable";
 
-import { CourseConfirmationUserText } from "../utils/emails/course/courseConfirmationUser"
+const REGISTER_ENDPOINT = process.env.GATSBY_REGISTER_ENDPOINT
 
-export const handleRegisterSubmit = async (
-  registerData,
-  apiEndpoint, 
-  token
-) => {
-  try {
-    const orderNumber = generateOrderNumber();
-    const currentPath = window.location.pathname.replace(/\/$/, ""); // Usuń końcowy ukośnik, jeśli istnieje
+export const handleRegisterSubmit = async (registerData) => {
+  const orderNumber = generateOrderNumber()
+  const currentPath = window.location.pathname.replace(/\/$/, "")
 
-    const fullOrderData = {
-      ...registerData,
+  // ── 1. ZAPIS (await) – 409/500 = throw, Form pokaże błąd ──
+  const regRes = await fetch(REGISTER_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       orderNumber,
-    };
-    
-    // Natychmiastowe przekierowanie użytkownika
-    navigate(`${currentPath}/formularz-wyslany`);
+      email: registerData.email,
+      firstName: registerData.firstName,
+      surName: registerData.surName,
+      phone: registerData.phone ? String(registerData.phone) : null,
+      courseId: registerData.courseId,
+      courseTitle: registerData.courseTitle,
+      baseAmount: registerData.baseAmount,
+      paymentMethod: registerData.paymentMethod || "transfer",
+      payload: registerData,
+    }),
+  })
 
-    // Operacje w tle
-    const performBackgroundTasks = async () => {
-      try {
-        // Zapis do Airtable
-        await saveToAirtable(fullOrderData);
-
-        // Generowanie treści e-maili za pomocą szablonów
-        const emailHtmlToYou = renderEmailTemplate("CourseConfirmation", {
-          courseTitle: registerData.courseTitle,
-          firstName: registerData.firstName,
-          surName: registerData.surName,
-          street: registerData.street,
-          numberHome: registerData.numberHome,
-          zipCode: registerData.zipCode,
-          city: registerData.city,
-          email: registerData.email,
-          phone: registerData.phone,
-          birthday: registerData.birthday,
-          invoiceName: registerData.invoiceName,
-          invoiceStreet: registerData.invoiceStreet,
-          invoiceNumberHome: registerData.invoiceNumberHome,
-          invoiceZipCode: registerData.invoiceZipCode,
-          invoiceCity: registerData.invoiceCity,
-          invoiceNip: registerData.invoiceNip,
-          dishes: registerData.dishes,
-          total: registerData.total,
-          orderNumber,
-        });
-
-        const emailHtmlToUser = renderEmailTemplate("CourseConfirmationUser", {
-          name: registerData.name,
-          email: registerData.email,
-          courseTitle: registerData.courseTitle,
-          total: registerData.total,
-          
-          orderNumber,
-        });
-
-        const emailTextToUser = CourseConfirmationUserText({
-          courseTitle: registerData.courseTitle,
-          total: registerData.total,
-          orderNumber,
-        })
-
-        // Przygotowanie payload do wysyłki do Google Cloud Functions
-        const payload = {
-          formType: "course",
-          token,
-          toYou: {
-            to: "sekretariat@ceea.org.pl",
-            subject: `Nowe zgłoszenie na kurs: ${registerData.courseTitle} (nr ${orderNumber})`,
-            html: emailHtmlToYou,
-          },
-          toUser: {
-            to: registerData.email,
-            subject: `Potwierdzenie zgłoszenia na kurs "${registerData.courseTitle}" – CEEA Poznań`,
-            html: emailHtmlToUser,
-            text: emailTextToUser, // ← CourseConfirmationUserText({ courseTitle, total, orderNumber })
-          },
-        }
-
-        console.log("📦 Payload wysyłany do API:", payload);
-
-        // Wysłanie danych do API
-        const response = await fetch(apiEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Błąd odpowiedzi z API:", errorText);
-          throw new Error(`HTTP status: ${response.status}`);
-        }
-      } catch (error) {
-        console.error("❌ Błąd podczas operacji w tle:", error);
-      }
-    };
-
-    // Uruchomienie operacji w tle
-    performBackgroundTasks();
-  } catch (error) {
-    console.error("❌ Błąd podczas wysyłania formularza:", error);
-    throw error;
+  if (!regRes.ok) {
+    const err = await regRes.json().catch(() => ({}))
+    if (regRes.status === 409) throw new Error(err.error || "Brak wolnych miejsc na tym kursie.")
+    throw new Error(err.error || "Błąd zapisu rejestracji. Spróbuj ponownie.")
   }
-};
+
+  const json = await regRes.json()
+
+  // ── 2. Online → przekierowanie do bramki tpay / symulatora ──
+  if (json.transactionUrl) {
+    window.location.href = json.transactionUrl
+    return
+  }
+
+  // ── 3. Transfer → strona potwierdzenia ──
+  navigate(`${currentPath}/formularz-wyslany`)
+}
+
+function generateOrderNumber() {
+  const now = new Date()
+  const ymd = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`
+  return `CEEA-${ymd}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`
+}

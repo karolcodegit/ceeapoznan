@@ -38,7 +38,9 @@ const MarkdownImage = ({ node, src, alt, title }) => {
     return (
       <figure className="my-6 flex justify-center">
         <div className="w-full max-w-lg aspect-video bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center gap-3 text-gray-400 dark:text-gray-500">
+        <a href={src}>
           <FaImage className="text-3xl opacity-60" />
+        </a>
           <figcaption className="text-sm font-medium">Nie udało się załadować obrazu</figcaption>
         </div>
       </figure>

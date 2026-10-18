@@ -1,33 +1,18 @@
 import React from "react"
 import { graphql } from "gatsby"
-import { useLocation } from "@reach/router"
-import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
 import Seo from "../components/seo"
 import FormRegister from "../components/Form/FormRegister"
 
+// Strona rejestracji: wybiera aktywny kurs z DatoCMS i renderuje formularz.
+// Logika formularza: components/Form/FormRegister.js (zapis → Cloud Run → Supabase)
 const Rejestracja = ({ data }) => {
-  // const location = useLocation()
-  // const currentPath = location.pathname
-  // const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
-  // const currentLink = allLinks.find(link => link.to === currentPath)
-
-  const availableCourse = data.allDatoCmsCourse.nodes.find(
-    course => course.available === true
-  )
+  const availableCourse =
+    data.allDatoCmsCourse.nodes.find(c => c.available === true) || null
 
   return (
-    <>
-      <div className="">
-        <div className="max-w-6xl mx-auto ">
-          <FormRegister
-            data={data}
-            availableCourse={
-              availableCourse || { nameCourse: "Bez nazwy kursu" }
-            }
-          />
-        </div>
-      </div>
-    </>
+    <div className="max-w-6xl mx-auto">
+      <FormRegister data={data} availableCourse={availableCourse} />
+    </div>
   )
 }
 
@@ -58,6 +43,6 @@ export const query = graphql`
   }
 `
 
-export const Head = () => <Seo title="Rejestracja" />
+export const Head = () => <Seo title="Rejestracja na kurs" />
 
 export default Rejestracja

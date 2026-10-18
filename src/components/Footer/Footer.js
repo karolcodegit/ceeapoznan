@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Link, useStaticQuery, graphql, navigate } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import scrollTo from "gatsby-plugin-smoothscroll"
@@ -16,25 +16,16 @@ import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
 
+// --- API ---
+
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
+
 const Footer = () => {
+  // UWAGA: datoCmsCompany wyleciało z GraphQL — dane firmy z /company.
+  // allDatoCmsCourse ZOSTAJE do czasu modułu kursów (ostatnie wykorzystanie
+  // GraphQL w projekcie).
   const data = useStaticQuery(graphql`
     query FooterQuery {
-      datoCmsCompany {
-        nameCompany
-        description
-        street
-        numberHome
-        city
-        zipCode
-        regon
-        nip
-        krs
-        bankAccount
-        bankAccountName
-        mail
-        facebook
-        youtube
-      }
       allDatoCmsCourse(filter: { available: { eq: true } }) {
         nodes {
           id
@@ -50,8 +41,23 @@ const Footer = () => {
       }
     }
   `)
-  const company = data.datoCmsCompany
   const activeCourse = data.allDatoCmsCourse.nodes[0]
+
+  const [company, setCompany] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${API_URL}/company`)
+      .then(r => {
+        if (!r.ok) throw new Error("company")
+        return r.json()
+      })
+      .then(({ company }) => {
+        if (!cancelled) setCompany(company)
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
 
   const handleClick = (to, event) => {
     event.preventDefault()
@@ -95,7 +101,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Grid: 1 col → 2 cols → 12 cols */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-8">
-            
+
             {/* Brand */}
             <div className="lg:col-span-4 lg:pr-10 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
               <Link to="/" className="inline-flex items-center gap-3 mb-5">
@@ -106,11 +112,11 @@ const Footer = () => {
                 />
               </Link>
               <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                {company.description}
+                {company?.description}
               </p>
 
               <div className="flex items-center gap-3">
-                {company.facebook && (
+                {company?.facebook && (
                   <a
                     href={`https://www.facebook.com/${company.facebook}`}
                     target="_blank"
@@ -121,9 +127,9 @@ const Footer = () => {
                     <FaFacebookF className="w-4 h-4" />
                   </a>
                 )}
-                {company.youtube && (
+                {company?.youtube && (
                   <a
-                    href="https://www.youtube.com"
+                    href={company.youtube.startsWith("http") ? company.youtube : `https://www.youtube.com/${company.youtube}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="YouTube"
@@ -165,8 +171,10 @@ const Footer = () => {
                   const isStudent = link.title === "Panel kursanta"
                   return (
                     <li key={link.title}>
-                      <Link
-                        to={link.to}
+                      <a
+                        href={link.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         onClick={e => handleClick(link.to, e)}
                         className={`inline-flex items-center gap-2 text-sm transition-colors duration-200 py-0.5 ${
                           isStudent
@@ -178,7 +186,7 @@ const Footer = () => {
                           <UserCircleIcon className="w-4 h-4 text-amber-400 flex-shrink-0" />
                         )}
                         <span>{link.title}</span>
-                      </Link>
+                      </a>
                     </li>
                   )
                 })}
@@ -208,25 +216,25 @@ const Footer = () => {
                   <MapPinIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-white text-sm leading-tight">
-                      {company.nameCompany}
+                      {company?.nameCompany || company?.name_company}
                     </p>
                     <p className="text-sm mt-1">
-                      {company.street} {company.numberHome}
+                      {company?.street} {company?.number_home || company?.numberHome}
                     </p>
                     <p className="text-sm">
-                      {company.zipCode} {company.city}
+                      {company?.zip_code || company?.zipCode} {company?.city}
                     </p>
                   </div>
                 </div>
 
-                {company.mail && (
+                {company?.email && (
                   <div className="flex items-center gap-3">
                     <EnvelopeIcon className="w-5 h-5 text-cyan-400 flex-shrink-0" />
                     <a
-                      href={`mailto:${company.mail}`}
+                      href={`mailto:${company.email}`}
                       className="hover:text-white transition-colors text-sm"
                     >
-                      {company.mail}
+                      {company.email}
                     </a>
                   </div>
                 )}
@@ -235,11 +243,11 @@ const Footer = () => {
                   <BuildingLibraryIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-[11px] text-gray-400 mb-1 uppercase tracking-wide">
-                      {company.bankAccountName}
+                      {company?.bank_account_name || company?.bankAccountName}
                     </p>
-                    <CopyToClipboardWithNotification text={company.bankAccount}>
+                    <CopyToClipboardWithNotification text={company?.bank_account || company?.bankAccount}>
                       <span className="inline-block font-mono text-xs bg-white/5 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors border border-white/5">
-                        {company.bankAccount}
+                        {company?.bank_account || company?.bankAccount}
                       </span>
                     </CopyToClipboardWithNotification>
                   </div>

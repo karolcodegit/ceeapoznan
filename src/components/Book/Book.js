@@ -3,6 +3,18 @@ import Title from "../Title/Title"
 import DeliveryInfo from "../DeliveryInfo/DeliveryInfo"
 import { MarkdownText } from "../../utils/markdownText"
 
+const logo = `<svg width="800" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#0A2A43"/>
+  <text x="50%" y="55%" font-size="60" fill="#FFFFFF" text-anchor="middle" font-family="sans-serif">
+    CEEA Poznań
+  </text>
+  <text x="50%" y="65%" font-size="40" fill="#2BB4A8" text-anchor="middle" font-family="sans-serif">
+    Materiały kursowe
+  </text>
+</svg>`
+
+const svgFallback = `data:image/svg+xml;utf8,${encodeURIComponent(logo)}`
+
 const Book = ({
   originalId,
   image,
@@ -17,24 +29,34 @@ const Book = ({
   additionalInformation,
   available,
   reprint,
-  stockQuantity
+  stockQuantity,
 }) => {
   return (
     <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row py-10 md:py-20 border-b last-of-type:border-none">
       {/* Obrazek */}
       <div className="flex flex-col lg:flex-row flex-1 items-center md:items-start">
         <div className="mb-6 md:mb-0">
-          <img
-            className="object-cover rounded-lg w-48 sm:w-64 md:w-72 lg:w-96 h-auto"
-            src={image.fluid.src}
-            alt={title}
-          />
+          <div className="mb-6 md:mb-0">
+            {image?.fluid?.src ? (
+              <img
+                className="object-cover rounded-lg w-48 sm:w-64 md:w-72 lg:w-96 h-auto"
+                src={image.fluid.src}
+                alt={title}
+              />
+            ) : (
+              <img
+                className="object-cover rounded-lg w-48 sm:w-64 md:w-72 lg:w-96 h-auto"
+                src={svgFallback}
+                alt={title}
+              />
+            )}
+          </div>
         </div>
         {/* Informacje o produkcie */}
         <div className="lg:px-10 w-full dark:text-gray-200">
           {/* Dostępność i tytuł */}
           <div className="flex space-x-4 align-middle items-center mb-10">
-          <span
+            <span
               className={`self-start px-4 py-2 text-xs sm:text-sm font-semibold rounded-full ${
                 available && stockQuantity > 0
                   ? "bg-green-100 text-green-800"
@@ -90,9 +112,9 @@ const Book = ({
             </div>
             {/* Jeśli dodamy EAN */}
             {/* <div className="flex justify-between">
-          <span className="dark:text-gray-400">EAN:</span>
-          <span className="font-bold">{ean}</span>
-        </div> */}
+              <span className="dark:text-gray-400">EAN:</span>
+              <span className="font-bold">{ean}</span>
+            </div> */}
             {additionalInformation && (
               <div className="mt-6 space-y-4">
                 <span className="dark:text-gray-400">
@@ -109,7 +131,13 @@ const Book = ({
 
       {/* Informacje o dostawie */}
       <div className="mt-8 md:mt-0 md:ml-8 flex-shrink-0">
-        <DeliveryInfo price={price} available={available} title={title} originalId={originalId} image={image}/>
+        <DeliveryInfo
+          price={price}
+          available={available && stockQuantity > 0}
+          title={title}
+          originalId={originalId}
+          image={image}
+        />
       </div>
     </div>
   )

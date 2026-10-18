@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useState, useEffect } from "react"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { graphql } from "gatsby"
 import Seo from "../components/seo"
@@ -6,6 +7,11 @@ import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
+import SponsorsSection from "../components/Sponsors/SponsorsSection"
+
+// --- API ---
+
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const IndexPage = ({ data }) => {
   const image1 = data.allFile.edges.find(
@@ -20,19 +26,34 @@ const IndexPage = ({ data }) => {
     edge => edge.node.name === "Creativity_and_innovation"
   )?.node?.childImageSharp?.fluid
 
-  const currentCourse = data.allDatoCmsCourse.nodes.find(
-    c => c.available === true
-  )
-  const futureCourses = data.allDatoCmsCourse.nodes
-    .filter(c => c.nextCourse === true)
-    .slice(0, 3)
+  // ── Kursy ze Supabase (zamiast allDatoCmsCourse) ──
+  const [courses, setCourses] = useState([])
 
-  const sponsors = data?.datoCmsSponsor?.sponsor || []
-  const firstCourse = data?.allDatoCmsCourse?.nodes?.[0]
 
-  const websiteRegister = firstCourse
-    ? `/kursy/${getYearFromDate(firstCourse.date)}/${slugify(
-        firstCourse.nameCourse
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${API_URL}/courses?scope=home`)
+      .then(r => {
+        if (!r.ok) throw new Error("courses")
+        return r.json()
+      })
+      .then(({ courses }) => {
+        if (!cancelled) setCourses(courses || [])
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+
+  const currentCourse =
+  courses.find(c => c.available === true) ||
+  courses.find(c => c.is_active === true)
+  const futureCourses = courses.filter(c => c.is_next === true).slice(0, 3)
+
+  // Link rejestracji: dotychczasowy format URL (strony kursów jeszcze z DatoCMS)
+  const regCourse = currentCourse || courses[0]
+  const websiteRegister = regCourse
+    ? `/kursy/${getYearFromDate(regCourse.start_date || regCourse.date_label)}/${slugify(
+        regCourse.title
       )}/rejestracja`
     : "#"
 
@@ -41,21 +62,15 @@ const IndexPage = ({ data }) => {
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
         <section className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh]">
-          {/* 🔹 GatsbyImage jako tło */}
-          {currentCourse?.backgroundimage?.gatsbyImageData ? (
-            <GatsbyImage
-              image={getImage(currentCourse.backgroundimage)}
-              alt={currentCourse.nameCourse || "Tło kursu"}
-              className="absolute inset-0 w-full h-full"
-              imgClassName="object-cover w-full h-full"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-              }}
-            />
+          {/* 🔹 Tło: zdjęcie kursu (Supabase) lub gradient */}
+          {currentCourse?.background_image_url ? (
+            <>
+              <img
+                src={currentCourse.background_image_url}
+                alt={currentCourse.title || "Tło kursu"}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </>
           ) : (
             /* 🔹 Gradient mesh z ruchem - wersja działająca */
             <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0b1120]">
@@ -192,17 +207,17 @@ const IndexPage = ({ data }) => {
                 )}
 
                 <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.1] drop-shadow-xl">
-                  {currentCourse?.nameCourse || "Centrum Edukacji CEEA"}
+                  {currentCourse?.title || "Centrum Edukacji CEEA"}
                 </h1>
 
                 <p className="text-xl text-gray-100 font-medium drop-shadow-md">
-                  {currentCourse?.date
-                    ? `Data kursu: ${currentCourse.date}`
+                  {currentCourse?.date_label
+                    ? `Data kursu: ${currentCourse.date_label}`
                     : "Nowa edycja kursów CEEA już wkrótce!"}
                 </p>
 
                 <p className="text-gray-200 max-w-lg leading-relaxed text-lg drop-shadow-md">
-                  {currentCourse?.description2 ||
+                  {currentCourse?.home_description ||
                     "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
                 </p>
 
@@ -244,14 +259,20 @@ const IndexPage = ({ data }) => {
                   <div className="absolute -inset-4 bg-gradient-to-r from-[#0077FF]/20 to-[#00C6FF]/20 rounded-[3rem] blur-2xl opacity-60" />
 
                   <motion.div className="relative group">
-                    <GatsbyImage
-                      image={getImage(
-                        currentCourse?.image || data.defaultImage
-                      )}
-                      alt={currentCourse?.nameCourse || "CEEA kurs"}
-                      className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full"
-                      imgClassName="object-cover"
-                    />
+                    {currentCourse?.image_url ? (
+                      <img
+                        src={currentCourse.image_url}
+                        alt={currentCourse.title || "CEEA kurs"}
+                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full object-cover"
+                      />
+                    ) : (
+                      <GatsbyImage
+                        image={getImage(data.defaultImage)}
+                        alt="CEEA kurs"
+                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full"
+                        imgClassName="object-cover"
+                      />
+                    )}
 
                     {/* Gradient overlay - subtelniejszy */}
                     <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-black/20 via-transparent to-transparent" />
@@ -280,13 +301,13 @@ const IndexPage = ({ data }) => {
                     : futureCourses.length === 2
                     ? "md:grid-cols-2 sm:grid-cols-1 justify-items-center"
                     : "md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-1"
-                } 
+                }
               `}
             >
               {futureCourses.map((course, i) => (
                 <motion.div
-                  key={course.id}
-                  className="bg-white dark:bg-slate-700 rounded-3xl shadow-lg hover:shadow-2xl w-full"
+                  key={course.course_id}
+                  className="bg-white dark:bg-slate-700 rounded-3xl shadow-lg hover:shadow-2xl w-full overflow-hidden"
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
@@ -296,14 +317,23 @@ const IndexPage = ({ data }) => {
                     ease: "easeOut",
                   }}
                 >
-                  <GatsbyImage
-                    image={getImage(course.image || data.defaultImage)}
-                    alt={course.nameCourse}
-                    className="rounded-t-3xl h-56 object-cover"
-                  />
+                  {course.image_url ? (
+                    <img
+                      src={course.image_url}
+                      alt={course.title}
+                      className="rounded-t-3xl h-56 w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="rounded-t-3xl h-56 w-full bg-gradient-to-br from-[#016ABA] to-[#00C6FF] flex items-center justify-center">
+                      <span className="text-5xl font-bold text-white">
+                        {(course.title || "C").charAt(0)}
+                      </span>
+                    </div>
+                  )}
                   <div className="p-6 text-left">
                     <h3 className="h-16 text-xl font-semibold text-[#016ABA] dark:text-sky-400 mb-3 line-clamp-2">
-                      {course.nameCourse}
+                      {course.title}
                     </h3>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                       <li className="flex items-center">
@@ -311,7 +341,7 @@ const IndexPage = ({ data }) => {
                         <span>
                           Numer kursu:{" "}
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.numerCourse || "Brak numeru"}
+                            {course?.course_number ?? "Brak numeru"}
                           </span>
                         </span>
                       </li>
@@ -320,23 +350,8 @@ const IndexPage = ({ data }) => {
                         <span>
                           Data:{" "}
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.date || "Data wkrótce"}
+                            {course?.date_label || "Data wkrótce"}
                           </span>
-                        </span>
-                      </li>
-                      <li className="flex items-center">
-                        <span className="text-lg px-2">⏳</span>
-                        <span>
-                          {course?.duration ? (
-                            <>
-                              Czas trwania:{" "}
-                              <span className="font-medium text-gray-900 dark:text-gray-100">
-                                {course.duration}
-                              </span>
-                            </>
-                          ) : (
-                            "Czas trwania wkrótce"
-                          )}
                         </span>
                       </li>
                       <li className="flex items-center">
@@ -344,7 +359,7 @@ const IndexPage = ({ data }) => {
                         <span>
                           Język:{" "}
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.language === true ? "PL" : "EN"}
+                            {course?.language === "en" ? "EN" : "PL"}
                           </span>
                         </span>
                       </li>
@@ -353,8 +368,7 @@ const IndexPage = ({ data }) => {
                         <span>
                           Tryb:{" "}
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.type?.label ??
-                              (course?.online ? "Online" : "Stacjonarny")}
+                            {course?.is_online ? "Online" : "Stacjonarny"}
                           </span>
                         </span>
                       </li>
@@ -377,9 +391,7 @@ const IndexPage = ({ data }) => {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.6 }}
               >
-                {currentCourse
-                  ? "Kurs już dostępny"
-                  : "Najbliższy kurs już wkrótce!"}
+                Kurs już dostępny
               </motion.h2>
 
               <motion.p
@@ -411,132 +423,65 @@ const IndexPage = ({ data }) => {
         )}
 
         {/* === SPONSORZY === */}
-        <section className="py-24 bg-gray-50 dark:bg-slate-800">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <motion.h2
-              className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6 }}
-            >
-              Współpracujemy z
-            </motion.h2>
+        <SponsorsSection />
 
-            <div
-              className={`grid gap-8 items-center justify-center opacity-80 place-items-center
-                ${sponsors.length === 1 ? "grid-cols-1 max-w-xs mx-auto" : ""}
-                ${sponsors.length === 2 ? "grid-cols-2 max-w-2xl mx-auto" : ""}
-                ${sponsors.length === 3 ? "grid-cols-2 md:grid-cols-3 max-w-4xl mx-auto" : ""}
-                ${sponsors.length >= 4 ? "grid-cols-2 md:grid-cols-4" : ""}
-              `}
-            >
-              {sponsors.map((sponsor, idx) => {
-                const image = getImage(sponsor.gatsbyImageData)
-                const website = sponsor?.customData?.stronaInternetowa
+        {currentCourse?.available && !!currentCourse?.info_description && (
+          <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(2,132,199,0.15),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.15),transparent_70%)]"></div>
 
-                const content = (
-                  <GatsbyImage
-                    image={image}
-                    alt={sponsor.title || `Sponsor ${idx + 1}`}
-                    className={`h-auto max-h-36 w-auto max-w-full object-contain mx-auto transition-all duration-300
-            dark:invert dark:brightness-125 dark:contrast-125`}
-                    style={{ filter: "invert(0%)" }}
-                  />
-                )
+            <div className="relative max-w-5xl mx-auto px-6">
+              <motion.h2
+                className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
+              >
+                Dodatkowe informacje o kursie
+              </motion.h2>
 
-                return (
-                  <motion.div
-                    key={idx}
-                    className="p-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.5, delay: idx * 0.15 }}
-                    whileHover={{ scale: 1.1 }}
+              <motion.p
+                className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+              >
+                {currentCourse.info_description}
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <Link
+                  to={`/kursy/${getYearFromDate(
+                    currentCourse.start_date || currentCourse.date_label
+                  )}/${slugify(currentCourse.title)}/szczegoly`}
+                  className="inline-flex items-center gap-2 bg-[#016ABA] hover:bg-[#0157A1] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Przejdź do strony kursu
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    className="w-5 h-5"
                   >
-                    {website ? (
-                      <a
-                        href={website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Odwiedź stronę sponsora ${
-                          sponsor.title || ""
-                        }`}
-                      >
-                        {content}
-                      </a>
-                    ) : (
-                      content
-                    )}
-                  </motion.div>
-                )
-              })}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 12h14m-7-7l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+              </motion.div>
             </div>
-          </div>
-        </section>
-
-        {currentCourse?.available &&
-          !!data?.datoCmsDetailedInformationAboutTheCourse && (
-            <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(2,132,199,0.15),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.15),transparent_70%)]"></div>
-
-              <div className="relative max-w-5xl mx-auto px-6">
-                <motion.h2
-                  className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  Dodatkowe informacje o kursie
-                </motion.h2>
-
-                <motion.p
-                  className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.6, delay: 0.15 }}
-                >
-                  {currentCourse?.additionalInfo ||
-                    "Więcej szczegółowych informacji o tym kursie znajdziesz na stronie poświęconej danej edycji."}
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                  <Link
-                    to={`/kursy/${getYearFromDate(
-                      data.activeCourse?.nodes[0]?.date
-                    )}/${slugify(
-                      data.activeCourse?.nodes[0]?.nameCourse
-                    )}/szczegoly`}
-                    className="inline-flex items-center gap-2 bg-[#016ABA] hover:bg-[#0157A1] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    Przejdź do strony kursu
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 12h14m-7-7l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
-                </motion.div>
-              </div>
-            </section>
-          )}
+          </section>
+        )}
 
         {/* === DLACZEGO WARTO === */}
         <section className="py-24 bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
@@ -606,39 +551,11 @@ const IndexPage = ({ data }) => {
   )
 }
 
+// GraphQL zostaje TYLKO dla lokalnych plików (Home/ + onas3.jpg).
+// allDatoCmsCourse / activeCourse / datoCmsDetailedInformationAboutTheCourse
+// wyleciały – kursy idą z /courses.
 export const query = graphql`
   query ImageQuery {
-    allDatoCmsCourse {
-      nodes {
-        id
-        numerCourse
-        nameCourse
-        nextCourse
-        newCourse
-        description2
-        online
-        language
-        date
-        available
-        backgroundimage {
-          gatsbyImageData(width: 1600, placeholder: BLURRED)
-        }
-        image {
-          gatsbyImageData(width: 800, placeholder: BLURRED)
-        }
-      }
-    }
-    activeCourse: allDatoCmsCourse(filter: { available: { eq: true } }) {
-      nodes {
-        id
-        date
-        nameCourse
-        backgroundimage {
-          gatsbyImageData(width: 800, placeholder: BLURRED)
-        }
-      }
-    }
-
     allFile(filter: { relativeDirectory: { eq: "Home" } }) {
       edges {
         node {
@@ -653,16 +570,6 @@ export const query = graphql`
       childImageSharp {
         gatsbyImageData(width: 800, placeholder: BLURRED)
       }
-    }
-    datoCmsSponsor {
-      sponsor {
-        title
-        gatsbyImageData(width: 400, placeholder: BLURRED)
-        customData
-      }
-    }
-    datoCmsDetailedInformationAboutTheCourse {
-      id
     }
   }
 `

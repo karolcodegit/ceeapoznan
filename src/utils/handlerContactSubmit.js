@@ -1,70 +1,15 @@
-import { toast } from "react-toastify"
-import { clearForm } from "../store/contact/contactSlice"
-import { renderEmailTemplate } from "./renderEmailTemplate"
-import { ContactConfirmationUserText } from "../utils/emails/contact/contactConfirmationUser"
+// Wysyła dane formularza kontaktowego do chmury – mail buduje i wysyła serwer
+const API = process.env.GATSBY_REGISTER_ENDPOINT
 
-export const handleContactSubmit = async (
-  contactData,
-  apiEndpoint,
-  dispatch,
-  navigate,
-  token
-) => {
-  try {
-    // Generowanie treści e-maili za pomocą szablonów
-    const emailHtmlToYou = renderEmailTemplate("ContactConfirmation", {
-      name: contactData.name,
-      email: contactData.email,
-      message: contactData.message,
-    })
-    const emailHtmlToUser = renderEmailTemplate("ContactConfirmationUser", {
-      name: contactData.name,
-      email: contactData.email,
-      message: contactData.message,
-    })
-    const emailTextToUser = ContactConfirmationUserText({
-      name: contactData.name,
-    })
-
-    // ✅ UWAGA: Dodajemy token do payloadu!
-    const payload = {
-      formType: "contact",
-      name: contactData.name,
-      email: contactData.email,
-      message: contactData.message,
-      token,
-      toYou: {
-        to: "sekretariat@ceea.org.pl",
-        subject: `Nowa wiadomość od ${contactData.name} – formularz kontaktowy`,
-        html: emailHtmlToYou,
-      },
-      toUser: {
-        to: contactData.email,
-        subject: "Dziękujemy za kontakt – CEEA Poznań",
-        html: emailHtmlToUser,
-        text: emailTextToUser, // ← ContactConfirmationUserText({ name: contactData.name })
-      },
-    }
-
-    const response = await fetch(apiEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error("❌ Błąd odpowiedzi z Google Cloud Functions:", errorText)
-      throw new Error(`HTTP status: ${response.status}`)
-    }
-
-    toast.success("Formularz pomyślnie wysłany!")
-    dispatch(clearForm())
-    if (navigate) navigate("/kontakt/wyslano")
-  } catch (error) {
-    console.error("❌ Błąd podczas wysyłania formularza:", error)
-    toast.error("Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie.")
+export const handleContactSubmit = async (payload) => {
+  const res = await fetch(`${API}/contact`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || "Nie udało się wysłać wiadomości.")
   }
+  return true
 }

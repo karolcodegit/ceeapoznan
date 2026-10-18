@@ -1,22 +1,36 @@
 import React from "react"
 import { Provider } from "react-redux"
-// import * as Sentry from "@sentry/react";
-// import { BrowserTracing } from "@sentry/react";
 import { store } from "./src/store/index"
 import "./src/styles/global.css"
 import "react-toastify/dist/ReactToastify.css"
 
 export const onClientEntry = () => {
   if (typeof window !== "undefined") {
+    // InPost widget
     const link = document.createElement("link")
     link.rel = "stylesheet"
     link.href = "https://geowidget.inpost.pl/inpost-geowidget.css"
     document.head.appendChild(link)
 
-    const script = document.createElement("script")
-    script.src = "https://geowidget.inpost.pl/inpost-geowidget.js"
-    script.defer = true
-    document.body.appendChild(script)
+    const inpostScript = document.createElement("script")
+    inpostScript.src = "https://geowidget.inpost.pl/inpost-geowidget.js"
+    inpostScript.defer = true
+    document.body.appendChild(inpostScript)
+
+    // // CEEA Feedback Widget
+    // window.CEEA_FEEDBACK_CONFIG = {
+    //   supabaseUrl: 'https://kdksdqfnfqoauphpippu.supabase.co',
+    //   edgeFunctionUrl: 'https://kdksdqfnfqoauphpippu.supabase.co/functions/v1/feedback-submit',
+    //   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtka3NkcWZuZnFvYXVwaHBpcHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODcxMTcsImV4cCI6MjEwNDI2MzExN30.4gBxpq2yqvVf6O4spB8V7c1xiHEhxSz5oy2j0hHXsdg',
+    //   source: 'website',
+    //   position: 'bottom-right',
+    //   primaryColor: '#0ea5e9',
+    // };
+
+    //const feedbackScript = document.createElement("script")
+    //feedbackScript.src = '/ceea-feedback-widget.js'
+    //feedbackScript.defer = true
+    //document.body.appendChild(feedbackScript)
   }
 }
 
@@ -43,12 +57,3 @@ export const onRouteUpdate = ({ location }) => {
 export const wrapRootElement = ({ element }) => (
   <Provider store={store}>{element}</Provider>
 )
-
-//   export const onRouteUpdate = ({ location }) => {
-//     const params = new URLSearchParams(location.search);
-//     const preview = params.get("preview");
-
-//     if (!preview && !location.pathname.startsWith("/maintenance")) {
-//         window.location.replace("/maintenance");
-//     }
-// };

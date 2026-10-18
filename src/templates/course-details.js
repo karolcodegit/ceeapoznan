@@ -1,19 +1,17 @@
+// src/components/CourseDetails/CourseDetails.jsx
+// Dane z props (Supabase przez Cloud Run) – bez GraphQL.
+// Oczekuje: course (wiersz tabeli courses) + company (company_settings).
 import React, { useState } from "react"
-import { graphql } from "gatsby"
-import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import {
   ClipboardDocumentIcon,
   ClipboardDocumentCheckIcon,
   EnvelopeOpenIcon,
   PhoneIcon,
-  MapPinIcon,
   BanknotesIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/outline"
 import Title from "../components/Title/Title"
-import Paragraph from "../components/Paragraph/Paragraph"
 import Line from "../components/Line/Line"
-import Seo from "../components/seo"
 import { MarkdownText } from "../utils/markdownText"
 import StyledMarkdown from "../components/StyledMarkdown/StyledMarkdown"
 
@@ -45,7 +43,7 @@ const InfoCard = ({ icon: Icon, label, children, className = "" }) => (
 
 const BankDetails = ({ company, courseNumber }) => {
   const [copied, setCopied] = useState(false)
-  const account = company?.bankAccount || ""
+  const account = company?.bank_account || ""
 
   const handleCopy = async () => {
     if (!account) return
@@ -71,12 +69,11 @@ const BankDetails = ({ company, courseNumber }) => {
 
       <div className="space-y-3 text-sm sm:text-base">
         <p className="font-semibold text-gray-900 dark:text-gray-100">
-          Europejska Fundacja ds. Szkolenia w Anestezjologii i Intensywnej
-          Terapii CEEA
+          {company?.name_company || "Europejska Fundacja ds. Szkolenia w Anestezjologii"}
         </p>
         <p className="text-gray-600 dark:text-gray-400">
-          {company?.zipCode} {company?.city}, ul. {company?.street}{" "}
-          {company?.numberHome}
+          {company?.zip_code} {company?.city}, ul. {company?.street}{" "}
+          {company?.number_home}
         </p>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -115,20 +112,24 @@ const BankDetails = ({ company, courseNumber }) => {
 
 // --- Główna strona ---
 
-const CourseDetails = ({ data }) => {
-  const { datoCmsCourse: course, datoCmsCompany: company } = data
+const CourseDetails = ({ course, company }) => {
+  if (!course) return null
 
-  const courseInfo = course?.detailedInformationAboutTheCourse
-  const hotelInfo = course?.detailedInformationAboutTheHotel
-
-  console.log(courseInfo)
-
-  const hotelImage = courseInfo?.imageHotel
-    ? getImage(courseInfo.imageHotel)
-    : null
-  const hotelPicture = hotelInfo?.pictureHotel
-    ? getImage(hotelInfo.pictureHotel)
-    : null
+  // Mapowanie pól Supabase → struktura, której oczekuje layout
+  const courseInfo = {
+    description: course.info_description,
+    emailHotel: course.info_email,
+    phone: course.info_phone,
+    password: course.info_password,
+    hotelprice: Array.isArray(course.info_prices) ? course.info_prices : [],
+    additionalInformation: course.info_additional,
+    imageHotel: course.info_image_url,
+  }
+  const hotelInfo = {
+    conditionsOfParticipation: course.participation_condition,
+    pictureHotel: course.hotel_image_url,
+    extras: course.hotel_extra,
+  }
 
   return (
     <div className="px-5 py-12 sm:py-16 max-w-6xl mx-auto">
@@ -140,7 +141,6 @@ const CourseDetails = ({ data }) => {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10 items-start">
-          {/* Treść — 3/5 szerokości */}
           <div className="lg:col-span-3 space-y-6">
             {courseInfo?.description && (
               <div className="text-gray-700 dark:text-gray-300 leading-7 text-base sm:text-lg">
@@ -148,7 +148,6 @@ const CourseDetails = ({ data }) => {
               </div>
             )}
 
-            {/* Karty kontaktowe — bardziej zwarte */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
               {courseInfo?.emailHotel && (
                 <InfoCard icon={EnvelopeOpenIcon} label="E-mail">
@@ -164,7 +163,7 @@ const CourseDetails = ({ data }) => {
               {courseInfo?.phone && (
                 <InfoCard icon={PhoneIcon} label="Telefon">
                   <a
-                    href={`tel:${courseInfo.phone.replace(/\s/g, "")}`}
+                    href={`tel:${String(courseInfo.phone).replace(/\s/g, "")}`}
                     className="text-primary hover:underline text-sm"
                   >
                     {courseInfo.phone}
@@ -186,15 +185,14 @@ const CourseDetails = ({ data }) => {
             </div>
           </div>
 
-          {/* Obrazek — 2/5 szerokości, ograniczona wysokość */}
-          {hotelImage && (
+          {courseInfo?.imageHotel && (
             <div className="lg:col-span-2 lg:sticky lg:top-8 self-start">
               <div className="relative overflow-hidden rounded-2xl shadow-lg bg-gray-100 dark:bg-gray-800 h-full min-h-[240px]">
-                <GatsbyImage
-                  image={hotelImage}
-                  alt={courseInfo?.hotelName || "Hotel"}
+                <img
+                  src={courseInfo.imageHotel}
+                  alt="Hotel"
                   className="w-full h-full object-cover"
-                  objectFit="cover"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -203,7 +201,6 @@ const CourseDetails = ({ data }) => {
       </section>
 
       {/* ===== SEKCJA: KOSZT I PŁATNOŚCI ===== */}
-      {/* ===== SEKCJA: KOSZT I PŁATNOŚCI ===== */}
       <section className="mb-16 sm:mb-20">
         <header className="mb-8 sm:mb-10">
           <Title tag="h2">Warunki uczestnictwa i płatności</Title>
@@ -211,7 +208,6 @@ const CourseDetails = ({ data }) => {
         </header>
 
         <div className="space-y-10">
-          {/* Ceny zakwaterowania */}
           {courseInfo?.hotelprice && courseInfo.hotelprice.length > 0 && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -251,7 +247,6 @@ const CourseDetails = ({ data }) => {
             </div>
           )}
 
-          {/* Co obejmuje opłata za kurs */}
           {hotelInfo?.conditionsOfParticipation && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -266,36 +261,34 @@ const CourseDetails = ({ data }) => {
             </div>
           )}
 
-          {/* Dane bankowe + obrazek hotelu */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div className="lg:col-span-3">
               <BankDetails
                 company={company}
-                courseNumber={course?.numerCourse}
+                courseNumber={course?.course_number}
               />
             </div>
             <div className="lg:col-span-2">
-              {hotelPicture && (
+              {hotelInfo?.pictureHotel && (
                 <div className="relative overflow-hidden rounded-2xl shadow-lg bg-gray-100 dark:bg-gray-800 h-full min-h-[240px]">
-                  <GatsbyImage
-                    image={hotelPicture}
+                  <img
+                    src={hotelInfo.pictureHotel}
                     alt="Zdjęcie hotelu"
-                    className="w-full h-full"
-                    objectFit="cover"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
               )}
             </div>
           </div>
 
-          {/* Dodatkowe info o płatnościach */}
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-5 sm:p-6">
             <div className="flex items-start gap-3">
               <InformationCircleIcon className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="space-y-2 text-sm text-blue-900 dark:text-blue-100">
                 <p className="font-medium">
                   Prosimy o dokonywanie wpłat z uwzględnieniem w tytule „Kurs nr{" "}
-                  {course?.numerCourse}" oraz czego dotyczą.
+                  {course?.course_number}" oraz czego dotyczą.
                 </p>
                 <p className="font-semibold text-blue-800 dark:text-blue-200">
                   Liczba miejsc na kursie jest ograniczona — prosimy o jak
@@ -316,44 +309,5 @@ const CourseDetails = ({ data }) => {
     </div>
   )
 }
-
-export const courseAndCompanyQuery = graphql`
-  query CourseAndCompanyQuery($id: String!) {
-    datoCmsCourse(id: { eq: $id }) {
-      numerCourse
-      detailedInformationAboutTheCourse {
-        imageHotel {
-          gatsbyImageData(width: 800)
-        }
-        additionalInformation
-        description
-        emailHotel
-        password
-        phone
-        hotelprice {
-          price
-          room
-        }
-      }
-      detailedInformationAboutTheHotel {
-        conditionsOfParticipation
-        pictureHotel {
-          gatsbyImageData(width: 800)
-        }
-        extras
-      }
-    }
-    datoCmsCompany {
-      nameCompany
-      street
-      numberHome
-      city
-      zipCode
-      bankAccount
-    }
-  }
-`
-
-export const Head = () => <Seo title="O kursie" />
 
 export default CourseDetails

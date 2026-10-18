@@ -1,54 +1,57 @@
 import React, { useEffect, useState } from "react"
-import { graphql } from "gatsby"
+import { Link } from "gatsby"
 import Title from "../components/Title/Title"
 import Seo from "../components/seo"
-import { Link } from "gatsby"
 import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 
-const ArchiwumKursow = ({ data }) => {
-  const [windowWidth, setWindowWidth] = useState(0) // Początkowa szerokość okna
+// --- API ---
+
+const API_URL =
+  process.env.GATSBY_CLOUD_API_URL ||
+  process.env.GATSBY_REGISTER_ENDPOINT ||
+  "https://ceea-registration-course-XXXXX.run.app" // ← podmień, jeśli nie masz env
+
+const ArchiwumKursow = () => {
+  const [windowWidth, setWindowWidth] = useState(0)
+  const [courses, setCourses] = useState(null) // null = ładowanie
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => setWindowWidth(window.innerWidth)
-      setWindowWidth(window.innerWidth) // Ustawiamy początkową szerokość okna
+      setWindowWidth(window.innerWidth)
       window.addEventListener("resize", handleResize)
 
-      return () => window.removeEventListener("resize", handleResize)
-    }
-  }, []) // Uruchamiane tylko raz po zamontowaniu komponentu
+      let cancelled = false
+      fetch(`${API_URL}/courses`)
+        .then(r => {
+          if (!r.ok) throw new Error("courses")
+          return r.json()
+        })
+        .then(({ courses }) => {
+          if (cancelled) return
+          const archived = (courses || [])
+            .filter(c => c.is_archive === true)
+            // sort rosnąco po dacie (jak dotychczas: najstarsze pierwsze)
+            .sort((a, b) => (a.start_date || "").localeCompare(b.start_date || ""))
+          setCourses(archived)
+        })
+        .catch(() => {
+          if (!cancelled) setCourses([])
+        })
 
-  if (!data) {
-    return <div>Loading...</div>
+      return () => {
+        window.removeEventListener("resize", handleResize)
+        cancelled = true
+      }
+    }
+  }, [])
+
+  if (courses === null) {
+    return <div className="py-24 text-center text-gray-400">Ładowanie…</div>
   }
 
-  const {
-    allDatoCmsCourse: { nodes },
-  } = data
-
-  // Parsowanie i sortowanie dat
-  const sortedCourses = nodes.sort((a, b) => {
-    const parseDate = dateString => {
-      if (/^\d{4}$/.test(dateString)) {
-        return { year: parseInt(dateString, 10), month: 0 } // Domyślnie styczeń
-      }
-      const match = dateString.match(/(\d{1,2})[-.]?(\d{1,2})?[-.]?(\d{4})/)
-      if (match) {
-        return {
-          year: parseInt(match[3], 10),
-          month: parseInt(match[2] || "1", 10) - 1,
-        }
-      }
-      return null
-    }
-
-    const dateA = parseDate(a.date)
-    const dateB = parseDate(b.date)
-
-    if (!dateA || !dateB) return 0 // Jeśli data jest nieprawidłowa
-    return dateA.year - dateB.year || dateA.month - dateB.month
-  })
+  const sortedCourses = courses
 
   return (
     <div>
@@ -57,49 +60,41 @@ const ArchiwumKursow = ({ data }) => {
         style={{
           gridTemplateColumns: `${
             windowWidth < 840
-              ? "1fr" // Jedna kolumna na małych ekranach
+              ? "1fr"
               : windowWidth < 1024
-              ? `repeat(${Math.min(sortedCourses.length, 2)}, 1fr)` // Dwie kolumny na średnich ekranach
-              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)` // Trzy kolumny na dużych ekranach
+              ? `repeat(${Math.min(sortedCourses.length, 2)}, 1fr)`
+              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)`
           }`,
         }}
       >
         {sortedCourses.map(course => {
-          const courseSlug = slugify(course.nameCourse)
+          const courseSlug = slugify(course.title)
           return (
             <div
-              key={course.id}
+              key={course.course_id}
               className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform lg:hover:scale-110 hover:z-10 z-0"
               style={{
-                backgroundImage: `url(${course.image.fluid.src})`,
+                backgroundImage: course.image_url ? `url(${course.image_url})` : undefined,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
               }}
             >
-              <Link to={`/kursy/${course.date.slice(-4)}/${courseSlug}`}>
+              <Link to={`/kursy/${getYearFromDate(course.start_date || course.date_label)}/${courseSlug}`}>
                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-md" />
                 <div className="relative z-10 flex flex-col h-full gap-6">
                   {/* Tytuł kursu */}
-                  <Title
-                    white
-                    tag="h5"
-                    className="text-white dark:text-gray-300"
-                  >
-                    Kurs nr {course.numerCourse}
+                  <Title white tag="h5" className="text-white dark:text-gray-300">
+                    Kurs nr {course.course_number ?? "—"}
                   </Title>
-                  <Title
-                    white
-                    tag="h4"
-                    className="text-white dark:text-gray-200"
-                  >
-                    {course?.nameCourse}
+                  <Title white tag="h4" className="text-white dark:text-gray-200">
+                    {course.title}
                   </Title>
 
                   {/* Informacje o kursie */}
                   <div className="flex justify-between mt-auto text-white dark:text-gray-300">
                     <p className="text-white dark:text-gray-400">
-                      {course.date || "Brak daty"}
+                      {course.date_label || "Brak daty"}
                     </p>
                     <span
                       className={`px-2 items-center inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -121,25 +116,7 @@ const ArchiwumKursow = ({ data }) => {
   )
 }
 
-export const query = graphql`
-  query archiveCourse {
-    allDatoCmsCourse(filter: { archive: { eq: true } }) {
-      nodes {
-        id
-        nameCourse
-        numerCourse
-        date
-        available
-        image {
-          fluid {
-            src
-          }
-        }
-      }
-    }
-  }
-`
-
+// GraphQL usunięte – archiwum z /courses (filtr is_archive po stronie klienta)
 export const Head = () => <Seo title="Archiwum kursów" />
 
 export default ArchiwumKursow

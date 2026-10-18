@@ -1,234 +1,212 @@
 import React from "react"
 import { navigate } from "gatsby"
 import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
 import CheckoutProgress from "../../components/CheckoutProgress/CheckoutProgress"
 import Title from "../../components/Title/Title"
 import Form from "../../components/Form/Form"
-import { prepareOrderData } from "../../utils/prepareOrderData"
 import Button from "../../components/Button/Button"
+import PaymentMethodSelector from "../../components/PaymentMethodSelector/PaymentMethodSelector"
+import { updateField } from "../../store/checkout/checkoutSlice"
+import {
+  selectItems,
+  selectSubtotal,
+  selectDeliveryCost,
+  selectTotal,
+  selectCustomer,
+  selectPaymentFee,
+  selectDelivery,
+  selectPaymentMethod,
+  selectGrandTotal,
+} from "../../store/checkout/selectors"
 import { handleOrderSubmit } from "../../utils/handleOrderSubmit"
+import BookCover from "../../components/Book/BookCover"
 
-const Podsumowanie = ({
-  apiEndpoint = "https://order-books-cart-559160331745.us-central1.run.app",
-}) => {
+const TPAY_ENABLED = process.env.GATSBY_TPAY_ENABLED === "true"
+
+const Row = ({ label, children }) => (
+  <div className="flex justify-between gap-4 border-b border-gray-100 dark:border-slate-700 last:border-0 py-2 text-gray-900 dark:text-gray-100">
+    <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+    <span className="text-sm font-medium text-right">{children || "—"}</span>
+  </div>
+)
+
+const Podsumowanie = () => {
   const dispatch = useDispatch()
-  const orderData = useSelector(prepareOrderData)
+  const items = useSelector(selectItems)
+  const customer = useSelector(selectCustomer)
+  const delivery = useSelector(selectDelivery)
+  const paymentMethod = useSelector(selectPaymentMethod)
+  const subtotal = useSelector(selectSubtotal)
+  const deliveryCost = useSelector(selectDeliveryCost)
+  const fee = useSelector(selectPaymentFee)
+  const grandTotal = useSelector(selectGrandTotal)
 
-  const summary = useSelector(state => state.cart.summary) // Pobierz dane podsumowania z Redux
+  // w komponencie, obok innych selektorów:
+  useEffect(() => {
+    dispatch(
+      updateField({
+        field: "token",
+        value: Math.random().toString(36).substring(2),
+      })
+    )
+  }, [dispatch])
 
-  // Ten warunek można zostawić, ale **po hookach**
-  if (typeof window === "undefined") {
-    return null // albo <div>Ładowanie...</div>
-  }
-  if (!orderData?.items?.length) {
-    return <div>Brak książki w koszyku. Nie można kontynuować zamówienia.</div>
+  // tpay wyłączone (do aktywacji konta) – wymuszamy przelew
+  useEffect(() => {
+    if (!TPAY_ENABLED && paymentMethod === "tpay") {
+      dispatch(updateField({ field: "paymentMethod", value: "transfer" }))
+    }
+  }, [TPAY_ENABLED, paymentMethod, dispatch])
+
+  if (typeof window !== "undefined" && items.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto py-20 text-center">
+        <p className="text-gray-700 dark:text-gray-300">Koszyk jest pusty.</p>
+        <Button
+          variant="next"
+          className="mt-6"
+          onClick={() => navigate("/sklep")}
+        >
+          Przeglądaj książki
+        </Button>
+      </div>
+    )
   }
 
   const handleSubmitOverride = async e => {
     e.preventDefault()
-    await handleOrderSubmit(orderData, apiEndpoint, dispatch, navigate)
+    await handleOrderSubmit()
   }
+
   return (
-    <>
-      <div className="mt-3">
-        <CheckoutProgress currentStep="podsumowanie" />
-        <div className="max-w-6xl mx-auto p-6 flex flex-col xl:flex-row gap-8">
-          {/* Lewa kolumna: postęp i podsumowanie zamówienia */}
-          <div className="flex-1 w-full">
-            <Title
-              tag="h4"
-              className="pt-6 pb-10 text-gray-900 dark:text-gray-100"
-            >
-              Podsumowanie zamówienia
-            </Title>
-            <Form
-              apiEndpoint={apiEndpoint}
-              formSliceKey="order"
-              submitButtonText="Złóż zamówienie"
-              variant="submit"
-              showSubmit={true}
-              notificationMessage="Formularz został wysłany!"
-              requiredFields={[]}
-              onSubmitOverride={handleSubmitOverride}
-              addToButton="float-right"
-            >
-              {orderData.items && orderData.items.length > 0 ? (
-                <div className="space-y-4 p-4 pt-6 border rounded bg-white dark:bg-gray-900 transition-colors duration-300">
-                  <Title tag="h5" className="text-gray-900 dark:text-gray-100">
-                    Produkty
-                  </Title>
-                  {orderData.items.map(({ id, title, price, quantity }) => (
-                    <div
-                      key={id}
-                      className="flex justify-between items-start gap-8 border-b last:border-none pb-2 text-gray-900 dark:text-gray-100"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold break-words">{title}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Ilość: {quantity}
-                        </p>
-                      </div>
-                      <div className="font-medium whitespace-nowrap">
-                        {(price * quantity).toFixed(2)} zł
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-700 dark:text-gray-300">
-                  Brak produktów w koszyku.
-                </p>
-              )}
+    <div className="max-w-6xl mx-auto p-4 sm:p-6">
+      <CheckoutProgress currentStep="podsumowanie" />
+      <div className="mt-4 flex flex-col xl:flex-row gap-8 items-start">
+        <div className="flex-1 w-full">
+          <Title tag="h4" className="pb-6 text-gray-900 dark:text-gray-100">
+            Podsumowanie zamówienia
+          </Title>
 
-              {/* Dane do dostawy */}
-              <div className="mt-10 p-4 border rounded bg-white dark:bg-gray-900 transition-colors duration-300">
-                <Title tag="h5" className="text-gray-900 dark:text-gray-100">
-                  Dane do dostawy
-                </Title>
-                <div className="space-y-4 pt-6">
-                  {[
-                    { label: "Imię", value: orderData.customer.firstName },
-                    { label: "Nazwisko", value: orderData.customer.lastName },
-                    { label: "E-mail", value: orderData.customer.email },
-                    { label: "Telefon", value: orderData.customer.phone },
-                  ].map((field, idx) => (
-                    <div
-                      key={idx}
-                      className="flex justify-between border-b last:border-none pb-2 text-gray-900 dark:text-gray-100"
-                    >
-                      <div>
-                        <p className="font-semibold">{field.label}:</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {field.value}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Metoda dostawy */}
-              <div className="mt-6 p-4 border rounded bg-white dark:bg-gray-900 transition-colors duration-300">
-                <Title tag="h5" className="text-gray-900 dark:text-gray-100">
-                  Metoda dostawy
-                </Title>
-                <div className="space-y-4 pt-6 text-gray-900 dark:text-gray-100">
-                  <div className="flex justify-between border-b last:border-none pb-2">
-                    <div>
-                      <p className="font-semibold">Sposób dostawy:</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {orderData.delivery.method === "Paczkomat"
-                          ? "Paczkomat"
-                          : "Kurier InPost"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {orderData.delivery.method === "Paczkomat" &&
-                  orderData.delivery.lockerCode ? (
-                    <>
-                      <div className="flex justify-between border-b pb-2">
-                        <div>
-                          <p className="font-semibold">ID paczkomatu:</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {orderData.delivery.lockerCode || "—"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex justify-between pb-2">
-                        <div>
-                          <p className="font-semibold">Adres paczkomatu:</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {[
-                              orderData.delivery.parcelLocker.address?.street,
-                              orderData.delivery.parcelLocker.address
-                                ?.building_number,
-                            ]
-                              .filter(Boolean)
-                              .join(" ")}
-                            ,{" "}
-                            {[
-                              orderData.delivery.parcelLocker.address
-                                ?.post_code,
-                              orderData.delivery.parcelLocker.address?.city,
-                            ]
-                              .filter(Boolean)
-                              .join(" ")}
-                          </p>
-                        </div>
-                      </div>
-                    </>
-                  ) : orderData.delivery.address ? (
-                    <>
-                      {["Ulica", "Kod pocztowy", "Miasto"].map((label, idx) => {
-                        const value =
-                          label === "Ulica"
-                            ? orderData.delivery.address.street
-                            : label === "Kod pocztowy"
-                            ? orderData.delivery.address.postcode
-                            : orderData.delivery.address.city
-                        return (
-                          <div
-                            key={idx}
-                            className="flex justify-between border-b last:border-none pb-2"
-                          >
-                            <div>
-                              <p className="font-semibold">{label}:</p>
-                              <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {value}
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </>
-                  ) : (
-                    <p className="text-gray-700 dark:text-gray-400">
-                      Brak adresu dostawy
-                    </p>
+          <Form
+            formSliceKey="checkout"
+            submitButtonText={
+              TPAY_ENABLED && paymentMethod === "tpay"
+                ? "Opłać i złóż zamówienie"
+                : "Złóż zamówienie"
+            }
+            paymentMethods
+            variant="submit"
+            notificationMessage="Zamówienie złożone!"
+            requiredFields={["paymentMethod"]}
+            onSubmitOverride={handleSubmitOverride}
+            addToButton="float-right"
+          >
+            {/* Produkty */}
+            <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 transition-colors">
+              <Title tag="h5" className="pb-4">
+                Produkty
+              </Title>
+              {items.map(i => (
+                <div
+                  key={i.productId}
+                  className="flex gap-4 py-3 border-b border-gray-100 dark:border-slate-700 last:border-0"
+                >
+                  {i.image && (
+                    <BookCover
+                      src={i.image}
+                      alt={i.title}
+                      className="w-12 h-18 object-cover rounded-md shrink-0"
+                    />
                   )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 dark:text-gray-100 leading-snug">
+                      {i.title}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Ilość: {i.quantity}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                    {(i.price * i.quantity).toFixed(2)} zł
+                  </p>
                 </div>
-              </div>
+              ))}
+            </section>
 
-              <Button
-                variant="back"
-                className="my-6"
-                onClick={() => navigate("/koszyk/dostawa")}
-              >
-                Wstecz
-              </Button>
-            </Form>
-          </div>
+            {/* Dane + dostawa */}
+            <section className="mt-6 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 transition-colors">
+              <Title tag="h5" className="pb-2">
+                Dane i dostawa
+              </Title>
+              <Row label="Imię i nazwisko">
+                {customer.firstName} {customer.lastName}
+              </Row>
+              <Row label="Email">{customer.email}</Row>
+              <Row label="Telefon">{customer.phone}</Row>
+              <Row label="Dostawa">
+                {delivery.method === "paczkomat"
+                  ? "Paczkomat InPost"
+                  : "Kurier InPost"}
+              </Row>
+              {delivery.method === "paczkomat" && delivery.locker && (
+                <>
+                  <Row label="Paczkomat">
+                    {delivery.locker.name} ({delivery.locker.code})
+                  </Row>
+                  <Row label="Adres paczkomatu">
+                    {delivery.locker.address?.street}{" "}
+                    {delivery.locker.address?.building_number},{" "}
+                    {delivery.locker.address?.post_code}{" "}
+                    {delivery.locker.address?.city}
+                  </Row>
+                </>
+              )}
+              {delivery.method === "courier" && (
+                <Row label="Adres">
+                  {delivery.address?.street}, {delivery.address?.postcode}{" "}
+                  {delivery.address?.city}
+                </Row>
+              )}
+            </section>
 
-          {/* Prawa kolumna: widget podsumowania */}
-          <aside className="xl:sticky xl:top-20 mt-14 xl:self-start w-full xl:w-96 bg-white dark:bg-gray-800 dark:text-gray-100 rounded-lg shadow-lg overflow-hidden z-10 transition-colors duration-300">
-            <div className="p-7 divide-y divide-gray-300 dark:divide-gray-700 leading-5">
-              <div className="flex justify-between pb-3">
-                <Title tag="h4" className="text-gray-900 dark:text-gray-100">
-                  Podsumowanie
-                </Title>
-              </div>
-              <div className="py-4 space-y-4 text-gray-900 dark:text-gray-100">
-                <div className="flex justify-between">
-                  <span>Wartość produktów</span>
-                  <span>{summary.subtotal?.toFixed(2)} zł</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Dostawa:</span>
-                  <span>{summary.deliveryCost?.toFixed(2)} zł</span>
-                </div>
-              </div>
-              <div className="py-4 pt-6 flex justify-between border-t border-gray-300 dark:border-gray-700">
-                <span className="font-bold text-xl">Razem</span>
-                <span className="text-2xl font-bold">
-                  {orderData.summary.total?.toFixed(2)} zł
-                </span>
-              </div>
-            </div>
-          </aside>
+            {/* Płatność – ten sam komponent co w zapisie na kurs */}
+            <section className="mt-6 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 transition-colors">
+              <PaymentMethodSelector
+                name="paymentMethod"
+                value={paymentMethod}
+                onChange={e =>
+                  dispatch(
+                    updateField({
+                      field: "paymentMethod",
+                      value: e.target.value,
+                    })
+                  )
+                }
+              />
+            </section>
+          </Form>
         </div>
+
+        {/* Sticky podsumowanie kosztów */}
+        <aside className="xl:sticky xl:top-20 w-full xl:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 transition-colors">
+          <Title tag="h5" className="pb-4">
+            Podsumowanie
+          </Title>
+          <Row label="Produkty">{subtotal.toFixed(2)} zł</Row>
+          <Row label="Dostawa">{deliveryCost.toFixed(2)} zł</Row>
+          {fee > 0 && (
+            <Row label="Opłata obsługi płatności online">
+              {fee.toFixed(2)} zł
+            </Row>
+          )}
+          <div className="flex justify-between pt-4 mt-2 border-t ...">
+            <span>Razem</span>
+            <span>{grandTotal.toFixed(2)} zł</span>
+          </div>
+        </aside>
       </div>
-    </>
+    </div>
   )
 }
 

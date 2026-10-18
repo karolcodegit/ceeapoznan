@@ -136,7 +136,65 @@ const ActionLink = ({ type, href, label }) => {
   )
 }
 
+
+// --- Style: logo (SOWE/sponsorzy) jako małe, ustawione obok siebie,
+// nawet gdy markdown produkuje osobne <p> dla każdego obrazka ---
+
+const scopedStyles = `
+  /* ── Logo / obrazki w opisie kursu ──
+     dobre praktyki: spójna wysokość, odstępy, brak zawijania tekstu
+     wokół obrazka, wyśrodkowanie w pionie */
+  .course-desc figure {
+    display: inline-flex;
+    align-items: center;
+    margin: .5rem .9rem .5rem 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: .25rem .5rem !important;
+    width: auto;
+    max-width: none;
+    vertical-align: middle;
+    border-radius: .5rem;
+    transition: background-color .15s ease;
+  }
+  .course-desc figure:hover { background: rgba(0,0,0,.03) !important; }
+  .dark .course-desc figure:hover { background: rgba(255,255,255,.05) !important; }
+  .course-desc figure > div {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    width: auto;
+    overflow: visible;
+    line-height: 0;
+  }
+  .course-desc figure > div > div:first-child,
+  .course-desc figure .animate-pulse { display: none !important; }
+  .course-desc img {
+    display: inline-block;
+    max-height: 56px;
+    max-width: 140px;
+    width: auto;
+    object-fit: contain;
+    margin: 0;
+    vertical-align: middle;
+  }
+  /* linki w opisie: odstęp, nie zawijają się „przyklejone" do logo */
+  .course-desc a { margin-right: .25rem; }
+  .course-desc p { overflow-wrap: break-word; }
+  /* ostatni akapit (zwykle certyfikat): odstęp od logo */
+  .course-desc p:last-of-type { margin-top: 1rem; }
+  @media (max-width: 640px) {
+    .course-desc img { max-height: 44px; max-width: 110px; }
+    .course-desc figure { margin-right: .6rem !important; padding: .2rem .35rem !important; }
+  }
+`
+
 // --- Główny komponent ---
+
 
 const CourseProgram = ({ text }) => {
   const { intro, program, workshops } = parseCourseProgram(text)
@@ -148,7 +206,8 @@ const CourseProgram = ({ text }) => {
   const hasWorkshops = workshops.length > 0
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 course-desc">
+      <style>{scopedStyles}</style>
       {/* Intro: tekst w bloku + linki w osobnym flexboxie */}
       {introBody && (
         <motion.div

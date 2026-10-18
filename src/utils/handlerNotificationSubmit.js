@@ -1,68 +1,28 @@
-import { toast } from "react-toastify"
+// Zapis na listę oczekujących -> chmura: book_notifications + mail z layoutu
+import { toast } from "sonner"
+import { clearForm } from "../store/notificationBook/notificationSlice"
 
-import { renderEmailTemplate } from "./renderEmailTemplate"
-import { saveAirableNotificationBook } from "./airtable-notificationBook";
-import { clearForm } from "../store/notificationBook/notificationSlice";
-import { BookNotificationUserText } from "../utils/emails/notification/NotificationConfirmationUser"
+const API = process.env.GATSBY_REGISTER_ENDPOINT
 
-
-export const handleNotificationSubmit = async (
-    formData, 
-    bookInfo,
-    apiEndpoint,
-    dispatch
-) => {
+export const handleNotificationSubmit = async (formData, bookInfo, _apiEndpoint, dispatch) => {
   try {
-
-const payloadData = {
-    email: formData.email,
-    bookTitle: bookInfo.title,
-    bookId: bookInfo.originalId,
-    price: bookInfo.price,
-  };
-
-
-    const emailHtmlToUser = renderEmailTemplate("bookNotificationUser", {
-      title_book: bookInfo.title,
-    })
-    
-    const emailTextToUser = BookNotificationUserText({
-      title_book: bookInfo.title,
-    })
-    
-
-    // Przygotowanie payload do wysyłki do Google Cloud Functions
-    const payload = {
-      toUser: {
-        to: formData.email,
-        subject: `Zapisaliśmy Cię na listę oczekujących – "${formData.title_book}"`,
-        html: emailHtmlToUser,
-        text: emailTextToUser, // ← BookNotificationUserText({ title_book: formData.title_book })
-      },
-    }
-
-    //console.log("Payload wysyłany do Google Cloud Functions:", payload);
-    await saveAirableNotificationBook(payloadData);
-    // Wysłanie zamówienia do API
-    const response = await fetch(apiEndpoint, {
+    const res = await fetch(`${API}/book-notify`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: formData.email,
+        productId: bookInfo.originalId,
+        title: bookInfo.title,
+      }),
     })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error("Błąd odpowiedzi z Google Cloud Functions:", errorText)
-      throw new Error(`HTTP status: ${response.status}`)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error || "Błąd zapisu powiadomienia.")
     }
-
-    // Sukces: przekierowanie na stronę sukcesu
-    toast.success("Formularz pomyślnie wysłany!")
-    dispatch(clearForm()) // Usunięcie danych koszyka
+    toast.success("Zapisaliśmy Cię na listę oczekujących!")
+    dispatch(clearForm())
   } catch (error) {
-    console.error("Błąd podczas wysyłania zamówienia:", error)
-    toast.error("Wystąpił błąd podczas składania zamówienia. Spróbuj ponownie.")
+    console.error("handleNotificationSubmit:", error)
+    toast.error("Wystąpił błąd. Spróbuj ponownie.")
   }
 }

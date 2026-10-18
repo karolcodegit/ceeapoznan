@@ -9,7 +9,7 @@ import {
 import Button from "../Button/Button"
 import DeliveryModal from "../Modal/DeliveryModal"
 // import { slugify } from "../../utils/slugify"
-import { addToCart } from "../../store/cart/cartSlice"
+import { addItem } from "../../store/checkout/checkoutSlice"
 import { toast } from "sonner"
 import Form from "../Form/Form"
 import FormField from "../Form/FormField/FormField"
@@ -38,17 +38,17 @@ const DeliveryInfo = ({
 
   const handleAddToCart = () => {
     dispatch(
-      addToCart({
-        id: originalId,
+      addItem({
+        productId: originalId,
         title,
         price,
-        image,
+        image: image?.fluid?.src || image?.url || image || null,  // ← zawsze string URL
         quantity: 1,
       })
     )
-    // dispatch(calculateSummary())
     toast.success("Dodano do koszyka")
   }
+  
 
 
   const [isModalOpen, setIsModalOpen] = useState(false)

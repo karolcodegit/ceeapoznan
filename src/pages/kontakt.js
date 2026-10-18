@@ -1,13 +1,13 @@
-import React from "react"
-import { graphql } from "gatsby"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import ContactBox from "../components/ContactBox/ContactBox"
 import ContactForm from "../components/Form/ContactForm"
 import Seo from "../components/seo"
 import Title from "../components/Title/Title"
 
+// --- API ---
 
-
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -43,15 +43,6 @@ const slideLeft = {
   },
 }
 
-const slideRight = {
-  hidden: { opacity: 0, x: 40 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-}
-
 const scaleIn = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: {
@@ -72,20 +63,36 @@ const separatorLine = {
 
 // --- Komponent ---
 
-const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
-  const {
-    requireToken = true,
-    nameCompany,
-    street,
-    numberHome,
-    city,
-    zipCode,
-    regon,
-    nip,
-    krs,
-    bankAccount,
-    mail,
-  } = datoCmsCompany
+const Contact = () => {
+  // Dane firmy + pracownicy ze Supabase (GraphQL wyleciało całkowicie)
+  const [company, setCompany] = useState(null)
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch(`${API_URL}/company`)
+      .then(r => {
+        if (!r.ok) throw new Error("company")
+        return r.json()
+      })
+      .then(({ company }) => {
+        if (!cancelled) setCompany(company)
+      })
+      .catch(() => {})
+
+    fetch(`${API_URL}/employees?role=Administracja`)
+      .then(r => {
+        if (!r.ok) throw new Error("employees")
+        return r.json()
+      })
+      .then(({ employees }) => {
+        if (!cancelled) setEmployees(employees || [])
+      })
+      .catch(() => {})
+
+    return () => { cancelled = true }
+  }, [])
 
   const onSubmit = (formData) => {
     //console.log("Formularz wysłany:", formData);
@@ -119,9 +126,9 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
           className="grid grid-cols-1 md:grid-cols-2 gap-8 col-span-2"
           variants={staggerContainer}
         >
-          {allDatoCmsEmployee.nodes.map((employee, index) => (
+          {employees.map((employee, index) => (
             <motion.div
-              key={employee.surname}
+              key={employee.surname + index}
               variants={scaleIn}
               whileHover={{
                 scale: 1.02,
@@ -131,8 +138,8 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
               <ContactBox
                 name={`${employee.name} ${employee.surname}`}
                 phone={employee.phone}
-                secondPhone={employee.secondPhone}
-                email={employee.mail}
+                secondPhone={employee.second_phone}
+                email={employee.email}
                 degree={employee.degree}
               />
             </motion.div>
@@ -153,7 +160,7 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
       >
         {/* Lewa kolumna - nazwa firmy */}
         <motion.div variants={slideLeft}>
-          <Title tag="h2">{nameCompany}</Title>
+          <Title tag="h2">{company?.name_company || ""}</Title>
         </motion.div>
 
         {/* Prawa kolumna - adres + dane firmy */}
@@ -166,9 +173,9 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
             <ContactBox
-              place={`ul.${street} ${numberHome}`}
-              place2={`${zipCode} ${city}`}
-              email={mail}
+              place={`${company?.street || ""} ${company?.number_home || ""}`}
+              place2={`${company?.zip_code || ""} ${company?.city || ""}`}
+              email={company?.email}
             />
           </motion.div>
 
@@ -177,11 +184,11 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
             <ContactBox
-              name={nameCompany}
-              account={bankAccount}
-              regon={regon}
-              nip={nip}
-              krs={krs}
+              name={company?.name_company}
+              account={company?.bank_account}
+              regon={company?.regon}
+              nip={company?.nip}
+              krs={company?.krs}
             />
           </motion.div>
         </motion.div>
@@ -209,33 +216,7 @@ const Contact = ({ data: { datoCmsCompany, allDatoCmsEmployee } }) => {
   )
 }
 
-export const query = graphql`
-  query Query {
-    datoCmsCompany {
-      nameCompany
-      street
-      numberHome
-      city
-      zipCode
-      regon
-      nip
-      krs
-      bankAccount
-      mail
-    }
-    allDatoCmsEmployee(filter: { role: { eq: "Administracja" } }) {
-      nodes {
-        name
-        surname
-        phone
-        degree
-        secondPhone
-        mail
-      }
-    }
-  }
-`
-
+// GraphQL całkowicie usunięte – dane firmy i pracownicy lecą z Cloud Run.
 export const Head = () => <Seo title="Kontakt" />
 
 export default Contact

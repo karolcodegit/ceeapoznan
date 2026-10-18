@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { Link, graphql } from "gatsby"
+import { Link } from "gatsby"
 import { motion } from "framer-motion"
-
 import Seo from "../components/seo"
 import Title from "../components/Title/Title"
 import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 
+// --- API ---
+
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 // --- Animacje ---
 
@@ -51,8 +53,13 @@ const badgePop = {
 
 // --- Komponent ---
 
-const Courses = ({ data }) => {
+const Courses = () => {
   const [windowWidth, setWindowWidth] = useState(0)
+
+  // Kursy ze Supabase (zamiast allDatoCmsCourse)
+  const [courses, setCourses] = useState(null) // null = ładowanie
+
+  console.log(courses)
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -60,11 +67,31 @@ const Courses = ({ data }) => {
     if (typeof window !== "undefined") {
       setWindowWidth(window.innerWidth)
       window.addEventListener("resize", handleResize)
-      return () => window.removeEventListener("resize", handleResize)
+    }
+
+    let cancelled = false
+    fetch(`${API_URL}/courses?scope=home`)
+      .then(r => {
+        if (!r.ok) throw new Error("courses")
+        return r.json()
+      })
+      .then(({ courses }) => {
+        if (!cancelled) {
+          // sort jak w DatoCMS: po numerze kursu ASC
+          setCourses((courses || []).slice().sort((a, b) => (a.course_number ?? 999) - (b.course_number ?? 999)))
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setCourses([])
+      })
+
+    return () => {
+      if (typeof window !== "undefined") window.removeEventListener("resize", handleResize)
+      cancelled = true
     }
   }, [])
 
-  if (!data) {
+  if (courses === null) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -81,9 +108,7 @@ const Courses = ({ data }) => {
     )
   }
 
-  const {
-    allDatoCmsCourse: { nodes },
-  } = data
+  const nodes = courses
 
   const gridCols = windowWidth < 840
     ? "1fr"
@@ -92,6 +117,12 @@ const Courses = ({ data }) => {
     : `repeat(${Math.min(nodes.length, 3)}, 1fr)`
 
   return (
+    <>
+    {nodes.length === 0 && (
+      <p className="col-span-full text-center py-24 text-gray-500 dark:text-gray-400">
+        Brak kursów do wyświetlenia.
+      </p>
+    )}
     <motion.div
       className="grid gap-4 py-24 relative"
       style={{ gridTemplateColumns: gridCols }}
@@ -100,14 +131,15 @@ const Courses = ({ data }) => {
       variants={staggerContainer}
     >
       {nodes.map((course, index) => {
-        const courseSlug = slugify(course.nameCourse)
-
+        const courseSlug = slugify(course.title)
         return (
+          <>
+          
           <motion.div
-            key={course.id}
+            key={course.course_id}
             className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 z-0 overflow-hidden group"
             style={{
-              backgroundImage: `url(${course.image.fluid.src})`,
+              backgroundImage: course.image_url ? `url(${course.image_url})` : undefined,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -127,18 +159,18 @@ const Courses = ({ data }) => {
               transition={{ duration: 0.3 }}
             />
 
-            <Link to={`/kursy/${getYearFromDate(course.date)}/${courseSlug}`}>
+            <Link to={`/kursy/${getYearFromDate(course.start_date || course.date_label)}/${courseSlug}`}>
               <div className="relative z-10 flex flex-col h-full gap-6">
                 {/* Tytuł kursu */}
                 <motion.div variants={titleSlide}>
                   <Title white tag="h5">
-                    Kurs nr {course.numerCourse}
+                    Kurs nr {course.course_number ?? "—"}
                   </Title>
                 </motion.div>
 
                 <motion.div variants={titleSlide}>
                   <Title white tag="h4" className="text-white dark:text-gray-200">
-                    {course.nameCourse}
+                    {course.title}
                   </Title>
                 </motion.div>
 
@@ -148,7 +180,7 @@ const Courses = ({ data }) => {
                     className="text-white dark:text-gray-200"
                     variants={titleSlide}
                   >
-                    {course.date || "Brak daty"}
+                    {course.date_label || "Brak daty"}
                   </motion.p>
 
                   <motion.span
@@ -165,34 +197,16 @@ const Courses = ({ data }) => {
               </div>
             </Link>
           </motion.div>
+          </>
         )
       })}
     </motion.div>
+    </>
   )
 }
 
-export const query = graphql`
-  query MyQuery {
-    allDatoCmsCourse(
-      filter: { archive: { ne: true } }
-      sort: { numerCourse: ASC }
-    ) {
-      nodes {
-        id
-        nameCourse
-        date
-        numerCourse
-        available
-        image {
-          fluid {
-            src
-          }
-        }
-      }
-    }
-  }
-`
-
+// GraphQL usunięte – kursy z /courses (filtr is_archive=false jest po stronie
+// endpointu: scope=home, sortowanie po course_number jak w DatoCMS)
 export const Head = () => <Seo title="Kursy" />
 
 export default Courses
