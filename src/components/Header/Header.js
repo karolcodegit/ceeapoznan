@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link } from "gatsby"
+import { apiGet } from "../../utils/api"
 import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
 import {
@@ -29,23 +30,16 @@ const linkIcons = {
   "Panel kursanta": UserCircleIcon,
 }
 
-const API_URL =
-  process.env.GATSBY_CLOUD_API_URL ||
-  process.env.GATSBY_REGISTER_ENDPOINT ||
-  "https://ceea-registration-course-559160331745.europe-central2.run.app"
-
 const Header = () => {
   const [activeCourse, setActiveCourse] = useState(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    fetch(`${API_URL}/courses?scope=home`)
-      .then(r => (r.ok ? r.json() : null))
+    apiGet("/courses?scope=home")
       .then(j => {
-        if (cancelled || !j) return
-        const found = (j.courses || []).find(c => c.available === true)
-        setActiveCourse(found || null)
+        if (cancelled) return
+        setActiveCourse((j.courses || []).find(c => c.available === true) || null)
       })
       .catch(() => {})
     return () => { cancelled = true }
@@ -183,7 +177,7 @@ const Header = () => {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-gradient-to-b from-cyan-600 via-cyan-700 to-blue-900 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 text-white shadow-2xl flex flex-col">
           <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 flex-shrink-0">
             <img
-              className="h-8 w-auto brightness-0 invert"
+              className="h-6 w-auto brightness-0 invert"
               src={Logo}
               alt="CEEA"
             />
