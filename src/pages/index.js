@@ -88,7 +88,7 @@ const IndexPage = ({ data }) => {
 
               {/* Blob 1 - niebieski, pływa w lewo-górę */}
               <div
-                className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse"
+                className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse hero-blob"
                 style={{
                   background:
                     "radial-gradient(circle, #0077FF 0%, transparent 70%)",
@@ -101,7 +101,7 @@ const IndexPage = ({ data }) => {
 
               {/* Blob 2 - turkusowy, pływa w prawo-dół */}
               <div
-                className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse"
+                className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse hero-blob"
                 style={{
                   background:
                     "radial-gradient(circle, #00C6FF 0%, transparent 70%)",
@@ -115,7 +115,7 @@ const IndexPage = ({ data }) => {
 
               {/* Blob 3 - zielony, pływa centralnie */}
               <div
-                className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse"
+                className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse hero-blob"
                 style={{
                   background:
                     "radial-gradient(circle, #00C896 0%, transparent 70%)",
@@ -129,7 +129,7 @@ const IndexPage = ({ data }) => {
 
               {/* Blob 4 - fioletowy akcent */}
               <div
-                className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse"
+                className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse hero-blob"
                 style={{
                   background:
                     "radial-gradient(circle, #6366f1 0%, transparent 70%)",
@@ -143,7 +143,7 @@ const IndexPage = ({ data }) => {
 
               {/* Center glow - subtelne światło w centrum */}
               <div
-                className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px]"
+                className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px] hero-blob"
                 style={{
                   background:
                     "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
@@ -558,6 +558,15 @@ const IndexPage = ({ data }) => {
           </div>
         </section>
       </div>
+      {/* Mobile: wyłącz ciężkie animacje blur (hero zabija wątek/GPU, menu muli) */}
+      <style>{`
+        @media (max-width: 1023px) {
+          .hero-blob { animation: none !important; filter: blur(50px) !important; opacity: .22 !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-blob { animation: none !important; }
+        }
+      `}</style>
     </>
   )
 }
