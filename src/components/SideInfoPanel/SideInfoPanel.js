@@ -8,12 +8,13 @@ import { formatMoney } from "../../utils/payment"
 const SideInfoPanel = ({
   points,
   money,
-  time,
   available,
   nameCourse,
   date,
-  paymentFee = 0, // 💰 opłata obsługi płatności online (0 = brak)
+  paymentFee = 0,
 }) => {
+  console.log(points);
+  
   const location = useLocation()
   const rejestraction = location.pathname.includes("/rejestracja")
   return (

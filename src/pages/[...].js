@@ -334,7 +334,7 @@ const CourseClient = ({ location }) => {
         >
           <SideInfoPanel
             money={course.price}
-            time={course.date_label}
+            points={course.points}
             available={course.available}
             nameCourse={course.title}
             date={course.date_label}
