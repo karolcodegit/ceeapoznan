@@ -7,7 +7,9 @@ import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
-const SponsorsSection = React.lazy(() => import("../components/Sponsors/SponsorsSection"))
+const SponsorsSection = React.lazy(() =>
+  import("../components/Sponsors/SponsorsSection")
+)
 
 // --- API ---
 
@@ -52,7 +54,9 @@ const IndexPage = ({ data }) => {
     } else {
       setTimeout(start, 800)
     }
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const currentCourse = courses.find(c => c.available === true)
@@ -61,119 +65,115 @@ const IndexPage = ({ data }) => {
   // Link rejestracji: dotychczasowy format URL (strony kursów jeszcze z DatoCMS)
   const regCourse = currentCourse || courses[0]
   const websiteRegister = regCourse
-    ? `/kursy/${getYearFromDate(regCourse.start_date || regCourse.date_label)}/${slugify(
-        regCourse.title
-      )}/rejestracja`
+    ? `/kursy/${getYearFromDate(
+        regCourse.start_date || regCourse.date_label
+      )}/${slugify(regCourse.title)}/rejestracja`
     : "#"
 
   return (
     <>
       <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         {/* === HERO SECTION === */}
-        <section className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh]">
-          {/* 🔹 Tło: zdjęcie kursu (Supabase) lub gradient */}
-          {currentCourse?.background_image_url ? (
-            <>
-              <img
-                src={cld(currentCourse.background_image_url, 1600)}
-                alt={currentCourse.title || "Tło kursu"}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </>
-          ) : (
-            /* 🔹 Gradient mesh z ruchem - wersja działająca */
-            <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0b1120]">
-              {/* Gradient bazowy */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e293b]" />
+        <section className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh] bg-slate-900">
+          {/* 🔹 Tło: ZAWSZE gradient mesh (zdjęcie kursu jest tylko w karcie po prawej) */}
+          <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0b1120]">
+            {/* Gradient bazowy */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e293b]" />
 
-              {/* Blob 1 - niebieski, pływa w lewo-górę */}
-              <div
-                className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse hero-blob"
-                style={{
-                  background:
-                    "radial-gradient(circle, #0077FF 0%, transparent 70%)",
-                  top: "-10%",
-                  left: "-15%",
-                  animation:
-                    "pulse 4s ease-in-out infinite, float 20s ease-in-out infinite",
-                }}
-              />
+            {/* Blob 1 - niebieski, pływa w lewo-górę */}
+            <div
+              className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse hero-blob"
+              style={{
+                background:
+                  "radial-gradient(circle, #0077FF 0%, transparent 70%)",
+                top: "-10%",
+                left: "-15%",
+                animation:
+                  "pulse 4s ease-in-out infinite, float 20s ease-in-out infinite",
+              }}
+            />
 
-              {/* Blob 2 - turkusowy, pływa w prawo-dół */}
-              <div
-                className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse hero-blob"
-                style={{
-                  background:
-                    "radial-gradient(circle, #00C6FF 0%, transparent 70%)",
-                  bottom: "-15%",
-                  right: "-10%",
-                  animation:
-                    "pulse 5s ease-in-out infinite, drift 25s ease-in-out infinite reverse",
-                  animationDelay: "1s, 0s",
-                }}
-              />
+            {/* Blob 2 - turkusowy, pływa w prawo-dół */}
+            <div
+              className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse hero-blob"
+              style={{
+                background:
+                  "radial-gradient(circle, #00C6FF 0%, transparent 70%)",
+                bottom: "-15%",
+                right: "-10%",
+                animation:
+                  "pulse 5s ease-in-out infinite, drift 25s ease-in-out infinite reverse",
+                animationDelay: "1s, 0s",
+              }}
+            />
 
-              {/* Blob 3 - zielony, pływa centralnie */}
-              <div
-                className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse hero-blob"
-                style={{
-                  background:
-                    "radial-gradient(circle, #00C896 0%, transparent 70%)",
-                  top: "40%",
-                  left: "50%",
-                  animation:
-                    "pulse 6s ease-in-out infinite, drift 22s ease-in-out infinite",
-                  animationDelay: "2s, 0s",
-                }}
-              />
+            {/* Blob 3 - zielony, pływa centralnie */}
+            <div
+              className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse hero-blob"
+              style={{
+                background:
+                  "radial-gradient(circle, #00C896 0%, transparent 70%)",
+                top: "40%",
+                left: "50%",
+                animation:
+                  "pulse 6s ease-in-out infinite, drift 22s ease-in-out infinite",
+                animationDelay: "2s, 0s",
+              }}
+            />
 
-              {/* Blob 4 - fioletowy akcent */}
-              <div
-                className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse hero-blob"
-                style={{
-                  background:
-                    "radial-gradient(circle, #6366f1 0%, transparent 70%)",
-                  top: "20%",
-                  right: "30%",
-                  animation:
-                    "pulse 7s ease-in-out infinite, float 18s ease-in-out infinite",
-                  animationDelay: "3s, 5s",
-                }}
-              />
+            {/* Blob 4 - fioletowy akcent */}
+            <div
+              className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse hero-blob"
+              style={{
+                background:
+                  "radial-gradient(circle, #6366f1 0%, transparent 70%)",
+                top: "20%",
+                right: "30%",
+                animation:
+                  "pulse 7s ease-in-out infinite, float 18s ease-in-out infinite",
+                animationDelay: "3s, 5s",
+              }}
+            />
 
-              {/* Center glow - subtelne światło w centrum */}
-              <div
-                className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px] hero-blob"
-                style={{
-                  background:
-                    "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  animation: "pulse-glow 8s ease-in-out infinite",
-                }}
-              />
+            {/* Center glow - subtelne światło w centrum */}
+            <div
+              className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px] hero-blob"
+              style={{
+                background:
+                  "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                animation: "pulse-glow 8s ease-in-out infinite",
+              }}
+            />
 
-              {/* Siatka dla struktury */}
-              <div
-                className="absolute inset-0 opacity-[0.025]"
-                style={{
-                  backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-                  backgroundSize: "40px 40px",
-                }}
-              />
+            {/* Siatka dla struktury */}
+            <div
+              className="absolute inset-0 opacity-[0.025]"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+                backgroundSize: "40px 40px",
+              }}
+            />
 
-              {/* Winietowanie - ciemniejsze brzegi */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%)",
-                }}
-              />
-            </div>
-          )}
-          <div className="absolute inset-0 w-full h-full bg-black/40 dark:bg-black/50 "></div>
+            {/* Winietowanie - ciemniejsze brzegi */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%)",
+              }}
+            />
+          </div>
+
+          {/* 🔹 Overlay: lekki, bo gradient mesh jest ciemny z natury */}
+          <div className="absolute inset-0 w-full h-full bg-black/30" />
+          {/* Przyciemnienie góry pod menu */}
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent" />
+          {/* Fade na dół pod falę */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 to-transparent" />
+
           {/* 🔹 Dekoracyjna fala SVG */}
           <svg
             className="absolute bottom-0 left-0 w-full"
@@ -202,7 +202,7 @@ const IndexPage = ({ data }) => {
             <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
               {/* Lewa kolumna: tekst */}
               <motion.div
-                className="lg:col-span-5 flex flex-col justify-center text-white space-y-6"
+                className="lg:col-span-6 flex flex-col justify-center text-white space-y-6"
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}
@@ -256,15 +256,14 @@ const IndexPage = ({ data }) => {
                 )}
               </motion.div>
 
-              {/* Prawa kolumna: obrazek */}
+              {/* Prawa kolumna: obrazek kursu */}
               <motion.div
-                className="lg:col-span-7 relative max-lg:hidden flex items-center justify-center"
+                className="lg:col-span-6 relative max-lg:hidden flex items-center justify-center"
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.3 }}
               >
                 <div className="relative w-full max-w-2xl">
-                  {/* Glow za zdjęciem */}
                   <div className="absolute -inset-4 bg-gradient-to-r from-[#0077FF]/20 to-[#00C6FF]/20 rounded-[3rem] blur-2xl opacity-60" />
 
                   <motion.div className="relative group">
@@ -272,21 +271,19 @@ const IndexPage = ({ data }) => {
                       <img
                         src={cld(currentCourse.image_url, 800)}
                         alt={currentCourse.title || "CEEA kurs"}
-                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full object-cover"
+                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full aspect-[4/3] object-cover"
                       />
                     ) : (
-                      <GatsbyImage
-                        image={getImage(data.defaultImage)}
-                        alt="CEEA kurs"
-                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full"
-                        imgClassName="object-cover"
-                      />
+                      <div className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 overflow-hidden aspect-[4/3] w-full">
+                        <GatsbyImage
+                          image={getImage(data.defaultImage)}
+                          alt="CEEA kurs"
+                          className="w-full h-full"
+                          imgClassName="object-cover"
+                        />
+                      </div>
                     )}
-
-                    {/* Gradient overlay - subtelniejszy */}
                     <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-black/20 via-transparent to-transparent" />
-
-                    {/* Dekoracyjna ramka */}
                     <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10" />
                   </motion.div>
                 </div>
