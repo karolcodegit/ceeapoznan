@@ -3,6 +3,8 @@ import { Provider } from "react-redux"
 import { store } from "./src/store/index"
 import "./src/styles/global.css"
 import "react-toastify/dist/ReactToastify.css"
+import MaintenanceGate from "./src/components/MaintenanceGate";
+
 
 export const onClientEntry = () => {
   if (typeof window !== "undefined") {
@@ -57,3 +59,6 @@ export const onRouteUpdate = ({ location }) => {
 export const wrapRootElement = ({ element }) => (
   <Provider store={store}>{element}</Provider>
 )
+export const wrapPageElement = ({ element }) => (
+  <MaintenanceGate>{element}</MaintenanceGate>
+);
