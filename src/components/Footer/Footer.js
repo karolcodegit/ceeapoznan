@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Link, useStaticQuery, graphql, navigate } from "gatsby"
+import { Link, navigate } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 import scrollTo from "gatsby-plugin-smoothscroll"
 import { FaFacebookF, FaYoutube } from "react-icons/fa"
@@ -21,29 +21,10 @@ import { getYearFromDate } from "../../utils/getYearFromDate"
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const Footer = () => {
-  // UWAGA: datoCmsCompany wyleciało z GraphQL — dane firmy z /company.
-  // allDatoCmsCourse ZOSTAJE do czasu modułu kursów (ostatnie wykorzystanie
-  // GraphQL w projekcie).
-  const data = useStaticQuery(graphql`
-    query FooterQuery {
-      allDatoCmsCourse(filter: { available: { eq: true } }) {
-        nodes {
-          id
-          nameCourse
-          date
-          available
-          image {
-            fluid(maxWidth: 800) {
-              ...GatsbyDatoCmsFluid
-            }
-          }
-        }
-      }
-    }
-  `)
-  const activeCourse = data.allDatoCmsCourse.nodes[0]
-
+  // Dane firmy z /company, aktywny kurs z /courses — projekt jest już w 100%
+  // bez DatoCMS (GraphQL tylko do site w seo.js / siteMetadata).
   const [company, setCompany] = useState(null)
+  const [activeCourse, setActiveCourse] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -54,6 +35,30 @@ const Footer = () => {
       })
       .then(({ company }) => {
         if (!cancelled) setCompany(company)
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+
+  // Aktywny kurs do linku „Zapis na kurs" — normalizacja pól z Supabase/API
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${API_URL}/courses`)
+      .then(r => {
+        if (!r.ok) throw new Error("courses")
+        return r.json()
+      })
+      .then(({ courses }) => {
+        if (cancelled) return
+        const arr = Array.isArray(courses) ? courses : []
+        // jak w index.js: aktywny kurs = available, fallback: pierwszy z listy
+        const c = arr.find(x => x.available === true) || arr[0] || null
+        if (c) {
+          setActiveCourse({
+            nameCourse: c.title || "",
+            date: c.start_date || c.date_label || null,
+          })
+        }
       })
       .catch(() => {})
     return () => { cancelled = true }
@@ -190,7 +195,7 @@ const Footer = () => {
                     </li>
                   )
                 })}
-                {activeCourse?.nameCourse && (
+                {activeCourse?.nameCourse && activeCourse?.date && (
                   <li className="pt-1">
                     <Link
                       to={`/kursy/${getYearFromDate(

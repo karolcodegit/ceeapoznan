@@ -4,10 +4,18 @@ const courseConfirmationTransfer = require("./course").confirmationTransfer;
 const paymentSuccess = require("./payment").success;
 const organizerNotification = require("./payment").organizerNotification;
 const contactConfirmation = require("./contact").confirmation;
-const { orderConfirmationTransfer, orderConfirmationOnline, orderOrganizer, notifyConfirmation
+const {
+  orderConfirmationTransfer,
+  orderConfirmationOnline,
+  orderOrganizer,
+  notifyConfirmation,
 } = require("./book");
 const contactOrganizer = require("./contact").organizer;
 
+const {
+  success: bookPaymentSuccess,
+  organizerNotification: bookPaymentOrganizer,
+} = require("./bookPayment");
 
 module.exports = {
   courseConfirmationTransfer,
@@ -19,4 +27,6 @@ module.exports = {
   bookOrderConfirmationOnline: orderConfirmationOnline,
   bookOrderOrganizer: orderOrganizer,
   bookNotifyConfirmation: notifyConfirmation,
+  bookPaymentSuccess,
+  bookPaymentOrganizer,
 };

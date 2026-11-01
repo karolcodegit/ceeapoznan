@@ -54,8 +54,6 @@ const separatorVariants = {
   },
 };
 
-// --- Treść statyczna (dawniej DatoCMS About_Company) ---
-
 // ZDJĘCIA: wrzuć pliki do katalogu /static/images/ (lub podmień ścieżki).
 // Na razie placeholdery – sekcja ze zdjęciem nie renderuje się, dopóki
 // ścieżka jest pusta (""), więc strona działa nawet przed podmianą grafik.

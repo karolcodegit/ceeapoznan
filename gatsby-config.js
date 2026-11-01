@@ -14,6 +14,9 @@ module.exports = {
     lang: `pl`,
     locale: `pl_PL`,
     siteUrl: process.env.GATSBY_SITE_URL || `https://ceea.org.pl/`,
+    // ── SEO globalne (dawniej DatoCMS globalSeo) ──
+    twitterAccount: ``, // np. `@ceea_poznan`; puste = bez meta twitter:creator
+    ogImage: `/images/og-image.png`, // plik 1200×630 px w katalogu static/
     organization: {
       name: `CEEA – Centrum Edukacji w Anestezjologii`,
       url: `https://ceea.org.pl/`,
@@ -29,7 +32,10 @@ module.exports = {
       resolve: `gatsby-omni-font-loader`,
       options: {
         enableListener: true,
-        preconnect: [`https://fonts.googleapis.com`, `https://fonts.gstatic.com`],
+        preconnect: [
+          `https://fonts.googleapis.com`,
+          `https://fonts.gstatic.com`,
+        ],
         web: [
           {
             name: `Montserrat`,
@@ -69,7 +75,7 @@ module.exports = {
             priority: pageContext?.priority || 0.7,
           }
         },
-      }
+      },
     },
     {
       resolve: `gatsby-plugin-robots-txt`,
@@ -98,7 +104,7 @@ module.exports = {
       },
     },
     `gatsby-plugin-layout`,
-    'gatsby-plugin-postcss',
+    "gatsby-plugin-postcss",
     `gatsby-plugin-image`,
     `gatsby-plugin-smoothscroll`,
     {
@@ -109,19 +115,13 @@ module.exports = {
       },
     },
     {
-      resolve: 'gatsby-plugin-playground',
+      resolve: "gatsby-plugin-playground",
       options: {
         disableNetlify: false,
       },
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    {
-      resolve: `gatsby-source-datocms`,
-      options: {
-        apiToken: process.env.GATSBY_DATOCMS_API,
-      },
-    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -140,6 +140,21 @@ module.exports = {
       options: {
         siteUrl: `https://ceea.org.pl/`,
         stripQueryString: true,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [
+          process.env.GATSBY_GA_MEASUREMENT_ID,
+        ].filter(Boolean),
+        gtagConfig: {
+          anonymize_ip: true,
+        },
+        pluginConfig: {
+          head: true,
+          respectDNT: true,
+        },
       },
     },
   ],

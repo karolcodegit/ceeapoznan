@@ -57,7 +57,6 @@ const badgePop = {
 const Courses = () => {
   const [windowWidth, setWindowWidth] = useState(0)
 
-  // Kursy ze Supabase (zamiast allDatoCmsCourse)
   const [courses, setCourses] = useState(null) // null = ładowanie
 
   useEffect(() => {

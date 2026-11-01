@@ -20,6 +20,8 @@ const { faqHandler } = require('./src/faq')
 const { employeesHandler } = require('./src/employees')
 const { companyHandler } = require("./src/company")
 const { coursesHandler } = require("./src/courses")
+const { bookMarkPaidHandler } = require("./src/bookMarkPaid")
+
 
 const corsHandler = cors({ origin: true })
 
@@ -82,6 +84,9 @@ functions.http("handler", async (req, res) => {
       }
       if (req.path === "/courses") {
         return await coursesHandler(req, res)
+      }
+      if (req.path === "/book-mark-paid") {
+        return await bookMarkPaidHandler(req, res)
       }
       return res.status(404).json({ error: "Not found" })
     } catch (error) {

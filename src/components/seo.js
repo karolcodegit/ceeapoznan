@@ -3,8 +3,10 @@ import { useStaticQuery, graphql } from 'gatsby';
 import { Helmet } from 'react-helmet';
 import { useLocation } from '@reach/router';
 
+// Wymagane pola w siteMetadata: title, description, author, siteUrl,
+//   twitterAccount (opcjonalnie, może być ""), ogImage (np. "/og-image.png" w static/)
 function Seo({ description, title, children, favicon, twitterImage }) {
-  const { site, datoCmsSite } = useStaticQuery(
+  const { site } = useStaticQuery(
     graphql`
       query {
         site {
@@ -13,23 +15,8 @@ function Seo({ description, title, children, favicon, twitterImage }) {
             author
             siteUrl
             description
-          }
-        }
-        datoCmsSite {
-          globalSeo {
-            siteName
-            titleSuffix
             twitterAccount
-            fallbackSeo {
-              title
-              description
-              twitterCard
-              image {
-                fluid {
-                  tracedSVG
-                }
-              }
-            }
+            ogImage
           }
         }
       }
@@ -37,35 +24,43 @@ function Seo({ description, title, children, favicon, twitterImage }) {
   );
 
   const location = useLocation();
+  const meta = site.siteMetadata;
 
-  const metaDescription =
-    description ||
-    site.siteMetadata.description ||
-    datoCmsSite.globalSeo.fallbackSeo.description;
-  const defaultTitle =
-    site.siteMetadata?.title || datoCmsSite.globalSeo.fallbackSeo.title;
-  const twitterAccount = datoCmsSite.globalSeo.twitterAccount;
-  const twitterImageUrl =
-    twitterImage || datoCmsSite.globalSeo.fallbackSeo.image.fluid.tracedSVG;
-  const canonicalUrl = `${site.siteMetadata.siteUrl}${location.pathname}`;
+  const metaDescription = description || meta.description;
+  const defaultTitle = meta.title;
+  const pageTitle = defaultTitle ? `${title} | ${defaultTitle}` : title;
+  const baseUrl = (meta.siteUrl || '').replace(/\/$/, '');
+  const shareImageUrl =
+    twitterImage || `${baseUrl}${meta.ogImage || '/og-image.png'}`;
+  const canonicalUrl = `${meta.siteUrl}${location.pathname}`;
 
   return (
     <Helmet>
-      <title>{defaultTitle ? `${title} | ${defaultTitle}` : title}</title>
-      <meta name="author" content={site.siteMetadata.author} />
+      <title>{pageTitle}</title>
+      <meta name="author" content={meta.author} />
       <link rel="canonical" href={canonicalUrl} />
       <link rel="icon" href={favicon} />
       <meta httpEquiv="content-language" content="PL-pl" />
       <meta name="robots" content="index,follow" />
       <meta name="description" content={metaDescription} />
-      <meta property="og:title" content={title} />
+
+      {/* Open Graph (Facebook, LinkedIn, Messenger...) */}
+      <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:type" content="website" />
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:creator" content={twitterAccount} />
-      <meta name="twitter:title" content={title} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:image" content={shareImageUrl} />
+      <meta property="og:locale" content="pl_PL" />
+
+      {/* X / Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      {meta.twitterAccount && (
+        <meta name="twitter:creator" content={meta.twitterAccount} />
+      )}
+      <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={metaDescription} />
-      <meta name="twitter:image" content={twitterImageUrl} />
+      <meta name="twitter:image" content={shareImageUrl} />
+
       {children}
     </Helmet>
   );

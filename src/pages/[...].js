@@ -1,5 +1,4 @@
 // src/pages/kursy/[...].js — client-only route: /kursy/{rok}/{slug}/*
-// Obsługuje WSZYSTKIE widoki kursu z danych Supabase (bez DatoCMS):
 //   /kursy/{rok}/{slug}                    → strona kursu (opis + program)
 //   /kursy/{rok}/{slug}/szczegoly          → szczegóły (hotel, płatności)
 //   /kursy/{rok}/{slug}/rejestracja        → formularz rejestracji
@@ -122,7 +121,6 @@ const CourseClient = ({ location }) => {
 
   // ===== WIDOK: /rejestracja =====
   if (sub === "rejestracja") {
-    // FormRegister oczekuje kształtu DatoCMS → syntetyzujemy z pól Supabase
     const availableCourse = course.available
       ? {
           originalId: course.course_id,

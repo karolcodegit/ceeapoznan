@@ -34,7 +34,6 @@ const IndexPage = ({ data }) => {
     edge => edge.node.name === "Creativity_and_innovation"
   )?.node?.childImageSharp?.fluid
 
-  // ── Kursy ze Supabase (zamiast allDatoCmsCourse) ──
   const [courses, setCourses] = useState([])
 
   useEffect(() => {
@@ -62,7 +61,6 @@ const IndexPage = ({ data }) => {
   const currentCourse = courses.find(c => c.available === true)
   const futureCourses = courses.filter(c => c.is_next === true).slice(0, 3)
 
-  // Link rejestracji: dotychczasowy format URL (strony kursów jeszcze z DatoCMS)
   const regCourse = currentCourse || courses[0]
   const websiteRegister = regCourse
     ? `/kursy/${getYearFromDate(
