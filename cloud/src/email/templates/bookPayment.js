@@ -57,22 +57,5 @@ Pozdrawiamy,
 Zespol CEEA Poznan`,
 });
 
-// Kopia do sekretariatu
-const organizerNotification = (o) => ({
-  subject: `[CEEA] Książki opłacone: ${o.order_number} (${o.name || ""} ${o.surname || ""})`,
-  html: renderEmail({
-    preheader: `Zaksięgowano wpłatę za zamówienie ${o.order_number}`,
-    title: "Powiadomienie dla sekretariatu",
-    content: `
-      <p><strong>${esc(o.name || "")} ${esc(o.surname || "")}</strong><br />
-         ${esc(o.email || "-")}<br />tel. ${esc(o.phone || "-")}</p>
-      <p>Zamówienie: <strong>${esc(o.order_number)}</strong><br />
-         Kwota: <strong>${money(o.amount)}</strong><br />
-         Dostawa: <strong>${deliveryLine(o)}</strong></p>
-      <p><strong>Pozycje:</strong></p>
-      <ul>${itemsHtml(o.items)}</ul>
-      <p>Wysyłka została odblokowana — można utworzyć przesyłkę InPost.</p>`,
-  }).html,
-});
 
 module.exports = { success, organizerNotification };

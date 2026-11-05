@@ -37,7 +37,7 @@ async function applyPaymentStatus(orderNumber, tpayStatus) {
         console.log(`✅ PAID (kurs) ${orderNumber}`);
       }
     }
-    return { ok: true, changed: false }; // znalezione w payments – koniec
+    return { ok: true, changed: false };
   }
 
   // ── 2. Zamówienia książek (book_orders) ──
@@ -54,22 +54,16 @@ async function applyPaymentStatus(orderNumber, tpayStatus) {
       .eq("id", bookOrder.id)
       .select();
 
-    // 📦 Przywróć stan magazynowy przy anulowaniu (rezerwacja była odjęta w /book-order)
-    if (updated?.length && newStatus === "canceled") {
+     // 📦 Przywróć stan magazynowy przy anulowaniu (rezerwacja była odjęta w /book-order)
+     if (updated?.length && newStatus === "canceled") {
       for (const item of bookOrder.items || []) {
-        if (!item.productId) continue;
-        const qty = Number(item.qty) || 1;
-        const { data: p } = await supabase
-          .from("products")
-          .select("id, stock_quantity")
-          .eq("datocms_id", String(item.productId))
-          .maybeSingle();
-        if (p) {
-          await supabase
-            .from("products")
-            .update({ stock_quantity: p.stock_quantity + qty })
-            .eq("id", p.id);
-        }
+        const productId = item.productId ?? item.datocmsId ?? item.id;
+        if (!productId) continue;
+        const qty = Number(item.qty ?? item.quantity) || 1;
+        await supabase.rpc("increment_stock", {
+          p_datocms_id: String(productId),
+          p_qty: qty,
+        });
       }
       console.log(`↩️ STOCK RESTORED ${orderNumber}`);
     }

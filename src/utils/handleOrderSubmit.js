@@ -14,33 +14,48 @@ export const handleOrderSubmit = async () => {
   const s = store.getState()
   const orderNumber = generateOrderNumber()
 
+  // ── Normalizacja pozycji: gwarantujemy productId + qty ──
+  // Stare (persystowane sprzed migracji do Supabase) pozycje mogą mieć
+  // inne pola — bez tego trafiają na backend z productId = undefined
+  // i stan magazynowy jest po cichu pomijany.
+  const items = selectItems(s).map(i => {
+    const productId = i.productId ?? i.datocmsId ?? i.datocms_id ?? null
+    const qty = Number(i.quantity ?? i.qty) || 1
+    if (!productId) {
+      console.error("[order] POZYCJA BEZ productId – stan NIE zostanie odjęty:", i)
+    }
+    return { productId, title: i.title, qty, price: i.price }
+  })
+
   const payload = {
     orderNumber,
     token: s.checkout.token,
     paymentMethod: selectPaymentMethod(s),
     ...selectCustomer(s),
     delivery: selectDelivery(s),
-    items: selectItems(s).map(i => ({
-      productId: i.productId,
-      title: i.title,
-      qty: i.quantity,
-      price: i.price,
-    })),
+    items,
     costs: {
       subtotal: selectSubtotal(s),
       delivery: selectDeliveryCost(s),
-      total: selectTotal(s),          // bez opłaty – chmura doliczy fee sam
+      total: selectTotal(s),          // bez opłaty – chmura doliczy fee sama
     },
     amount: selectGrandTotal(s),      // ← z opłatą (dla tpay); dla transferu = total
   }
 
-  const res = await fetch(`${API}/book-order`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  })
-  const json = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(json.error || "Błąd zapisu zamówienia. Spróbuj ponownie.")
+  let json
+  try {
+    const res = await fetch(`${API}/book-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+    json = await res.json().catch(() => ({}))
+    if (!res.ok) throw new Error(json.error || "Błąd zapisu zamówienia. Spróbuj ponownie.")
+  } catch (e) {
+    console.error("[order] submit:", e)
+    alert(e.message || "Błąd połączenia. Spróbuj ponownie.")
+    return
+  }
 
   store.dispatch(setLastOrder({ number: orderNumber, method: payload.paymentMethod }))
 

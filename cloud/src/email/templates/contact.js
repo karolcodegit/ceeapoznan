@@ -29,7 +29,7 @@ ${cleanMessage(message)}
 
 Pozdrawiamy,
 Zespół CEEA Poznań`,
-});
+})
 
 const organizer = ({ name, email, message }) => ({
   subject: `✉️ Formularz kontaktowy: ${name || email}`,
@@ -39,12 +39,25 @@ const organizer = ({ name, email, message }) => ({
     content: `
       <p>Imię: <strong>${esc(name || "—")}</strong><br>
       E-mail: <a href="mailto:${esc(email)}">${esc(email)}</a></p>
-      ${infoBox(`<p style="margin:0;font-size:14px"><strong>Wiadomość:</strong><br>${esc(String(message || "").slice(0, 2000)).replace(/\n/g, "<br>")}</p>`)}
-      ${button("Odpowiedz: " + (name || email), `mailto:${email}?subject=${encodeURIComponent("Odp.: Formularz kontaktowy")}&body=${encodeURIComponent("\n\n— oryginalna wiadomość —\n" + String(message || ""))}`)}
+      ${infoBox(
+        `<p style="margin:0;font-size:14px"><strong>Wiadomość:</strong><br>${esc(
+          String(message || "").slice(0, 2000)
+        ).replace(/\n/g, "<br>")}</p>`
+      )}
+      ${button(
+        "Odpowiedz: " + (name || email),
+        `mailto:${email}?subject=${encodeURIComponent(
+          "Odp.: Formularz kontaktowy"
+        )}&body=${encodeURIComponent(
+          "\n\n— oryginalna wiadomość —\n" + String(message || "")
+        )}`
+      )}
       <p style="font-size:12px;color:#9ca3af">Przycisk otworzy wiadomość bezpośrednio do nadawcy.</p>`,
   }).html,
-  text: `Wiadomość od: ${name || "—"} <${email}>\n\n${message}\n\n(Odpisz bezpośrednio na ten adres: ${email})`,
-});
+  text: `Wiadomość od: ${
+    name || "—"
+  } <${email}>\n\n${message}\n\n(Odpisz bezpośrednio na ten adres: ${email})`,
+})
 
 // przycięcie spacji + zwinięcie pustych linii (cytat nie rozjeżdża infoBoksa)
 function cleanMessage(m) {
