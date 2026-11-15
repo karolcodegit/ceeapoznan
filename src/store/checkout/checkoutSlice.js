@@ -13,6 +13,15 @@ export const initialState = {
   email: "",
   phone: "",
 
+  // Faktura VAT (płasko – tak samo jak dane kupującego; chowane checkboxem)
+  wantInvoice: false,
+  invoiceName: "",
+  invoiceStreet: "",
+  invoiceNumberHome: "",
+  invoicePostcode: "",
+  invoiceCity: "",
+  invoiceNip: "",
+
   // Dostawa (płasko – FormRadioGroup name="deliveryMethod")
   deliveryMethod: "Paczkomat",     // "Paczkomat" | "Kurier InPost"
   address: { street: "", city: "", postcode: "" },
@@ -92,6 +101,14 @@ const checkoutSlice = createSlice({
       state.locker = null
       state.paymentMethod = initialState.paymentMethod
       state.lastOrder = null
+      // faktura też wraca do zera
+      state.wantInvoice = initialState.wantInvoice
+      state.invoiceName = initialState.invoiceName
+      state.invoiceStreet = initialState.invoiceStreet
+      state.invoiceNumberHome = initialState.invoiceNumberHome
+      state.invoicePostcode = initialState.invoicePostcode
+      state.invoiceCity = initialState.invoiceCity
+      state.invoiceNip = initialState.invoiceNip
     },
   },
 })

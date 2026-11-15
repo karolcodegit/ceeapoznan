@@ -58,4 +58,37 @@ Zespol CEEA Poznan`,
 });
 
 
+const organizerNotification = (o) => ({
+    subject: `[CEEA] Wpłata zaksięgowana – książki (nr ${o.order_number})`,
+    html: renderEmail({
+      preheader: `Zaksięgowano wpłatę ${money(o.amount)} za zamówienie ${o.order_number}.`,
+      title: "Powiadomienie dla sekretariatu",
+      content: `
+        <p><strong>${esc(`${o.name || ""} ${o.surname || ""}`.trim() || "-")}</strong><br />
+           ${esc(o.email || "-")}<br />tel. ${esc(o.phone || "-")}</p>
+        <p>Zamówienie: <strong>${esc(o.order_number)}</strong><br />
+           Kwota: <strong>${money(o.amount)}</strong></p>
+        <p><strong>Pozycje:</strong></p>
+        <ul>${itemsHtml(o.items)}</ul>
+        <p>Dostawa: <strong>${deliveryLine(o)}</strong>${
+          o.delivery_method === "courier"
+            ? `<br />${esc([o.street, o.postcode, o.city].filter(Boolean).join(", "))}`
+            : ""
+        }</p>`,
+    }).html,
+    text: `Wplata zaksiogowana - zamowienie ${o.order_number}
+  
+  Klient: ${`${o.name || ""} ${o.surname || ""}`.trim() || "-"}
+  ${o.email || "-"}${o.phone ? `, tel. ${o.phone}` : ""}
+  Kwota: ${money(o.amount)}
+  
+  Pozycje:
+  ${itemsText(o.items)}
+  
+  Dostawa: ${deliveryLine(o)}${o.delivery_method === "courier"
+      ? `\n${[o.street, o.postcode, o.city].filter(Boolean).join(", ")}`
+      : ""}`,
+  });
+
+
 module.exports = { success, organizerNotification };

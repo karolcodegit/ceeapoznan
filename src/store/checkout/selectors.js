@@ -28,6 +28,17 @@ export const selectCustomer = s => ({
   phone: s.checkout.phone,
 })
 
+// ── Faktura VAT ──
+export const selectWantInvoice = s => s.checkout.wantInvoice
+export const selectInvoice = s => ({
+  name: s.checkout.invoiceName,
+  street: s.checkout.invoiceStreet,
+  numberHome: s.checkout.invoiceNumberHome,
+  postcode: s.checkout.invoicePostcode,
+  city: s.checkout.invoiceCity,
+  nip: s.checkout.invoiceNip,
+})
+
 export const selectDelivery = s => ({
   method: s.checkout.deliveryMethod === "Paczkomat" ? "paczkomat" : "courier",
   address: s.checkout.address,
