@@ -15,7 +15,11 @@ import Cart from "../components/Shop/Cart"
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState("")
   const location = useLocation()
-  const isHomePage = location.pathname === "/"
+  // /home2 = wariant hero (full-bleed jak strona główna; bez TopHeader)
+  const isHomePage =
+    location.pathname === "/" ||
+    location.pathname === "/home2" ||
+    location.pathname === "/home2/"
   const currentPath = location.pathname
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
   const is404Page = !allLinks.some(link => link.to === currentPath)
