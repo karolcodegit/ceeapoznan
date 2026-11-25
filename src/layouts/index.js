@@ -15,11 +15,13 @@ import Cart from "../components/Shop/Cart"
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState("")
   const location = useLocation()
-  // /home2 = wariant hero (full-bleed jak strona główna; bez TopHeader)
+  // full-bleed (bez TopHeader / max-w): home, home2, o-nas2
   const isHomePage =
     location.pathname === "/" ||
     location.pathname === "/home2" ||
-    location.pathname === "/home2/"
+    location.pathname === "/home2/" ||
+    location.pathname === "/o-nas2" ||
+    location.pathname === "/o-nas2/"
   const currentPath = location.pathname
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
   const is404Page = !allLinks.some(link => link.to === currentPath)
