@@ -157,7 +157,9 @@ const DeliveryInfo = ({
 
   return (
     <>
-      <div className={`${className} w-full max-w-sm md:sticky md:top-24`}>
+      <div
+        className={`${className} mx-auto w-full max-w-sm md:mx-0 md:sticky md:top-24`}
+      >
         {/* Mobile / tablet (< md): cena → CTA poniżej → dostawa rozwijana */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:hidden">
           <div className="space-y-3 p-3.5">

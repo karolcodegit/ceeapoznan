@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 
 import Seo from "../../components/seo"
 import PageHeroV2 from "../../components/PageHeroV2/PageHeroV2"
@@ -10,6 +10,7 @@ import { getYearFromDate } from "../../utils/getYearFromDate"
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const Courses2 = () => {
+  const reduceMotion = useReducedMotion()
   const [courses, setCourses] = useState(null)
 
   useEffect(() => {
@@ -99,10 +100,15 @@ const Courses2 = () => {
               return (
                 <li key={course.course_id}>
                   <motion.article
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={
+                      reduceMotion ? false : { opacity: 0, y: 18 }
+                    }
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                    transition={{
+                      duration: reduceMotion ? 0 : 0.45,
+                      delay: reduceMotion ? 0 : index * 0.05,
+                    }}
                     className="group relative flex h-full min-h-[280px] overflow-hidden rounded-2xl border border-slate-200 shadow-sm dark:border-slate-700"
                     style={{
                       backgroundImage: course.image_url

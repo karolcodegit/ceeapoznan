@@ -1,32 +1,23 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 
 import ContactBox from "../components/ContactBox/ContactBox"
 import ContactForm from "../components/Form/ContactForm"
 import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import Seo from "../components/seo"
+import {
+  fadeUp as fadeUpBase,
+  staggerContainer,
+  withReducedMotion,
+} from "../utils/motionVariants"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
-  },
-}
-
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
-  },
-}
-
 const Contact2 = () => {
+  const reduceMotion = useReducedMotion()
+  const fadeUp = withReducedMotion(fadeUpBase, reduceMotion)
+  const stagger = withReducedMotion(staggerContainer, reduceMotion)
   const [company, setCompany] = useState(null)
   const [employees, setEmployees] = useState([])
 

@@ -1,26 +1,14 @@
 import React from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: "easeOut" },
-  },
-}
-
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
-  },
-}
+import { motion, useReducedMotion } from "framer-motion"
+import {
+  fadeUp,
+  staggerContainer,
+  withReducedMotion,
+} from "../../utils/motionVariants"
 
 /**
- * Full-bleed gradient intro used by *2 pages (o-nas2 pattern).
+ * Full-bleed gradient intro used by marketing / checkout pages.
  * @param {{ title: string, subtitle?: string, description?: string, crumbs?: { label: string, to?: string }[], actions?: React.ReactNode }} props
  */
 const PageHeroV2 = ({
@@ -30,6 +18,10 @@ const PageHeroV2 = ({
   crumbs = [],
   actions,
 }) => {
+  const reduceMotion = useReducedMotion()
+  const item = withReducedMotion(fadeUp, reduceMotion)
+  const container = withReducedMotion(staggerContainer, reduceMotion)
+
   return (
     <section className="relative w-full overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
       <div
@@ -48,12 +40,12 @@ const PageHeroV2 = ({
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={stagger}
+          variants={container}
           className="max-w-3xl text-white"
         >
           {crumbs.length > 0 && (
             <motion.nav
-              variants={fadeInUp}
+              variants={item}
               aria-label="Okruszki nawigacyjne"
               className="mb-6"
             >
@@ -93,14 +85,14 @@ const PageHeroV2 = ({
             </motion.nav>
           )}
           <motion.h1
-            variants={fadeInUp}
+            variants={item}
             className="break-words text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
           >
             {title}
           </motion.h1>
           {subtitle ? (
             <motion.p
-              variants={fadeInUp}
+              variants={item}
               className="mt-3 text-lg sm:text-xl font-semibold text-[#E8A317]"
             >
               {subtitle}
@@ -108,17 +100,14 @@ const PageHeroV2 = ({
           ) : null}
           {description ? (
             <motion.p
-              variants={fadeInUp}
+              variants={item}
               className="mt-5 text-base sm:text-lg leading-relaxed text-white/90"
             >
               {description}
             </motion.p>
           ) : null}
           {actions ? (
-            <motion.div
-              variants={fadeInUp}
-              className="mt-8 flex flex-wrap gap-3"
-            >
+            <motion.div variants={item} className="mt-8 flex flex-wrap gap-3">
               {actions}
             </motion.div>
           ) : null}

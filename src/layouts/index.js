@@ -6,6 +6,7 @@ import Header from "../components/Header/Header"
 import Footer from "../components/Footer/Footer"
 import { Toaster } from "sonner"
 import TopHeader from "../components/TopHeader/TopHeader"
+import PageEnter from "../components/Motion/PageEnter"
 import { FontSizeContext } from "../context/fontSizeContext"
 import TitleContext from "../context/TitleContext"
 import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
@@ -118,7 +119,7 @@ focus:ring-4 focus:ring-blue-300 focus:outline-none"
   >
                   {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
                   {!isHomePage && !is404Page && <TopHeader />}
-                  {children}
+                  <PageEnter>{children}</PageEnter>
                 </div>
               </div>
               <Footer />

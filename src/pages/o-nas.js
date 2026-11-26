@@ -1,26 +1,14 @@
 import React from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { OfficialLetterKrzysztofKusza } from "../components/OfficialLetter/OfficialLetterKrzysztofKusza"
 import { OfficialLetterAnnaKluzik } from "../components/OfficialLetter/OfficialLetterAnnaKluzik"
 import Seo from "../components/seo"
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: "easeOut" },
-  },
-}
-
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.08 },
-  },
-}
+import {
+  fadeUp,
+  staggerContainer,
+  withReducedMotion,
+} from "../utils/motionVariants"
 
 /**
  * Fakty o fundacji i ośrodku — źródła:
@@ -110,6 +98,10 @@ const HISTORY = [
 ]
 
 const AboutUs2 = () => {
+  const reduceMotion = useReducedMotion()
+  const fadeInUp = withReducedMotion(fadeUp, reduceMotion)
+  const stagger = withReducedMotion(staggerContainer, reduceMotion)
+
   return (
     <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
       {/* Intro full-bleed: breadcrumbs + h1 „O nas” w gradiencie */}

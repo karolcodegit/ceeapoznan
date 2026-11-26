@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 
 import FaqItem from "../components/FaqItem/FaqItem"
 import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import Seo from "../components/seo"
+import {
+  fadeUpSoft,
+  staggerContainer,
+  withReducedMotion,
+} from "../utils/motionVariants"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: "easeOut" },
-  },
-}
-
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
-  },
-}
-
 const Faq2 = () => {
+  const reduceMotion = useReducedMotion()
+  const fadeUp = withReducedMotion(fadeUpSoft, reduceMotion)
+  const stagger = withReducedMotion(staggerContainer, reduceMotion)
   const [faq, setFaq] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

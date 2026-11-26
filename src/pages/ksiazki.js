@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 
 import Book from "../components/Book/Book"
 import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import Seo from "../components/seo"
+import { fadeUpSoft, withReducedMotion } from "../utils/motionVariants"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
@@ -29,17 +30,14 @@ function mapProduct(p) {
   }
 }
 
-const bookItem = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: "easeOut" },
-  },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.25 } },
-}
-
 const Books2 = () => {
+  const reduceMotion = useReducedMotion()
+  const bookItem = {
+    ...withReducedMotion(fadeUpSoft, reduceMotion),
+    exit: reduceMotion
+      ? { opacity: 1, transition: { duration: 0 } }
+      : { opacity: 0, y: -8, transition: { duration: 0.2 } },
+  }
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

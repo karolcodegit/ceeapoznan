@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import PageHeroV2 from "../../components/PageHeroV2/PageHeroV2"
 import Paragraph from "../../components/Paragraph/Paragraph"
 import Button from "../../components/Button/Button"
@@ -13,39 +13,29 @@ import CourseProgram from "../../templates/CourseProgram"
 import FormRegister from "../../components/Form/FormRegister"
 import Seo from "../../components/seo"
 import CourseDetails from "../../components/CourseDetails/CourseDetails"
+import {
+  fadeUp,
+  staggerContainer as staggerBase,
+  withReducedMotion,
+} from "../../utils/motionVariants"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 const BASE = "/kursy"
 
-const fadeIn = {
+const fadeInBase = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
+  visible: { opacity: 1, transition: { duration: 0.45 } },
 }
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
-  },
-}
-const slideUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-}
-const slideLeft = {
-  hidden: { opacity: 0, x: -40 },
+const slideLeftBase = {
+  hidden: { opacity: 0, x: -24 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 }
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
+const scaleInBase = {
+  hidden: { opacity: 0, scale: 0.97 },
   visible: {
     opacity: 1,
     scale: 1,
@@ -55,6 +45,13 @@ const scaleIn = {
 const viewportSettings = { once: true, margin: "-60px" }
 
 const CourseClient2 = ({ location }) => {
+  const reduceMotion = useReducedMotion()
+  const fadeIn = withReducedMotion(fadeInBase, reduceMotion)
+  const staggerContainer = withReducedMotion(staggerBase, reduceMotion)
+  const slideUp = withReducedMotion(fadeUp, reduceMotion)
+  const slideLeft = withReducedMotion(slideLeftBase, reduceMotion)
+  const scaleIn = withReducedMotion(scaleInBase, reduceMotion)
+
   const segments = location.pathname.split("/").filter(Boolean)
   // ["kursy", rok, slug, sub?, ...]
   const slug = segments[2] || ""
