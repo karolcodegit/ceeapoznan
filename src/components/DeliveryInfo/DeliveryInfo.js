@@ -68,17 +68,17 @@ const DeliveryInfo = ({
   }
 
   const priceLabel = (
-    <div className="min-w-0">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <div className="min-w-0 flex-1 pr-2">
+      <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300 sm:text-sm">
         Nasza cena
       </p>
-      <p className="text-xl font-extrabold leading-tight text-[#0C6478] dark:text-sky-300 sm:text-2xl">
-        {price}{" "}
-        <span className="text-base font-bold text-[#002C7C] dark:text-sky-200">
+      <p className="mt-0.5 text-3xl font-black leading-none tracking-tight text-[#0C6478] dark:text-sky-300 sm:text-4xl">
+        {price}
+        <span className="ml-1 text-xl font-extrabold text-[#002C7C] dark:text-sky-200 sm:text-2xl">
           zł
         </span>
       </p>
-      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+      <p className="mt-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
         + koszty przesyłki
       </p>
     </div>
@@ -160,9 +160,9 @@ const DeliveryInfo = ({
       >
         {/* Mobile: compact bar */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:hidden">
-          <div className="flex items-center gap-3 p-3">
+          <div className="flex items-center justify-between gap-3 p-3.5">
             {priceLabel}
-            <div className="w-[9.5rem] shrink-0 space-y-2">
+            <div className="ml-auto w-[10rem] shrink-0 space-y-2 self-center">
               {primaryCta}
               {available && (
                 <button
@@ -201,25 +201,32 @@ const DeliveryInfo = ({
           </div>
         </div>
 
-        {/* Desktop: compact card */}
+        {/* Desktop: cena lewa, CTA prawa; formularz poniżej gdy niedostępne */}
         <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:block">
-          <div className="border-b border-slate-100 px-4 py-4 dark:border-slate-700">
+          <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 py-5 dark:border-slate-700">
             {priceLabel}
+            {available && (
+              <div className="ml-auto w-[11rem] shrink-0">
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002C7C] px-4 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:bg-sky-600 dark:hover:bg-sky-500"
+                >
+                  <ShoppingCartIcon
+                    className="h-5 w-5 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Do koszyka
+                </button>
+              </div>
+            )}
           </div>
           <div className="space-y-3 p-4">
             {shippingButton}
             {available ? (
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002C7C] px-4 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:bg-sky-600 dark:hover:bg-sky-500"
-              >
-                <ShoppingCartIcon
-                  className="h-5 w-5 shrink-0"
-                  aria-hidden="true"
-                />
-                Dodaj do koszyka
-              </button>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Dostawa paczkomatem lub kurierem InPost.
+              </p>
             ) : (
               notifyForm
             )}
