@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { motion } from "framer-motion"
 
-import Seo from "../components/seo"
-import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
-import { slugify } from "../utils/slugify"
-import { getYearFromDate } from "../utils/getYearFromDate"
+import Seo from "../../components/seo"
+import PageHeroV2 from "../../components/PageHeroV2/PageHeroV2"
+import { slugify } from "../../utils/slugify"
+import { getYearFromDate } from "../../utils/getYearFromDate"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
@@ -114,7 +114,7 @@ const Courses2 = () => {
                       aria-hidden="true"
                     />
                     <Link
-                      to={`/kursy/${year}/${courseSlug}`}
+                      to={`/kursy2/${year}/${courseSlug}`}
                       className="relative z-10 flex h-full w-full flex-col justify-between gap-6 p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                     >
                       <div>

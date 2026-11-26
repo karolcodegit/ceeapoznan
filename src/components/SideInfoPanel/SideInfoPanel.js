@@ -12,6 +12,7 @@ const SideInfoPanel = ({
   nameCourse,
   date,
   paymentFee = 0,
+  basePath = "/kursy",
 }) => {
   console.log(points);
   
@@ -77,7 +78,7 @@ const SideInfoPanel = ({
 
         {available && !rejestraction && (
           <Button
-            href={`/kursy/${getYearFromDate(date)}/${slugify(
+            href={`${basePath}/${getYearFromDate(date)}/${slugify(
               nameCourse
             )}/rejestracja`}
             className="mt-4"

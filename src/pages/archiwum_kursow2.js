@@ -101,7 +101,7 @@ const ArchiwumKursow2 = () => {
                       aria-hidden="true"
                     />
                     <Link
-                      to={`/kursy/${year}/${courseSlug}`}
+                      to={`/kursy2/${year}/${courseSlug}`}
                       className="relative z-10 flex h-full w-full flex-col justify-between gap-6 p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                     >
                       <div>

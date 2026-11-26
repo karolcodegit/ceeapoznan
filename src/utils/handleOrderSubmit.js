@@ -10,7 +10,9 @@ import {
 
 const API = process.env.GATSBY_REGISTER_ENDPOINT
 
-export const handleOrderSubmit = async () => {
+export const handleOrderSubmit = async ({
+  successPath = "/koszyk/wyslane",
+} = {}) => {
   const s = store.getState()
   const orderNumber = generateOrderNumber()
 
@@ -67,7 +69,9 @@ export const handleOrderSubmit = async () => {
 
   // transfer → strona potwierdzenia
   store.dispatch(resetCheckout())
-  navigate(`/koszyk/wyslane?metoda=transfer&zamowienie=${orderNumber}`)
+  navigate(
+    `${successPath}?metoda=transfer&zamowienie=${orderNumber}`
+  )
 }
 
 function generateOrderNumber() {

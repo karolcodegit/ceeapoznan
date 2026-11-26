@@ -86,12 +86,20 @@ const Books2 = () => {
           { label: "Książki" },
         ]}
         actions={
-          <Link
-            to="/kontakt2/"
-            className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
-          >
-            Zapytaj o dostępność
-          </Link>
+          <>
+            <Link
+              to="/koszyk2/"
+              className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+            >
+              Koszyk
+            </Link>
+            <Link
+              to="/kontakt2/"
+              className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+            >
+              Zapytaj o dostępność
+            </Link>
+          </>
         }
       />
 

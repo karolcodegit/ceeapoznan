@@ -20,12 +20,19 @@ const MainLayout = ({ children }) => {
   const isV2Page =
     normalizedPath === "/home2" ||
     normalizedPath === "/o-nas2" ||
-    normalizedPath === "/kursy2" ||
-    normalizedPath === "/kontakt2" ||
     normalizedPath === "/faq2" ||
     normalizedPath === "/ksiazki2" ||
     normalizedPath === "/archiwum_kursow2" ||
-    normalizedPath === "/polityka-prywatnosci2"
+    normalizedPath === "/polityka-prywatnosci2" ||
+    normalizedPath === "/platnosc-status2" ||
+    normalizedPath === "/platnosc-test2" ||
+    normalizedPath === "/nie-znaleziono2" ||
+    normalizedPath === "/kursy2" ||
+    normalizedPath.startsWith("/kursy2/") ||
+    normalizedPath === "/kontakt2" ||
+    normalizedPath.startsWith("/kontakt2/") ||
+    normalizedPath === "/koszyk2" ||
+    normalizedPath.startsWith("/koszyk2/")
   const isHomePage = normalizedPath === "/" || isV2Page
   const currentPath = location.pathname
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
