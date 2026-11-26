@@ -14,7 +14,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid"
 import Button from "../Button/Button"
-import Logo from "../../assets/images/logo-header-color.png"
+import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
