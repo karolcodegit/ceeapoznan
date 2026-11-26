@@ -158,7 +158,7 @@ const Books2 = () => {
                     animate="visible"
                     exit="exit"
                     layout
-                    className="rounded-2xl border border-slate-200 bg-slate-50/80 p-2 dark:border-slate-700 dark:bg-slate-900/60 sm:p-3"
+                    className="rounded-2xl border border-slate-200 bg-white px-3 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:px-4"
                   >
                     <Book {...book} />
                   </motion.li>

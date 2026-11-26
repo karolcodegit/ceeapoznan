@@ -24,122 +24,109 @@ const Book = ({
   price,
   publisher,
   covertype,
-  // ean,
   printOnDemand,
   additionalInformation,
   available,
   reprint,
   stockQuantity,
 }) => {
+  const inStock = available && stockQuantity > 0
+
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row py-10 md:py-20 border-b last-of-type:border-none">
-      {/* Obrazek */}
-      <div className="flex flex-col lg:flex-row flex-1 items-center md:items-start">
-        <div className="mb-6 md:mb-0">
-          <div className="mb-6 md:mb-0">
-            {image?.fluid?.src ? (
-              <img
-                className="object-cover rounded-lg w-48 sm:w-64 md:w-72 lg:w-96 h-auto"
-                src={image.fluid.src}
-                alt={title}
-              />
-            ) : (
-              <img
-                className="object-cover rounded-lg w-48 sm:w-64 md:w-72 lg:w-96 h-auto"
-                src={svgFallback}
-                alt={title}
-              />
-            )}
-          </div>
+    <article className="mx-auto flex max-w-screen-xl flex-col gap-6 py-6 sm:gap-8 sm:py-8 lg:flex-row lg:items-start lg:gap-8 lg:py-10">
+      <div className="flex min-w-0 flex-1 flex-col gap-5 sm:flex-row sm:gap-6 lg:gap-8">
+        <div className="mx-auto shrink-0 sm:mx-0">
+          <img
+            className="h-auto w-40 rounded-xl object-cover shadow-sm sm:w-48 md:w-56 lg:w-64"
+            src={image?.fluid?.src || svgFallback}
+            alt={title}
+            loading="lazy"
+          />
         </div>
-        {/* Informacje o produkcie */}
-        <div className="lg:px-10 w-full dark:text-gray-200">
-          {/* Dostępność i tytuł */}
-          <div className="flex space-x-4 align-middle items-center mb-10">
+
+        <div className="min-w-0 flex-1 text-slate-800 dark:text-slate-100">
+          <div className="mb-4 flex flex-wrap gap-2">
             <span
-              className={`self-start px-4 py-2 text-xs sm:text-sm font-semibold rounded-full ${
-                available && stockQuantity > 0
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
+              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                inStock
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-200"
+                  : "bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-200"
               }`}
             >
-              {/* {available ? "Dostępny" : "Niedostępny"} */}
-              {available && stockQuantity > 0 ? "Dostępny" : "Niedostępny"}
+              {inStock ? "Dostępny" : "Niedostępny"}
             </span>
-            {available && stockQuantity > 0 && (
-              <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-200">
+            {inStock && (
+              <span className="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-800 dark:border-sky-700 dark:bg-sky-900/40 dark:text-sky-200">
                 Dostępność – {stockQuantity} szt.
               </span>
             )}
             {reprint && (
-              <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-sky-900 rounded-full">
+              <span className="inline-flex items-center rounded-full bg-[#002C7C] px-3 py-1 text-xs font-semibold text-white">
                 W dodruku
               </span>
             )}
-
             {printOnDemand && (
-              <span className="self-start px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-red-500 rounded-full">
+              <span className="inline-flex items-center rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white">
                 Na żądanie
               </span>
             )}
           </div>
-          <div className="flex flex-col space-y-4">
-            <Title tag="h4" className="text-lg sm:text-xl font-semibold">
-              {title}
-            </Title>
-            <div className="text-sm sm:text-base">
-              <span className="dark:text-gray-400">Autor:</span>{" "}
-              <span className="font-medium">red. {editor}</span>
-            </div>
-          </div>
 
-          {/* Separator */}
-          <div className="border-t my-6"></div>
+          <Title
+            tag="h4"
+            className="text-lg font-semibold text-[#002C7C] dark:text-sky-300 sm:text-xl"
+          >
+            {title}
+          </Title>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 sm:text-base">
+            <span className="text-slate-500 dark:text-slate-400">Autor:</span>{" "}
+            <span className="font-medium">red. {editor}</span>
+          </p>
 
-          {/* Szczegóły produktu */}
-          <div className="space-y-4 text-sm sm:text-base">
-            <div className="flex justify-between">
-              <span className="dark:text-gray-400">Wydawca:</span>
-              <span className="font-bold">{publisher}</span>
+          <div className="my-5 border-t border-slate-200 dark:border-slate-700" />
+
+          <dl className="space-y-2.5 text-sm sm:text-base">
+            <div className="flex justify-between gap-4">
+              <dt className="text-slate-500 dark:text-slate-400">Wydawca:</dt>
+              <dd className="text-right font-semibold">{publisher}</dd>
             </div>
-            <div className="flex justify-between">
-              <span className="dark:text-gray-400">Rok wydania:</span>
-              <span className="font-bold">{year}</span>
+            <div className="flex justify-between gap-4">
+              <dt className="text-slate-500 dark:text-slate-400">
+                Rok wydania:
+              </dt>
+              <dd className="text-right font-semibold">{year}</dd>
             </div>
-            <div className="flex justify-between">
-              <span className="dark:text-gray-400">Typ okładki:</span>
-              <span className="font-bold">{covertype}</span>
+            <div className="flex justify-between gap-4">
+              <dt className="text-slate-500 dark:text-slate-400">
+                Typ okładki:
+              </dt>
+              <dd className="text-right font-semibold">{covertype}</dd>
             </div>
-            {/* Jeśli dodamy EAN */}
-            {/* <div className="flex justify-between">
-              <span className="dark:text-gray-400">EAN:</span>
-              <span className="font-bold">{ean}</span>
-            </div> */}
-            {additionalInformation && (
-              <div className="mt-6 space-y-4">
-                <span className="dark:text-gray-400">
-                  Dodatkowe informacje:
-                </span>
-                <div className="text-sm sm:text-base">
-                  <MarkdownText text={additionalInformation} />
-                </div>
+          </dl>
+
+          {additionalInformation && (
+            <div className="mt-5 space-y-2">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Dodatkowe informacje:
+              </p>
+              <div className="text-sm sm:text-base">
+                <MarkdownText text={additionalInformation} />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Informacje o dostawie */}
-      <div className="mt-8 md:mt-0 md:ml-8 flex-shrink-0">
+      <div className="w-full shrink-0 lg:w-72 xl:w-80">
         <DeliveryInfo
           price={price}
-          available={available && stockQuantity > 0}
+          available={inStock}
           title={title}
           originalId={originalId}
           image={image}
         />
       </div>
-    </div>
+    </article>
   )
 }
 

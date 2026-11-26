@@ -1,40 +1,46 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useId, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-// import { Tooltip } from "react-tooltip"
 import {
-  // ClockIcon,
+  ChevronDownIcon,
   CurrencyDollarIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline"
-import Button from "../Button/Button"
 import DeliveryModal from "../Modal/DeliveryModal"
-// import { slugify } from "../../utils/slugify"
 import { addItem } from "../../store/checkout/checkoutSlice"
 import { toast } from "sonner"
 import Form from "../Form/Form"
 import FormField from "../Form/FormField/FormField"
 import { handleNotificationSubmit } from "../../utils/handlerNotificationSubmit"
 import { updateBookInfo } from "../../store/notificationBook/notificationSlice"
-import { selectBookById } from "../../store/notificationBook/notificationBook"; // Import selektora
+import { selectBookById } from "../../store/notificationBook/notificationBook"
 
-
+const API_ENDPOINT =
+  "https://notificationbook-559160331745.us-central1.run.app"
 
 const DeliveryInfo = ({
   price,
   available,
   title,
-  className,
+  className = "",
   originalId,
   image,
 }) => {
   const dispatch = useDispatch()
+  const formData = useSelector(state => selectBookById(state, originalId))
+  const formRef = useRef(null)
+  const panelId = useId()
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
 
-  const formData = useSelector((state) => selectBookById(state, originalId));
-
-
-
-  // const formData = useSelector((state) => state.notificationBook.books[originalId] || {}); // Pobierz dane dla konkretnej książki
+  useEffect(() => {
+    dispatch(
+      updateBookInfo({
+        id: originalId,
+        bookInfo: { title, price, image },
+      })
+    )
+  }, [title, originalId, price, image, dispatch])
 
   const handleAddToCart = () => {
     dispatch(
@@ -42,151 +48,189 @@ const DeliveryInfo = ({
         productId: originalId,
         title,
         price,
-        image: image?.fluid?.src || image?.url || image || null,  // ← zawsze string URL
+        image: image?.fluid?.src || image?.url || image || null,
         quantity: 1,
       })
     )
     toast.success("Dodano do koszyka")
   }
-  
 
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isOrderBooksOpen, setIsOrderBooksOpen] = useState(false)
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-  const closeContactModal = () => {
-    setIsOrderBooksOpen(false)
+  const handleSubmitOverride = async e => {
+    e.preventDefault()
+    const localFormData = { email: formData?.email || "" }
+    const bookInfo = { title, originalId, price, image }
+    await handleNotificationSubmit(
+      localFormData,
+      bookInfo,
+      API_ENDPOINT,
+      dispatch
+    )
   }
 
-  const openContactModal = () => {
-    setIsOrderBooksOpen(true)
-  }
+  const priceLabel = (
+    <div className="min-w-0">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        Nasza cena
+      </p>
+      <p className="text-xl font-extrabold leading-tight text-[#0C6478] dark:text-sky-300 sm:text-2xl">
+        {price}{" "}
+        <span className="text-base font-bold text-[#002C7C] dark:text-sky-200">
+          zł
+        </span>
+      </p>
+      <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        + koszty przesyłki
+      </p>
+    </div>
+  )
 
-  const formRef = useRef(null)
+  const shippingButton = (
+    <button
+      type="button"
+      onClick={() => setIsModalOpen(true)}
+      className="inline-flex min-h-11 w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-medium text-[#002C7C] transition hover:border-[#0C6478]/40 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:border-slate-600 dark:bg-slate-900 dark:text-sky-200 dark:hover:bg-slate-800"
+    >
+      <CurrencyDollarIcon
+        className="h-5 w-5 shrink-0 text-[#0C6478] dark:text-sky-400"
+        aria-hidden="true"
+      />
+      <span>Sprawdź koszt dostawy</span>
+    </button>
+  )
 
-  const apiEndpoint =
-    "https://notificationbook-559160331745.us-central1.run.app"
-    
-    useEffect(() => {
-      dispatch(updateBookInfo({ id: originalId, bookInfo: { title, price, image } })); // Zapisz dane książki w Redux
-    }, [title, originalId, price, image, dispatch]);
+  const notifyForm = (
+    <div className="space-y-3">
+      <p className="text-sm leading-snug text-slate-600 dark:text-slate-300">
+        Podaj e-mail, a damy znać, gdy książka wróci do sprzedaży.
+      </p>
+      <Form
+        ref={formRef}
+        submitButtonText="Powiadom mnie"
+        formSliceKey="notificationBook"
+        notificationMessage="Formularz został wysłany!"
+        requiredFields={[]}
+        apiEndpoint={API_ENDPOINT}
+        onSubmitOverride={handleSubmitOverride}
+        variant="notify"
+        addToButton="mt-2"
+        padding="py-3"
+        className="flex w-full flex-col"
+      >
+        <FormField
+          type="email"
+          name="email"
+          formSliceKey="notificationBook"
+          placeholder="Twój e-mail"
+          id={originalId}
+          margin="mt-0"
+        />
+      </Form>
+    </div>
+  )
 
-    const handleSubmitOverride = async (e) => {
-      e.preventDefault();
-      const localFormData = {
-        email: formData.email || "",
-      };
-    
-      const bookInfo = {
-        title,
-        originalId,
-        price,
-        image,
-      };
-      await handleNotificationSubmit(localFormData, bookInfo,  apiEndpoint, dispatch);
-    };
+  const primaryCta = available ? (
+    <button
+      type="button"
+      onClick={handleAddToCart}
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002C7C] px-4 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:bg-sky-600 dark:hover:bg-sky-500"
+    >
+      <ShoppingCartIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+      Do koszyka
+    </button>
+  ) : (
+    <button
+      type="button"
+      aria-expanded={detailsOpen}
+      aria-controls={panelId}
+      onClick={() => setDetailsOpen(open => !open)}
+      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#E8A317] to-[#d4890f] px-4 text-sm font-bold text-white transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478]"
+    >
+      {detailsOpen ? "Zwiń" : "Powiadom mnie"}
+      <ChevronDownIcon
+        className={`h-4 w-4 transition ${detailsOpen ? "rotate-180" : ""}`}
+        aria-hidden="true"
+      />
+    </button>
+  )
+
   return (
     <>
       <div
-  className={`${className} mt-10 md:mt-0 
-    bg-sky-50 dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-700 
-    dark:text-gray-100 rounded-2xl shadow-xl 
-    flex flex-col self-start w-full md:w-auto max-w-xs md:max-w-full 
-    mx-auto overflow-hidden z-10 transition-all duration-300`}
->
-  {/* Sekcja nagłówka */}
-  <div className="py-8 px-6 md:text-center 
-    bg-white dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-800 
-    border-b border-gray-200 dark:border-slate-600">
-    <span className="font-bold text-lg text-gray-800 dark:text-gray-300">
-      Nasza cena:
-    </span>
-    <span className="font-bold text-4xl text-darkBlueGreen dark:text-[#7fa8db] ml-2">
-      {price} zł
-    </span>
-    <div>
-      <span className="font-bold text-sm text-darkBlueGreen dark:text-[#7fa8db] ml-2 flex justify-end">
-        + koszty przesyłki
-      </span>
-    </div>
-  </div>
+        className={`${className} w-full max-w-sm md:sticky md:top-24`}
+      >
+        {/* Mobile: compact bar */}
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:hidden">
+          <div className="flex items-center gap-3 p-3">
+            {priceLabel}
+            <div className="w-[9.5rem] shrink-0 space-y-2">
+              {primaryCta}
+              {available && (
+                <button
+                  type="button"
+                  aria-expanded={detailsOpen}
+                  aria-controls={panelId}
+                  onClick={() => setDetailsOpen(open => !open)}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-full border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  Dostawa
+                  <ChevronDownIcon
+                    className={`h-4 w-4 transition ${
+                      detailsOpen ? "rotate-180" : ""
+                    }`}
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
+            </div>
+          </div>
 
-  {/* Sekcja kosztów dostawy */}
-  <div className="border-t border-gray-200 dark:border-slate-700 
-    p-5 flex items-center 
-    hover:bg-gray-100 dark:hover:bg-slate-700/70 
-    transition duration-300 bg-white dark:bg-slate-800/60">
-    <CurrencyDollarIcon
-      className="h-6 w-6 text-gray-800 dark:text-gray-400 flex-shrink-0"
-      aria-hidden="true"
-    />
-    <span
-      onClick={openModal}
-      className="font-normal text-sm pl-4 cursor-pointer hover:text-darkBlueGreen dark:hover:text-[#9ebae4] transition-colors"
-    >
-      Sprawdź koszt dostawy
-    </span>
-  </div>
+          <div
+            id={panelId}
+            hidden={!detailsOpen}
+            className="border-t border-slate-200 px-3 pb-3 pt-3 dark:border-slate-700"
+          >
+            <div className="space-y-3">
+              {shippingButton}
+              {!available && notifyForm}
+              {available && (
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Dostawa paczkomatem lub kurierem InPost.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
 
-  {/* Sekcja przycisku lub formularza */}
-  {available ? (
-    <Button
-      onClick={handleAddToCart}
-      className="font-normal text-sm pl-4 mt-1"
-      variant="default"
-      margines="mt-0"
-    >
-      <div className="flex items-center px-1 py-2 gap-4 text-gray-50 rounded-md">
-        <ShoppingCartIcon
-          className="h-6 w-6 flex-shrink-0"
-          aria-hidden="true"
-        />
-        <span>Dodaj do koszyka</span>
+        {/* Desktop: compact card */}
+        <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:block">
+          <div className="border-b border-slate-100 px-4 py-4 dark:border-slate-700">
+            {priceLabel}
+          </div>
+          <div className="space-y-3 p-4">
+            {shippingButton}
+            {available ? (
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002C7C] px-4 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:bg-sky-600 dark:hover:bg-sky-500"
+              >
+                <ShoppingCartIcon
+                  className="h-5 w-5 shrink-0"
+                  aria-hidden="true"
+                />
+                Dodaj do koszyka
+              </button>
+            ) : (
+              notifyForm
+            )}
+          </div>
+        </div>
       </div>
-    </Button>
-  ) : (
-    <>
-      <div className="border-t border-gray-200 dark:border-slate-700 
-        flex flex-col items-center gap-4 py-5 px-8 mx-auto 
-        w-full max-w-[280px] justify-center bg-white dark:bg-slate-800/50">
-        <span className="text-gray-700 font-medium text-center text-sm dark:text-gray-200">
-          Podaj swój e-mail, aby otrzymać powiadomienie o dostępności:
-        </span>
-        <Form
-          ref={formRef}
-          submitButtonText="Powiadom mnie"
-          formSliceKey="notificationBook"
-          notificationMessage="Formularz został wysłany!"
-          requiredFields={[]}
-          apiEndpoint={apiEndpoint}
-          onSubmitOverride={handleSubmitOverride}
-          variant="notify"
-          addToButton="mt-3"
-          padding="py-3"
-          className="flex flex-col items-center w-full"
-        >
-          <FormField
-            type="email"
-            name="email"
-            formSliceKey="notificationBook"
-            placeholder="Twój e-mail"
-            id={originalId}
-            margin="mt-0"
-          />
-        </Form>
-      </div>
-    </>
-  )}
-</div>
 
-      <DeliveryModal isOpen={isModalOpen} closeModal={closeModal} />
-      {/* <OrderBooks isOpen={isOrderBooksOpen} closeModal={closeContactModal} /> */}
+      <DeliveryModal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+      />
     </>
   )
 }
