@@ -82,8 +82,8 @@ const Faq2 = () => {
         )}
 
         {!loading && !error && (
-          <div className="grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-4 lg:sticky lg:top-28 lg:self-start">
               <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
                 Nie znalazłeś odpowiedzi?
               </h2>

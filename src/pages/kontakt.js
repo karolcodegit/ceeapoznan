@@ -12,18 +12,28 @@ import {
   withReducedMotion,
 } from "../utils/motionVariants"
 
-const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
+const API_URL = (process.env.GATSBY_REGISTER_ENDPOINT || "")
+  .trim()
+  .replace(/^['"]|['"]$/g, "")
 
 const Contact2 = () => {
   const reduceMotion = useReducedMotion()
   const fadeUp = withReducedMotion(fadeUpBase, reduceMotion)
   const stagger = withReducedMotion(staggerContainer, reduceMotion)
+
   const [company, setCompany] = useState(null)
   const [employees, setEmployees] = useState([])
+  const [peopleStatus, setPeopleStatus] = useState("loading") // loading | ready | error
+  const [companyStatus, setCompanyStatus] = useState("loading")
 
   useEffect(() => {
     let cancelled = false
-    if (!API_URL) return undefined
+
+    if (!API_URL) {
+      setPeopleStatus("error")
+      setCompanyStatus("error")
+      return undefined
+    }
 
     fetch(`${API_URL}/company`)
       .then(r => {
@@ -31,19 +41,44 @@ const Contact2 = () => {
         return r.json()
       })
       .then(({ company: data }) => {
-        if (!cancelled) setCompany(data)
+        if (cancelled) return
+        setCompany(data || null)
+        setCompanyStatus("ready")
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) {
+          setCompany(null)
+          setCompanyStatus("error")
+        }
+      })
 
-    fetch(`${API_URL}/employees?role=Administracja`)
+    fetch(`${API_URL}/employees?role=${encodeURIComponent("Administracja")}`)
       .then(r => {
         if (!r.ok) throw new Error("employees")
         return r.json()
       })
-      .then(({ employees: list }) => {
-        if (!cancelled) setEmployees(list || [])
+      .then(payload => {
+        if (cancelled) return
+        const list = Array.isArray(payload?.employees)
+          ? payload.employees
+          : Array.isArray(payload)
+            ? payload
+            : []
+        const admin = list
+          .filter(e => !e?.role || e.role === "Administracja")
+          .slice()
+          .sort(
+            (a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999)
+          )
+        setEmployees(admin)
+        setPeopleStatus("ready")
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) {
+          setEmployees([])
+          setPeopleStatus("error")
+        }
+      })
 
     return () => {
       cancelled = true
@@ -51,7 +86,7 @@ const Contact2 = () => {
   }, [])
 
   return (
-    <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
+    <div className="w-full bg-white text-slate-900 dark:bg-slate-950 dark:text-gray-100">
       <PageHeroV2
         title="Kontakt"
         subtitle="Jesteśmy do Twojej dyspozycji"
@@ -70,35 +105,65 @@ const Contact2 = () => {
         }
       />
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.12 }}
           variants={stagger}
-          className="grid gap-10 lg:grid-cols-12"
+          className="grid gap-8 lg:grid-cols-12 lg:gap-10"
         >
           <motion.div variants={fadeUp} className="lg:col-span-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+            <h2 className="text-2xl font-bold text-[#002C7C] dark:text-sky-300 sm:text-3xl">
               Skontaktuj się z nami
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
-              Jeżeli nurtują Cię jakiekolwiek wątpliwości, z radością odpowiemy
-              na Twoje pytania.
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
+              Administracja ośrodka — telefon, e-mail i osoby do kontaktu w
+              sprawach organizacyjnych.
             </p>
           </motion.div>
+
           <motion.div
             variants={stagger}
-            className="grid gap-5 sm:grid-cols-2 lg:col-span-8"
+            className="grid gap-3 sm:grid-cols-2 lg:col-span-8"
           >
+            {peopleStatus === "loading" && (
+              <p
+                className="text-sm text-slate-500 dark:text-slate-400 sm:col-span-2"
+                role="status"
+              >
+                Ładowanie osób kontaktowych…
+              </p>
+            )}
+            {peopleStatus === "error" && (
+              <p
+                className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-200 sm:col-span-2"
+                role="alert"
+              >
+                Nie udało się pobrać listy osób. Spróbuj odświeżyć stronę lub
+                napisz na{" "}
+                <a
+                  className="font-semibold underline underline-offset-2"
+                  href="mailto:sekretariat@ceea.org.pl"
+                >
+                  sekretariat@ceea.org.pl
+                </a>
+                .
+              </p>
+            )}
+            {peopleStatus === "ready" && employees.length === 0 && (
+              <p className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300 sm:col-span-2">
+                Brak osób z roli Administracja w katalogu. Skorzystaj z
+                formularza poniżej lub napisz na sekretariat@ceea.org.pl.
+              </p>
+            )}
             {employees.map((employee, index) => (
               <motion.div
-                key={`${employee.surname}-${index}`}
+                key={`${employee.email || employee.surname}-${index}`}
                 variants={fadeUp}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-900"
               >
                 <ContactBox
-                  name={`${employee.name} ${employee.surname}`}
+                  name={`${employee.name || ""} ${employee.surname || ""}`.trim()}
                   phone={employee.phone}
                   secondPhone={employee.second_phone}
                   email={employee.email}
@@ -106,76 +171,72 @@ const Contact2 = () => {
                 />
               </motion.div>
             ))}
-            {employees.length === 0 && (
-              <p className="text-slate-500 dark:text-slate-400 sm:col-span-2">
-                Ładowanie danych kontaktowych…
-              </p>
-            )}
           </motion.div>
         </motion.div>
       </section>
 
-      <section className="bg-slate-100 dark:bg-slate-900/80 py-12 sm:py-16">
+      <section className="bg-slate-100 py-10 dark:bg-slate-900/80 sm:py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.12 }}
             variants={stagger}
-            className="grid gap-10 lg:grid-cols-12"
+            className="grid gap-8 lg:grid-cols-12 lg:gap-10"
           >
             <motion.div variants={fadeUp} className="lg:col-span-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+              <h2 className="text-2xl font-bold text-[#002C7C] dark:text-sky-300 sm:text-3xl">
                 {company?.name_company || "Dane fundacji"}
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                 Adres korespondencyjny oraz dane rejestrowe ośrodka.
               </p>
+              {companyStatus === "error" && (
+                <p className="mt-3 text-sm text-rose-700 dark:text-rose-300" role="alert">
+                  Nie udało się odświeżyć danych fundacji.
+                </p>
+              )}
             </motion.div>
             <motion.div
-              variants={stagger}
-              className="grid gap-5 sm:grid-cols-2 lg:col-span-8"
+              variants={fadeUp}
+              className="grid gap-3 sm:grid-cols-2 lg:col-span-8"
             >
-              <motion.div
-                variants={fadeUp}
-                className="rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
-              >
-                <ContactBox
-                  place={`${company?.street || ""} ${
-                    company?.number_home || ""
-                  }`}
-                  place2={`${company?.zip_code || ""} ${company?.city || ""}`}
-                  email={company?.email}
-                />
-              </motion.div>
-              <motion.div
-                variants={fadeUp}
-                className="rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
-              >
-                <ContactBox
-                  name={company?.name_company}
-                  account={company?.bank_account}
-                  regon={company?.regon}
-                  nip={company?.nip}
-                  krs={company?.krs}
-                />
-              </motion.div>
+              <ContactBox
+                place={`${company?.street || ""} ${company?.number_home || ""}`.trim()}
+                place2={`${company?.zip_code || ""} ${company?.city || ""}`.trim()}
+                email={company?.email}
+              />
+              <ContactBox
+                name={company?.name_company}
+                account={company?.bank_account}
+                regon={company?.regon}
+                nip={company?.nip}
+                krs={company?.krs}
+              />
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="mb-8 max-w-2xl">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
-            Formularz kontaktowy
-          </h2>
-          <p className="mt-3 text-slate-600 dark:text-slate-300">
-            Wyślij wiadomość — odezwiemy się na wskazany adres e-mail.
-          </p>
-        </div>
-        <div className="rounded-3xl border border-slate-200 bg-[#F7F4EF] p-4 sm:p-8 dark:border-slate-700 dark:bg-slate-900">
-          <ContactForm />
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-sky-50/80 to-[#F7F4EF] shadow-sm dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+          <div className="grid lg:grid-cols-12">
+            <div className="border-b border-slate-200/80 px-5 py-6 sm:px-8 sm:py-8 lg:col-span-4 lg:border-b-0 lg:border-r dark:border-slate-700">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#0C6478] dark:text-sky-400">
+                Napisz do nas
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-[#002C7C] dark:text-sky-300 sm:text-3xl">
+                Formularz kontaktowy
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                Odpowiemy na wskazany adres e-mail. Pola oznaczone gwiazdką są
+                wymagane.
+              </p>
+            </div>
+            <div className="px-5 py-6 sm:px-8 sm:py-8 lg:col-span-8">
+              <ContactForm />
+            </div>
+          </div>
         </div>
       </section>
     </div>
