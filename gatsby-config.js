@@ -45,6 +45,10 @@ module.exports = {
             name: `Roboto`,
             file: `https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap`,
           },
+          {
+            name: `Syne`,
+            file: `https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&display=swap`,
+          },
         ],
       },
     },

@@ -110,23 +110,34 @@ const HeroParallax = ({
         className="relative z-10 mx-auto flex min-h-[88vh] sm:min-h-[92vh] lg:min-h-[100vh] max-w-7xl flex-col justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24"
         style={{ opacity: opacityFade }}
       >
-        <motion.p
-          className="mb-6 whitespace-nowrap font-extrabold tracking-tight text-[1.65rem] leading-none sm:text-4xl lg:text-5xl xl:text-6xl"
-          style={{ y: yMid }}
-          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+        <motion.div
+          className="mb-7 flex gap-3.5 sm:mb-9 sm:gap-4"
+          style={{
+            y: yMid,
+            fontFamily: '"Syne", "Montserrat", system-ui, sans-serif',
+          }}
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          transition={{ duration: 0.65, ease: "easeOut" }}
           aria-label="CEEA – Ośrodek Poznański"
         >
-          <span className="text-[#88C8EB]">C</span>
-          <span className="text-[#47AEE6]">E</span>
-          <span className="text-[#7EC8EB]">E</span>
-          <span className="text-white">A</span>
-          <span className="mx-2 text-white/75 sm:mx-2.5" aria-hidden="true">
-            –
-          </span>
-          <span className="text-white">Ośrodek Poznański</span>
-        </motion.p>
+          <span
+            className="mt-1 w-0.5 shrink-0 self-stretch rounded-full bg-gradient-to-b from-[#E8A317] via-[#7EC8EB]/55 to-transparent"
+            aria-hidden="true"
+          />
+          <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <span className="text-[2.65rem] font-semibold leading-none tracking-[0.14em] text-white sm:text-5xl lg:text-6xl xl:text-[4.1rem]">
+              CEEA
+            </span>
+            <span
+              className="hidden h-8 w-px shrink-0 bg-white/25 sm:block lg:h-10"
+              aria-hidden="true"
+            />
+            <span className="text-[0.68rem] font-medium uppercase leading-relaxed tracking-[0.3em] text-[#B8D9EC]/90 sm:text-xs lg:text-[0.8rem] lg:tracking-[0.34em]">
+              Ośrodek Poznański
+            </span>
+          </div>
+        </motion.div>
 
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
           <motion.div
