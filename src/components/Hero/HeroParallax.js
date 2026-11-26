@@ -17,6 +17,7 @@ const HeroParallax = ({
   websiteRegister,
   defaultImage,
   coursesPath = "/kursy/",
+  coursesReady = false,
 }) => {
   const reduceMotion = useReducedMotion()
   const { scrollY } = useScroll()
@@ -40,17 +41,31 @@ const HeroParallax = ({
     return () => window.removeEventListener("mousemove", onMove)
   }, [reduceMotion])
 
-  const title = currentCourse?.title || "Centrum Edukacji CEEA"
-  const dateLabel = currentCourse?.date_label
-    ? `Data kursu: ${currentCourse.date_label}`
-    : "Nowa edycja kursów CEEA już wkrótce!"
-  const description =
-    currentCourse?.home_description ||
-    "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."
+  // Dopóki dane niepewne — nie pokazuj fallbacku „nieaktywny”, tylko skeleton
+  const showCourseUi = coursesReady && !!currentCourse
+  const title = showCourseUi
+    ? currentCourse.title
+    : coursesReady
+      ? "Centrum Edukacji CEEA"
+      : null
+  const dateLabel = showCourseUi
+    ? currentCourse.date_label
+      ? `Data kursu: ${currentCourse.date_label}`
+      : null
+    : coursesReady
+      ? "Nowa edycja kursów CEEA już wkrótce!"
+      : null
+  const description = showCourseUi
+    ? currentCourse.home_description ||
+      "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."
+    : coursesReady
+      ? "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."
+      : null
 
-  const courseImg = currentCourse?.image_url
-    ? cld(currentCourse.image_url, 1400)
-    : null
+  const courseImg =
+    showCourseUi && currentCourse?.image_url
+      ? cld(currentCourse.image_url, 1400)
+      : null
   const fallback = getImage(defaultImage)
 
   return (
@@ -147,53 +162,72 @@ const HeroParallax = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {currentCourse?.available && (
-              <span className="mb-4 inline-flex rounded-full bg-[#00C896] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
-                Kurs już dostępny
-              </span>
-            )}
+            {!coursesReady ? (
+              <div className="space-y-4" aria-busy="true" aria-live="polite">
+                <div className="h-6 w-36 animate-pulse rounded-full bg-white/20" />
+                <div className="h-10 w-[92%] max-w-xl animate-pulse rounded-lg bg-white/15 sm:h-12" />
+                <div className="h-5 w-48 animate-pulse rounded bg-white/15" />
+                <div className="h-16 w-full max-w-xl animate-pulse rounded-lg bg-white/10" />
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <div className="h-12 w-44 animate-pulse rounded-full bg-white/20" />
+                  <div className="h-12 w-40 animate-pulse rounded-full bg-white/10" />
+                </div>
+              </div>
+            ) : (
+              <>
+                {currentCourse?.available && (
+                  <span className="mb-4 inline-flex rounded-full bg-[#00C896] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
+                    Kurs już dostępny
+                  </span>
+                )}
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] xl:text-5xl font-extrabold leading-[1.12] drop-shadow-lg">
-              {title}
-            </h1>
-            <p className="mt-4 text-base sm:text-lg font-semibold text-sky-100/95">
-              {dateLabel}
-            </p>
-            <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
-              {description}
-            </p>
+                <h1 className="text-3xl sm:text-4xl lg:text-[2.85rem] xl:text-5xl font-extrabold leading-[1.12] drop-shadow-lg">
+                  {title}
+                </h1>
+                {dateLabel && (
+                  <p className="mt-4 text-base sm:text-lg font-semibold text-sky-100/95">
+                    {dateLabel}
+                  </p>
+                )}
+                {description && (
+                  <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
+                    {description}
+                  </p>
+                )}
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              {currentCourse && (
-                <Link
-                  to={websiteRegister}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0077FF] to-[#00C6FF] px-7 py-3.5 text-base font-bold text-white shadow-[0_12px_40px_rgba(0,119,255,0.45)] transition hover:shadow-[0_16px_48px_rgba(0,119,255,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00C6FF]"
-                >
-                  Zapisz się na kurs
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="h-5 w-5"
-                    aria-hidden="true"
+                <div className="mt-8 flex flex-wrap gap-3">
+                  {currentCourse?.available && (
+                    <Link
+                      to={websiteRegister}
+                      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#0077FF] to-[#00C6FF] px-7 py-3.5 text-base font-bold text-white shadow-[0_12px_40px_rgba(0,119,255,0.45)] transition hover:shadow-[0_16px_48px_rgba(0,119,255,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00C6FF]"
+                    >
+                      Zapisz się na kurs
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="h-5 w-5"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 12h14m-7-7 7 7-7 7"
+                        />
+                      </svg>
+                    </Link>
+                  )}
+                  <Link
+                    to={coursesPath}
+                    className="inline-flex items-center rounded-full border border-white/35 px-6 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-7-7 7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              )}
-              <Link
-                to={coursesPath}
-                className="inline-flex items-center rounded-full border border-white/35 px-6 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
-              >
-                Przeglądaj ofertę
-              </Link>
-            </div>
+                    Przeglądaj ofertę
+                  </Link>
+                </div>
+              </>
+            )}
           </motion.div>
 
           <motion.div
@@ -208,11 +242,11 @@ const HeroParallax = ({
               style={{ perspective: "1200px" }}
             >
               <div
-                className="absolute -inset-6 rounded-[2.75rem] bg-gradient-to-br from-[#0077FF]/25 via-[#00C896]/15 to-[#E8A317]/20 blur-2xl"
+                className="absolute -inset-6 rounded-[2.75rem] bg-gradient-to-br from-[#0077FF]/25 via-[#00C896]/15 to-[#E8A317]/20 blur-2xl "
                 aria-hidden="true"
               />
               <div
-                className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] border border-white/15 shadow-2xl shadow-black/50 transition-transform duration-300 ease-out will-change-transform"
+                className="relative overflow-hidden rounded-[1.75rem] sm:rounded-[2.25rem] border border-white/15 shadow-2xl shadow-black/50 transition-transform duration-300 ease-out will-change-transform max-lg:hidden"
                 style={{
                   transform: reduceMotion
                     ? undefined
@@ -224,14 +258,14 @@ const HeroParallax = ({
                   <img
                     src={courseImg}
                     alt={title}
-                    className="aspect-[4/3] w-full object-cover"
+                    className="aspect-[4/3] w-full object-cover max-lg:hidden"
                     loading="eager"
                   />
                 ) : fallback ? (
                   <GatsbyImage
                     image={fallback}
                     alt={title}
-                    className="aspect-[4/3] w-full"
+                    className="aspect-[4/3] w-full max-lg:hidden"
                     imgClassName="object-cover"
                   />
                 ) : null}

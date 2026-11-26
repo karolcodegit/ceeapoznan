@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Link } from "gatsby"
-import { apiGet } from "../../utils/api"
 import { Squash as Hamburger } from "hamburger-react"
 import { Dialog } from "@headlessui/react"
 import {
@@ -19,6 +18,7 @@ import Logo from "../../assets/images/logo-header.png"
 import { menuLinks } from "../Menu"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
+import { useHomeCourses } from "../../context/HomeCoursesContext"
 
 const linkIcons = {
   "Strona główna": HomeIcon,
@@ -31,19 +31,8 @@ const linkIcons = {
 }
 
 const Header = () => {
-  const [activeCourse, setActiveCourse] = useState(null)
+  const { activeCourse, ready: coursesReady } = useHomeCourses()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-    apiGet("/courses?scope=home")
-      .then(j => {
-        if (cancelled) return
-        setActiveCourse((j.courses || []).find(c => c.available === true) || null)
-      })
-      .catch(() => {})
-    return () => { cancelled = true }
-  }, [])
 
   const handleClick = () => {
     if (mobileMenuOpen) {
@@ -60,6 +49,9 @@ const Header = () => {
   const courseRegistrationPath = activeCourse
     ? `/kursy/${getYearFromDate(activeCourse.start_date || activeCourse.date_label)}/${slugify(activeCourse.title)}/rejestracja`
     : "#"
+
+  const showCourseCta = coursesReady && !!activeCourse
+  const showCourseCtaSkeleton = !coursesReady
 
   const allMenuLinks = [
     ...menuLinks,
@@ -116,8 +108,16 @@ const Header = () => {
               ))}
             </div>
 
-            {/* CTA */}
-            {activeCourse && (
+            {/* CTA — skeleton póki dane kursu niepewne (bez flasha available) */}
+            {showCourseCtaSkeleton && (
+              <div
+                className="flex-shrink-0 px-6 xl:px-8 h-full 2xl:flex hidden items-center border-l border-white/10 dark:border-slate-700/50"
+                aria-hidden="true"
+              >
+                <div className="h-11 w-44 animate-pulse rounded-lg bg-white/20" />
+              </div>
+            )}
+            {showCourseCta && (
               <div className="flex-shrink-0 px-6 xl:px-8 h-full 2xl:flex hidden items-center border-l border-white/10 dark:border-slate-700/50">
                 <Button
                   margines="mt-0"
@@ -228,7 +228,7 @@ const Header = () => {
               })}
             </div>
 
-            {activeCourse && (
+            {showCourseCta && (
               <div className="mt-4 pt-4 border-t border-white/10">
                 <Link
                   to={courseDetailsPath}
@@ -244,7 +244,7 @@ const Header = () => {
             )}
           </div>
 
-          {activeCourse && (
+          {showCourseCta && (
             <div className="flex-shrink-0 p-6 border-t border-white/10 bg-gradient-to-t from-black/20 to-transparent">
               <Link
                 to={courseRegistrationPath}

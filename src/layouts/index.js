@@ -9,6 +9,7 @@ import TopHeader from "../components/TopHeader/TopHeader"
 import PageEnter from "../components/Motion/PageEnter"
 import { FontSizeContext } from "../context/fontSizeContext"
 import TitleContext from "../context/TitleContext"
+import { HomeCoursesProvider } from "../context/HomeCoursesContext"
 import { menuLinks, otherLinks, przydatneLinki } from "../components/Menu"
 import { SunIcon, MoonIcon } from "@heroicons/react/24/outline"
 import Cart from "../components/Shop/Cart"
@@ -79,13 +80,14 @@ const MainLayout = ({ children }) => {
         <ThemeProvider theme={theme}>
           <TitleContext.Provider value={{ title, setTitle }}>
             <FontSizeContext.Provider value={{ fontSize, setFontSize }}>
-              <Header />
-              <Toaster richColors position="top-right" closeButton />
-              <div className={`bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 ${isHomePage ? "" : "pt-20 lg:pt-24"}`}>
-                <div className="flex flex-col items-end justify-end relative">
-                  <button
-                    onClick={toggleDarkMode}
-                    className="fixed top-40 right-3 sm:top-48 sm:right-4 md:top-60 md:right-6 bg-gradient-to-r from-custom-blue to-navyBlue hover:from-blue-600 hover:to-blue-800
+              <HomeCoursesProvider>
+                <Header />
+                <Toaster richColors position="top-right" closeButton />
+                <div className={`bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 ${isHomePage ? "" : "pt-20 lg:pt-24"}`}>
+                  <div className="flex flex-col items-end justify-end relative">
+                    <button
+                      onClick={toggleDarkMode}
+                      className="fixed top-40 right-3 sm:top-48 sm:right-4 md:top-60 md:right-6 bg-gradient-to-r from-custom-blue to-navyBlue hover:from-blue-600 hover:to-blue-800
 text-white font-medium
 p-3 sm:p-4
 rounded-full shadow-lg
@@ -93,23 +95,23 @@ flex items-center justify-center
 z-50
 transition-all duration-300 transform hover:scale-105
 focus:ring-4 focus:ring-blue-300 focus:outline-none"
-                    aria-label="Toggle dark mode"
-                  >
-                    {darkMode ? (
-                      <SunIcon
-                        className="h-5 w-5 sm:h-6 sm:w-6"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <MoonIcon
-                        className="h-5 w-5 sm:h-6 sm:w-6"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </button>
-                  <Cart />
-                </div>
-                <div
+                      aria-label="Toggle dark mode"
+                    >
+                      {darkMode ? (
+                        <SunIcon
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <MoonIcon
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                    <Cart />
+                  </div>
+                  <div
     id="top"
     className={`${
       isHomePage
@@ -117,12 +119,13 @@ focus:ring-4 focus:ring-blue-300 focus:outline-none"
         : "max-w-6xl pb-12 sm:pb-20 lg:pb-28 mx-auto px-4 sm:px-6 lg:px-8"
     }`}
   >
-                  {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
-                  {!isHomePage && !is404Page && <TopHeader />}
-                  <PageEnter>{children}</PageEnter>
+                    {/* Renderuj TopHeader tylko jeśli to nie jest strona 404 */}
+                    {!isHomePage && !is404Page && <TopHeader />}
+                    <PageEnter>{children}</PageEnter>
+                  </div>
                 </div>
-              </div>
-              <Footer />
+                <Footer />
+              </HomeCoursesProvider>
             </FontSizeContext.Provider>
           </TitleContext.Provider>
         </ThemeProvider>

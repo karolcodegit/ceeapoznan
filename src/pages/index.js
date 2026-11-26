@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect, Suspense } from "react"
+import { Suspense } from "react"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { graphql } from "gatsby"
 import Seo from "../components/seo"
@@ -8,6 +8,7 @@ import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
 import HeroParallax from "../components/Hero/HeroParallax"
+import { useHomeCourses } from "../context/HomeCoursesContext"
 const SponsorsSection = React.lazy(() =>
   import("../components/Sponsors/SponsorsSection")
 )
@@ -16,8 +17,6 @@ const cld = (url, w) =>
   url && url.includes("res.cloudinary.com")
     ? url.replace("/upload/", `/upload/w_${w},q_auto,f_auto/`)
     : url
-
-const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const HERITAGE = [
   {
@@ -74,31 +73,12 @@ const WHY_ITEMS = [
 ]
 
 const Home2Page = ({ data }) => {
-  const [courses, setCourses] = useState([])
+  const {
+    courses,
+    activeCourse: currentCourse,
+    ready: coursesReady,
+  } = useHomeCourses()
 
-  useEffect(() => {
-    let cancelled = false
-    const start = () =>
-      fetch(`${API_URL}/courses?scope=home`)
-        .then(r => {
-          if (!r.ok) throw new Error("courses")
-          return r.json()
-        })
-        .then(({ courses }) => {
-          if (!cancelled) setCourses(courses || [])
-        })
-        .catch(() => {})
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(start, { timeout: 2500 })
-    } else {
-      setTimeout(start, 800)
-    }
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  const currentCourse = courses.find(c => c.available === true)
   const futureCourses = courses.filter(c => c.is_next === true).slice(0, 3)
 
   const regCourse = currentCourse || courses[0]
@@ -122,7 +102,7 @@ const Home2Page = ({ data }) => {
           currentCourse={currentCourse}
           websiteRegister={websiteRegister}
           defaultImage={data.defaultImage}
-          
+          coursesReady={coursesReady}
         />
 
         {/* Heritage strip */}
@@ -234,8 +214,8 @@ const Home2Page = ({ data }) => {
           </div>
         </section>
 
-        {/* Pas CTA */}
-        {currentCourse?.available && (
+        {/* Pas CTA — tylko gdy dane kursu pewne */}
+        {coursesReady && currentCourse?.available && (
           <section className="relative overflow-hidden px-4 py-16 sm:py-20 text-center text-white">
             <div
               className="absolute inset-0"
@@ -265,7 +245,9 @@ const Home2Page = ({ data }) => {
           <SponsorsSection />
         </Suspense>
 
-        {currentCourse?.available && !!currentCourse?.info_description && (
+        {coursesReady &&
+          currentCourse?.available &&
+          !!currentCourse?.info_description && (
           <section className="relative overflow-hidden bg-[#F7F4EF] py-16 sm:py-24 text-center dark:bg-slate-900">
             <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
               <h2 className="mb-8 text-3xl font-bold text-[#002C7C] dark:text-sky-300">
