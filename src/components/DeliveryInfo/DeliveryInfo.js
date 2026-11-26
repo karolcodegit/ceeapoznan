@@ -67,18 +67,18 @@ const DeliveryInfo = ({
     )
   }
 
-  const priceLabel = (
-    <div className="min-w-0 flex-1 pr-2">
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300 sm:text-sm">
+  const priceBlock = (
+    <div className="min-w-0">
+      <p className="whitespace-nowrap text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300 sm:text-sm">
         Nasza cena
       </p>
-      <p className="mt-0.5 text-3xl font-black leading-none tracking-tight text-[#0C6478] dark:text-sky-300 sm:text-4xl">
+      <p className="mt-1 whitespace-nowrap text-3xl font-black leading-none tracking-tight text-[#0C6478] dark:text-sky-300 sm:text-4xl">
         {price}
         <span className="ml-1 text-xl font-extrabold text-[#002C7C] dark:text-sky-200 sm:text-2xl">
           zł
         </span>
       </p>
-      <p className="mt-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+      <p className="mt-1.5 whitespace-nowrap text-sm font-medium text-slate-500 dark:text-slate-400">
         + koszty przesyłki
       </p>
     </div>
@@ -128,7 +128,7 @@ const DeliveryInfo = ({
     </div>
   )
 
-  const primaryCta = available ? (
+  const addToCartButton = (
     <button
       type="button"
       onClick={handleAddToCart}
@@ -137,7 +137,9 @@ const DeliveryInfo = ({
       <ShoppingCartIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
       Do koszyka
     </button>
-  ) : (
+  )
+
+  const notifyToggle = (
     <button
       type="button"
       aria-expanded={detailsOpen}
@@ -155,39 +157,35 @@ const DeliveryInfo = ({
 
   return (
     <>
-      <div
-        className={`${className} w-full max-w-sm md:sticky md:top-24`}
-      >
-        {/* Mobile: compact bar */}
+      <div className={`${className} w-full max-w-sm md:sticky md:top-24`}>
+        {/* Mobile / tablet (< md): cena → CTA poniżej → dostawa rozwijana */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:hidden">
-          <div className="flex items-center justify-between gap-3 p-3.5">
-            {priceLabel}
-            <div className="ml-auto w-[10rem] shrink-0 space-y-2 self-center">
-              {primaryCta}
-              {available && (
-                <button
-                  type="button"
-                  aria-expanded={detailsOpen}
-                  aria-controls={panelId}
-                  onClick={() => setDetailsOpen(open => !open)}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-full border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
-                >
-                  Dostawa
-                  <ChevronDownIcon
-                    className={`h-4 w-4 transition ${
-                      detailsOpen ? "rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
-                </button>
-              )}
-            </div>
+          <div className="space-y-3 p-3.5">
+            {priceBlock}
+            {available ? addToCartButton : notifyToggle}
+            {available && (
+              <button
+                type="button"
+                aria-expanded={detailsOpen}
+                aria-controls={panelId}
+                onClick={() => setDetailsOpen(open => !open)}
+                className="inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
+              >
+                Dostawa
+                <ChevronDownIcon
+                  className={`h-4 w-4 transition ${
+                    detailsOpen ? "rotate-180" : ""
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            )}
           </div>
 
           <div
             id={panelId}
             hidden={!detailsOpen}
-            className="border-t border-slate-200 px-3 pb-3 pt-3 dark:border-slate-700"
+            className="border-t border-slate-200 px-3.5 pb-3.5 pt-3 dark:border-slate-700"
           >
             <div className="space-y-3">
               {shippingButton}
@@ -201,25 +199,11 @@ const DeliveryInfo = ({
           </div>
         </div>
 
-        {/* Desktop: cena lewa, CTA prawa; formularz poniżej gdy niedostępne */}
+        {/* Desktop (md+): cena → CTA poniżej → dostawa zawsze widoczna */}
         <div className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 md:block">
-          <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-4 py-5 dark:border-slate-700">
-            {priceLabel}
-            {available && (
-              <div className="ml-auto w-[11rem] shrink-0">
-                <button
-                  type="button"
-                  onClick={handleAddToCart}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#002C7C] px-4 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:bg-sky-600 dark:hover:bg-sky-500"
-                >
-                  <ShoppingCartIcon
-                    className="h-5 w-5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  Do koszyka
-                </button>
-              </div>
-            )}
+          <div className="space-y-4 border-b border-slate-100 px-4 py-5 dark:border-slate-700">
+            {priceBlock}
+            {available ? addToCartButton : null}
           </div>
           <div className="space-y-3 p-4">
             {shippingButton}
