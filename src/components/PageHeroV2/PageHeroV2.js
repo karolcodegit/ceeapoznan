@@ -37,14 +37,14 @@ const PageHeroV2 = ({
         aria-hidden="true"
       />
       <div
-        className="absolute -right-20 top-10 h-72 w-72 rounded-full bg-[#E8A317]/20 blur-3xl"
+        className="pointer-events-none absolute -right-20 top-10 h-72 w-72 rounded-full bg-[#E8A317]/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-[#00C896]/15 blur-3xl"
+        className="pointer-events-none absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-[#00C896]/15 blur-3xl"
         aria-hidden="true"
       />
-      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -94,7 +94,7 @@ const PageHeroV2 = ({
           )}
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+            className="break-words text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
           >
             {title}
           </motion.h1>

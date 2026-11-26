@@ -14,6 +14,10 @@ const Courses2 = () => {
 
   useEffect(() => {
     let cancelled = false
+    if (!API_URL) {
+      setCourses([])
+      return undefined
+    }
     fetch(`${API_URL}/courses?scope=home`)
       .then(r => {
         if (!r.ok) throw new Error("courses")

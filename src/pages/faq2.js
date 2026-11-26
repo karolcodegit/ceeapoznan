@@ -116,7 +116,7 @@ const Faq2 = () => {
                 <motion.div
                   key={index}
                   variants={fadeUp}
-                  className="rounded-2xl border border-slate-200 bg-slate-50 px-1 dark:border-slate-700 dark:bg-slate-900"
+                  className="break-words rounded-2xl border border-slate-200 bg-slate-50 px-2 sm:px-3 dark:border-slate-700 dark:bg-slate-900"
                 >
                   <FaqItem question={item.question} answer={item.answer} />
                 </motion.div>

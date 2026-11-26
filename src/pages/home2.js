@@ -103,7 +103,7 @@ const Home2Page = ({ data }) => {
 
   const regCourse = currentCourse || courses[0]
   const websiteRegister = regCourse
-    ? `/kursy/${getYearFromDate(
+    ? `/kursy2/${getYearFromDate(
         regCourse.start_date || regCourse.date_label
       )}/${slugify(regCourse.title)}/rejestracja`
     : "#"
@@ -117,16 +117,17 @@ const Home2Page = ({ data }) => {
 
   return (
     <>
-      <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
+      <div className="overflow-x-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
         <HeroParallax
           currentCourse={currentCourse}
           websiteRegister={websiteRegister}
           defaultImage={data.defaultImage}
+          coursesPath="/kursy2/"
         />
 
         {/* Heritage strip */}
         <section
-          className="bg-[#F7F4EF] dark:bg-slate-900 px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
+          className="overflow-x-hidden bg-[#F7F4EF] dark:bg-slate-900 px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
           aria-label="Ośrodek CEEA"
         >
           <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-3">
@@ -148,7 +149,7 @@ const Home2Page = ({ data }) => {
         </section>
 
         {/* Nadchodzące kursy — CSS 3D tilt */}
-        <section className="bg-slate-100 py-16 sm:py-24 dark:bg-slate-900">
+        <section className="overflow-x-hidden bg-slate-100 py-16 sm:py-24 dark:bg-slate-900">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
             <h2 className="mb-10 sm:mb-12 text-3xl sm:text-4xl font-bold text-[#002C7C] dark:text-sky-300">
               Nadchodzące kursy i szkolenia
@@ -274,7 +275,7 @@ const Home2Page = ({ data }) => {
                 {currentCourse.info_description}
               </p>
               <Link
-                to={`/kursy/${getYearFromDate(
+                to={`/kursy2/${getYearFromDate(
                   currentCourse.start_date || currentCourse.date_label
                 )}/${slugify(currentCourse.title)}/szczegoly`}
                 className="inline-flex items-center gap-2 rounded-full bg-[#016ABA] px-8 py-3 font-semibold text-white shadow-lg transition hover:bg-[#0157A1]"
@@ -411,8 +412,8 @@ const Home2Page = ({ data }) => {
                 zainteresowani nabyciem naszych książek, zapraszamy do kontaktu.
               </p>
               <Link
-                to="/ksiazki/"
-                className="mt-6 inline-flex rounded-full bg-[#0B1F3A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#002C7C]"
+                to="/ksiazki2/"
+                className="mt-6 inline-flex rounded-full bg-[#0B1F3A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#002C7C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
               >
                 Przejdź do książek
               </Link>

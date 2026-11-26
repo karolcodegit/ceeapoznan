@@ -75,7 +75,7 @@ const Koszyk2Page = () => {
           {items.map(item => (
             <li
               key={item.productId}
-              className="flex items-center gap-4 py-4"
+              className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:gap-4"
             >
               {item.image ? (
                 <BookCover
@@ -99,12 +99,12 @@ const Koszyk2Page = () => {
                     onClick={() =>
                       dispatch(decrementQuantity(item.productId))
                     }
-                    className="h-8 w-8 rounded-lg bg-slate-100 transition-colors hover:bg-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:bg-slate-700 dark:hover:bg-slate-600"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 transition-colors hover:bg-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] sm:h-9 sm:w-9 dark:bg-slate-700 dark:hover:bg-slate-600"
                     aria-label="Zmniejsz ilość"
                   >
                     −
                   </button>
-                  <span className="w-8 text-center text-slate-900 dark:text-slate-100">
+                  <span className="min-w-8 text-center text-slate-900 dark:text-slate-100">
                     {item.quantity}
                   </span>
                   <button
@@ -112,21 +112,21 @@ const Koszyk2Page = () => {
                     onClick={() =>
                       dispatch(incrementQuantity(item.productId))
                     }
-                    className="h-8 w-8 rounded-lg bg-slate-100 transition-colors hover:bg-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:bg-slate-700 dark:hover:bg-slate-600"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 transition-colors hover:bg-slate-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] sm:h-9 sm:w-9 dark:bg-slate-700 dark:hover:bg-slate-600"
                     aria-label="Zwiększ ilość"
                   >
                     +
                   </button>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="flex items-center justify-between gap-3 sm:block sm:text-right">
                 <p className="font-semibold text-slate-900 dark:text-slate-100">
                   {(item.price * item.quantity).toFixed(2)} zł
                 </p>
                 <button
                   type="button"
                   onClick={() => dispatch(removeFromCart(item.productId))}
-                  className="mt-1 text-xs text-rose-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] dark:text-rose-400"
+                  className="min-h-11 rounded-lg px-2 text-sm text-rose-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317] sm:mt-1 sm:min-h-0 sm:px-0 sm:text-xs dark:text-rose-400"
                 >
                   Usuń
                 </button>

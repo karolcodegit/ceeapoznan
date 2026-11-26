@@ -14,8 +14,6 @@ const SideInfoPanel = ({
   paymentFee = 0,
   basePath = "/kursy",
 }) => {
-  console.log(points);
-  
   const location = useLocation()
   const rejestraction = location.pathname.includes("/rejestracja")
   return (

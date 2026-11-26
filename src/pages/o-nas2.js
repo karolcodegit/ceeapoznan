@@ -141,7 +141,7 @@ const AboutUs2 = () => {
               <ol className="flex flex-wrap items-center gap-2 text-sm text-white/75">
                 <li>
                   <Link
-                    to="/"
+                    to="/home2/"
                     className="rounded-sm transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                   >
                     Strona główna
@@ -177,8 +177,8 @@ const AboutUs2 = () => {
             </motion.p>
             <motion.div variants={fadeInUp} className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/kursy/"
-                className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50"
+                to="/kursy2/"
+                className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
               >
                 Zobacz kursy
               </Link>
@@ -347,8 +347,8 @@ const AboutUs2 = () => {
             </p>
           </div>
           <Link
-            to="/kursy/"
-            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50"
+            to="/kursy2/"
+            className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
           >
             Przejdź do kursów
           </Link>

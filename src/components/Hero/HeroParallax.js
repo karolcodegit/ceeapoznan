@@ -16,6 +16,7 @@ const HeroParallax = ({
   currentCourse,
   websiteRegister,
   defaultImage,
+  coursesPath = "/kursy/",
 }) => {
   const reduceMotion = useReducedMotion()
   const { scrollY } = useScroll()
@@ -170,7 +171,7 @@ const HeroParallax = ({
                 </Link>
               )}
               <Link
-                to="/kursy/"
+                to={coursesPath}
                 className="inline-flex items-center rounded-full border border-white/35 px-6 py-3.5 text-base font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
               >
                 Przeglądaj ofertę

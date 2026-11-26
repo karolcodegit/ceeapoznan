@@ -62,8 +62,16 @@ const CONFIG = {
   },
 }
 
+function sanitizeOrder(raw) {
+  const value = String(raw || "").trim()
+  if (!/^[A-Za-z0-9._-]{1,64}$/.test(value)) return null
+  return value
+}
+
 const PlatnoscStatus2 = ({ location }) => {
-  const order = new URLSearchParams(location.search).get("order")
+  const order = sanitizeOrder(
+    new URLSearchParams(location.search).get("order")
+  )
   const [state, setState] = useState({ loading: true })
 
   useEffect(() => {

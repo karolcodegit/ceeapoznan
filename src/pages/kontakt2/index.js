@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
 import { motion } from "framer-motion"
 
-import ContactBox from "../components/ContactBox/ContactBox"
-import ContactForm from "../components/Form/ContactForm"
-import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
-import Seo from "../components/seo"
+import ContactBox from "../../components/ContactBox/ContactBox"
+import ContactForm from "../../components/Form/ContactForm"
+import PageHeroV2 from "../../components/PageHeroV2/PageHeroV2"
+import Seo from "../../components/seo"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
@@ -32,6 +32,7 @@ const Contact2 = () => {
 
   useEffect(() => {
     let cancelled = false
+    if (!API_URL) return undefined
 
     fetch(`${API_URL}/company`)
       .then(r => {
