@@ -14,7 +14,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid"
 import Button from "../Button/Button"
-import Logo from "../../assets/images/logo-header.png"
+import Logo from "../../assets/images/logo-header-color.png"
 import { menuLinks } from "../Menu"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
@@ -59,13 +59,13 @@ const Header = () => {
   ]
 
   return (
-    <header className="relative bg-medium h-28 shadow-sm shadow-slate-900/10 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:shadow-slate-800/60 transition-colors duration-500 z-50">
+    <header className="relative bg-gradient-to-r from-[#0a5566] via-[#127a86] to-[#1a6f88] h-28 shadow-sm shadow-slate-900/10 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 dark:shadow-slate-800/60 transition-colors duration-500 z-50">
       {/* =========================================================
           TRAPEZ — osobny, wyższy div (h-36) z wyśrodkowanym logo
           Wystaje w dół poza prostokąt (h-28)
           ========================================================= */}
       <div
-        className="absolute max-lg:hidden top-0 left-0 h-36 w-[400px] xl:w-[460px] 2xl:w-[520px] bg-blue-600 dark:bg-slate-800 flex items-center justify-center z-50"
+        className="absolute max-lg:hidden top-0 left-0 h-36 w-[400px] xl:w-[460px] 2xl:w-[520px] bg-gradient-to-br from-[#152a45] via-[#1e4a72] to-[#2a628f] dark:from-slate-900 dark:via-slate-800 dark:to-slate-700 flex items-center justify-center z-50"
         style={{ clipPath: "polygon(0 0, 80% 0, 100% 100%, 0% 100%)" }}
       >
         <Link to="/" className="flex items-center p-1.5">
@@ -177,7 +177,7 @@ const Header = () => {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-gradient-to-b from-cyan-600 via-cyan-700 to-blue-900 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 text-white shadow-2xl flex flex-col">
           <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 flex-shrink-0">
             <img
-              className="h-8 w-auto brightness-0 invert"
+              className="h-8 w-auto"
               src={Logo}
               alt="CEEA"
             />

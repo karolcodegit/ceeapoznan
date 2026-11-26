@@ -141,9 +141,16 @@ const HeroParallax = ({
             aria-hidden="true"
           />
           <div className="flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-            <span className="text-[2.65rem] font-semibold leading-none tracking-[0.14em] text-white sm:text-5xl lg:text-6xl xl:text-[4.1rem]">
-              CEEA
+            <span
+              className="text-[2.65rem] font-semibold leading-none tracking-[0.14em] sm:text-5xl lg:text-6xl xl:text-[4.1rem]"
+              aria-hidden="true"
+            >
+              <span className="text-[#7DD3FC]">C</span>
+              <span className="text-[#38BDF8]">E</span>
+              <span className="text-[#2DD4BF]">E</span>
+              <span className="text-[#FACC86]">A</span>
             </span>
+            <span className="sr-only">CEEA</span>
             <span
               className="hidden h-8 w-px shrink-0 bg-white/25 sm:block lg:h-10"
               aria-hidden="true"
@@ -176,7 +183,11 @@ const HeroParallax = ({
             ) : (
               <>
                 {currentCourse?.available && (
-                  <span className="mb-4 inline-flex rounded-full bg-[#00C896] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
+                  <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#5ec4a8]/35 bg-[#0c6478]/55 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#B8EBD9] shadow-sm shadow-black/20 backdrop-blur-sm">
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-[#5ec4a8]"
+                      aria-hidden="true"
+                    />
                     Kurs już dostępny
                   </span>
                 )}
