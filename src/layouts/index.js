@@ -15,13 +15,18 @@ import Cart from "../components/Shop/Cart"
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState("")
   const location = useLocation()
-  // full-bleed (bez TopHeader / max-w): home, home2, o-nas2
-  const isHomePage =
-    location.pathname === "/" ||
-    location.pathname === "/home2" ||
-    location.pathname === "/home2/" ||
-    location.pathname === "/o-nas2" ||
-    location.pathname === "/o-nas2/"
+  // full-bleed (bez TopHeader / max-w): home + warianty *2
+  const normalizedPath = (location.pathname || "/").replace(/\/+$/, "") || "/"
+  const isV2Page =
+    normalizedPath === "/home2" ||
+    normalizedPath === "/o-nas2" ||
+    normalizedPath === "/kursy2" ||
+    normalizedPath === "/kontakt2" ||
+    normalizedPath === "/faq2" ||
+    normalizedPath === "/ksiazki2" ||
+    normalizedPath === "/archiwum_kursow2" ||
+    normalizedPath === "/polityka-prywatnosci2"
+  const isHomePage = normalizedPath === "/" || isV2Page
   const currentPath = location.pathname
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
   const is404Page = !allLinks.some(link => link.to === currentPath)
