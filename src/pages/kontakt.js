@@ -123,10 +123,7 @@ const Contact2 = () => {
             </p>
           </motion.div>
 
-          <motion.div
-            variants={stagger}
-            className="grid gap-3 sm:grid-cols-2 lg:col-span-8"
-          >
+          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-8">
             {peopleStatus === "loading" && (
               <p
                 className="text-sm text-slate-500 dark:text-slate-400 sm:col-span-2"
@@ -158,20 +155,16 @@ const Contact2 = () => {
               </p>
             )}
             {employees.map((employee, index) => (
-              <motion.div
+              <ContactBox
                 key={`${employee.email || employee.surname}-${index}`}
-                variants={fadeUp}
-              >
-                <ContactBox
-                  name={`${employee.name || ""} ${employee.surname || ""}`.trim()}
-                  phone={employee.phone}
-                  secondPhone={employee.second_phone}
-                  email={employee.email}
-                  degree={employee.degree}
-                />
-              </motion.div>
+                name={`${employee.name || ""} ${employee.surname || ""}`.trim()}
+                phone={employee.phone}
+                secondPhone={employee.second_phone}
+                email={employee.email}
+                degree={employee.degree}
+              />
             ))}
-          </motion.div>
+          </div>
         </motion.div>
       </section>
 
@@ -199,7 +192,7 @@ const Contact2 = () => {
             </motion.div>
             <motion.div
               variants={fadeUp}
-              className="grid gap-3 sm:grid-cols-2 lg:col-span-8"
+              className="grid items-start gap-3 sm:grid-cols-2 lg:col-span-8"
             >
               <ContactBox
                 place={`${company?.street || ""} ${company?.number_home || ""}`.trim()}
