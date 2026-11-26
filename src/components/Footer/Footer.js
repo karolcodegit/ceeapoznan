@@ -10,7 +10,7 @@ import {
   AcademicCapIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid"
-import Logo from "../../assets/images/logo-header.png"
+import Logo from "../../assets/images/logo-header-color.png"
 import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
 import { slugify } from "../../utils/slugify"
@@ -75,7 +75,17 @@ const Footer = () => {
   const footerMenuLinks = [...menuLinks]
 
   return (
-    <footer className="relative bg-dark dark:bg-gradient-to-b dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-100 overflow-hidden transition-colors duration-500">
+    <footer className="relative bg-gradient-to-br from-[#152a45] via-[#1a4d6e] to-[#0a5566] dark:bg-gradient-to-b dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 text-gray-100 overflow-hidden transition-colors duration-500">
+      {/* Soft depth — jak header, bez płaskiej plamy */}
+      <div
+        className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-[#2a628f]/25 blur-3xl dark:bg-sky-900/20"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-16 bottom-10 h-64 w-64 rounded-full bg-[#127a86]/20 blur-3xl dark:bg-teal-900/15"
+        aria-hidden="true"
+      />
+
       {/* Wave */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
         <svg
@@ -102,21 +112,21 @@ const Footer = () => {
         </svg>
       </div>
 
-      <div className="relative pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-8">
+      <div className="relative pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-8 border-transparent">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Grid: 1 col → 2 cols → 12 cols */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-8">
 
             {/* Brand */}
-            <div className="lg:col-span-4 lg:pr-10 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+            <div className="lg:col-span-4 lg:pr-10 border-b border-white/15 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
               <Link to="/" className="inline-flex items-center gap-3 mb-5">
                 <img
-                  className="h-9 w-auto object-contain brightness-0 invert"
+                  className="h-9 w-auto object-contain"
                   src={Logo}
                   alt="CEEA - Ośrodek Poznański"
                 />
               </Link>
-              <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed mb-6">
+              <p className="text-slate-100/90 text-sm leading-relaxed mb-6">
                 {company?.description}
               </p>
 
@@ -147,8 +157,8 @@ const Footer = () => {
             </div>
 
             {/* Menu */}
-            <div className="lg:col-span-2 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+            <div className="lg:col-span-2 border-b border-white/15 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#7DD3FC] mb-5">
                 Menu
               </h3>
               <ul className="space-y-3">
@@ -157,7 +167,7 @@ const Footer = () => {
                     <Link
                       to={link.to}
                       onClick={e => handleClick(link.to, e)}
-                      className="block text-sm text-gray-300 hover:text-white transition-colors duration-200 py-0.5"
+                      className="block text-sm text-slate-100/90 hover:text-white transition-colors duration-200 py-0.5"
                     >
                       {link.title}
                     </Link>
@@ -167,8 +177,8 @@ const Footer = () => {
             </div>
 
             {/* Przydatne linki */}
-            <div className="lg:col-span-3 border-b border-white/10 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+            <div className="lg:col-span-3 border-b border-white/15 pb-8 mb-8 lg:border-0 lg:pb-0 lg:mb-0">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#7DD3FC] mb-5">
                 Przydatne linki
               </h3>
               <ul className="space-y-3">
@@ -183,8 +193,8 @@ const Footer = () => {
                         onClick={e => handleClick(link.to, e)}
                         className={`inline-flex items-center gap-2 text-sm transition-colors duration-200 py-0.5 ${
                           isStudent
-                            ? "text-amber-300 hover:text-amber-200 font-medium"
-                            : "text-gray-300 hover:text-white"
+                            ? "text-amber-200 hover:text-amber-100 font-medium"
+                            : "text-slate-100/90 hover:text-white"
                         }`}
                       >
                         {isStudent && (
@@ -201,7 +211,7 @@ const Footer = () => {
                       to={`/kursy/${getYearFromDate(
                         activeCourse.date
                       )}/${slugify(activeCourse.nameCourse)}/rejestracja`}
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-amber-300 hover:text-amber-200 transition-colors py-0.5"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-amber-200 hover:text-amber-100 transition-colors py-0.5"
                     >
                       <AcademicCapIcon className="w-4 h-4 flex-shrink-0" />
                       <span>Zapis na kurs</span>
@@ -213,20 +223,20 @@ const Footer = () => {
 
             {/* Kontakt */}
             <div className="lg:col-span-3">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300 mb-5">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#7DD3FC] mb-5">
                 Kontakt
               </h3>
-              <div className="space-y-4 text-sm text-gray-300 dark:text-gray-400">
+              <div className="space-y-4 text-sm text-slate-100/90">
                 <div className="flex items-start gap-3">
-                  <MapPinIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <MapPinIcon className="w-5 h-5 text-[#7DD3FC] flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-white text-sm leading-tight">
                       {company?.nameCompany || company?.name_company}
                     </p>
-                    <p className="text-sm mt-1">
+                    <p className="text-sm mt-1 text-slate-100/90">
                       {company?.street} {company?.number_home || company?.numberHome}
                     </p>
-                    <p className="text-sm">
+                    <p className="text-sm text-slate-100/90">
                       {company?.zip_code || company?.zipCode} {company?.city}
                     </p>
                   </div>
@@ -234,10 +244,10 @@ const Footer = () => {
 
                 {company?.email && (
                   <div className="flex items-center gap-3">
-                    <EnvelopeIcon className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                    <EnvelopeIcon className="w-5 h-5 text-[#7DD3FC] flex-shrink-0" />
                     <a
                       href={`mailto:${company.email}`}
-                      className="hover:text-white transition-colors text-sm"
+                      className="text-slate-100/90 hover:text-white transition-colors text-sm"
                     >
                       {company.email}
                     </a>
@@ -245,13 +255,13 @@ const Footer = () => {
                 )}
 
                 <div className="flex items-start gap-3 pt-1">
-                  <BuildingLibraryIcon className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <BuildingLibraryIcon className="w-5 h-5 text-[#7DD3FC] flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[11px] text-gray-400 mb-1 uppercase tracking-wide">
+                    <p className="text-[11px] text-slate-200/80 mb-1 uppercase tracking-wide">
                       {company?.bank_account_name || company?.bankAccountName}
                     </p>
                     <CopyToClipboardWithNotification text={company?.bank_account || company?.bankAccount}>
-                      <span className="inline-block font-mono text-xs bg-white/5 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors border border-white/5">
+                      <span className="inline-block font-mono text-xs text-white bg-white/10 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/15 transition-colors border border-white/15">
                         {company?.bank_account || company?.bankAccount}
                       </span>
                     </CopyToClipboardWithNotification>
@@ -262,31 +272,38 @@ const Footer = () => {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-12 pt-6 border-t border-white/10">
+          <div className="mt-12 pt-6 border-t border-white/15">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex flex-col sm:flex-row flex-wrap items-center sm:items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs text-gray-400">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center sm:items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-xs text-slate-200/85">
                 <span>
-                  © 2023 – {new Date().getFullYear()} CEEA. Wszelkie prawa zastrzeżone.
+                  © 2023 – {new Date().getFullYear()}{" "}
+                  <span className="font-semibold tracking-wide" aria-label="CEEA">
+                    <span className="text-[#7DD3FC]">C</span>
+                    <span className="text-[#38BDF8]">E</span>
+                    <span className="text-[#2DD4BF]">E</span>
+                    <span className="text-[#FACC86]">A</span>
+                  </span>
+                  . Wszelkie prawa zastrzeżone.
                 </span>
-                <span className="hidden sm:inline text-gray-600">|</span>
+                <span className="hidden sm:inline text-white/30">|</span>
                 <span className="flex gap-5">
-                  <Link to="/sitemap-index.xml" className="hover:text-white transition-colors">
+                  <Link to="/sitemap-index.xml" className="text-slate-100/90 hover:text-white transition-colors">
                     Sitemap
                   </Link>
-                  <span className="hidden sm:inline text-gray-600">|</span>
-                  <Link to="/polityka-prywatnosci" className="hover:text-white transition-colors">
+                  <span className="hidden sm:inline text-white/30">|</span>
+                  <Link to="/polityka-prywatnosci" className="text-slate-100/90 hover:text-white transition-colors">
                     Polityka prywatności
                   </Link>
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-gray-400">
+              <div className="flex items-center gap-2 text-xs text-slate-200/85">
                 <span className="whitespace-nowrap">Projekt i wykonanie:</span>
                 <a
                   href="https://karolznojkiewicz.pl"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:opacity-100 opacity-60 transition-opacity"
+                  className="hover:opacity-100 opacity-80 transition-opacity"
                 >
                   <StaticImage
                     alt="Karol Znojkiewicz"
