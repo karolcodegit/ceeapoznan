@@ -7,13 +7,11 @@ import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 import { motion } from "framer-motion"
 import { Link } from "gatsby"
+import HeroParallax from "../components/Hero/HeroParallax"
 const SponsorsSection = React.lazy(() =>
   import("../components/Sponsors/SponsorsSection")
 )
 
-// --- API ---
-
-// obrazy z Cloudinary w rozmiarze pod ekran (bez megabajtowych oryginałów)
 const cld = (url, w) =>
   url && url.includes("res.cloudinary.com")
     ? url.replace("/upload/", `/upload/w_${w},q_auto,f_auto/`)
@@ -21,19 +19,61 @@ const cld = (url, w) =>
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
-const IndexPage = ({ data }) => {
-  const image1 = data.allFile.edges.find(
-    edge => edge.node.name === "Collaborative_learning_environment"
-  )?.node?.childImageSharp?.fluid
+const HERITAGE = [
+  {
+    title: "Od 1995 roku",
+    text: "Pierwszy ośrodek CEEA w Polsce — ciągłość kształcenia ustawicznego.",
+  },
+  {
+    title: "Evidence Based Medicine",
+    text: "Aktualne wytyczne i rekomendacje uzupełnione doświadczeniem klinicznym.",
+  },
+  {
+    title: "Warsztaty praktyczne",
+    text: "Sesje teoretyczne i spotkania warsztatowe w programie każdego kursu.",
+  },
+]
 
-  const image2 = data.allFile.edges.find(
-    edge => edge.node.name === "rozwoj-umiejetnosci"
-  )?.node?.childImageSharp?.fluid
+const PROCESS_STEPS = [
+  {
+    n: "01",
+    accent: "#E8A317",
+    title: "Wykłady i dyskusja",
+    text: "Sesje z ekspertami i praktykami — konfrontacja doświadczeń w gronie lekarzy.",
+  },
+  {
+    n: "02",
+    accent: "#0077FF",
+    title: "Warsztat praktyczny",
+    text: "Aspekt praktyczny w programie (np. ultrasonografia) — ograniczona liczba miejsc.",
+  },
+  {
+    n: "03",
+    accent: "#00C896",
+    title: "Skrypt / książka",
+    text: "Podsumowanie kursu w pakiecie powitalnym — oferta także w sekcji Książki.",
+  },
+]
 
-  const image3 = data.allFile.edges.find(
-    edge => edge.node.name === "Creativity_and_innovation"
-  )?.node?.childImageSharp?.fluid
+const WHY_ITEMS = [
+  {
+    key: "Collaborative_learning_environment",
+    title: "Wymiana doświadczeń między praktykami i ekspertami",
+    desc: "Każdorazowo w kursach CEEA uczestniczy grono kilkudziesięciu lekarzy – znakomitych ekspertów, doświadczonych praktyków a także początkujących rezydentów. Podczas wielu sesji wykładowych wywiązują się interesujące dyskusje i konfrontacje różnych doświadczeń i punktów widzenia.",
+  },
+  {
+    key: "rozwoj-umiejetnosci",
+    title: "Aktualna wiedza medyczna oparta o EBM oraz doświadczenie",
+    desc: "Wierzymy, że u podstaw nowoczesnej anestezjologii i intensywnej terapii stoją dowody naukowe wskazujące na skuteczność naszego postępowania, dlatego przedstawiana wiedza opiera się na aktualnych wytycznych i rekomendacjach, uzupełniona praktycznymi wskazówkami budowanymi na latach doświadczeń klinicznych naszych wykładowców.",
+  },
+  {
+    key: "Creativity_and_innovation",
+    title: "Warsztaty praktyczne",
+    desc: "W programie bogatym w sesje teoretyczne musi znaleźć się miejsce na aspekt praktyczny. Podczas każdego kursu odbywa się spotkanie warsztatowe, np. poświęcone wykorzystaniu ultrasonografii w anestezji regionalnej wybranych okolic ciała. Z uwagi na ograniczone możliwości czasowe liczba miejsc na udział w warsztatach jest ograniczona.",
+  },
+]
 
+const Home2Page = ({ data }) => {
   const [courses, setCourses] = useState([])
 
   useEffect(() => {
@@ -68,509 +108,325 @@ const IndexPage = ({ data }) => {
       )}/${slugify(regCourse.title)}/rejestracja`
     : "#"
 
+  const homeImages = Object.fromEntries(
+    (data.allFile?.edges || []).map(({ node }) => [
+      node.name,
+      getImage(node.childImageSharp),
+    ])
+  )
+
   return (
     <>
-      <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
-        {/* === HERO SECTION === */}
-        <section className="relative w-full overflow-hidden min-h-[100vh] xl:min-h-[105vh] lg:min-h-[100vh] max-sm:min-h-[70vh] sm:min-h-[70vh] md:min-h-[80vh] bg-slate-900">
-          {/* 🔹 Tło: ZAWSZE gradient mesh (zdjęcie kursu jest tylko w karcie po prawej) */}
-          <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0b1120]">
-            {/* Gradient bazowy */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#0b1120] to-[#1e293b]" />
+      <div className="overflow-x-hidden bg-white dark:bg-slate-900 text-slate-900 dark:text-gray-100">
+        <HeroParallax
+          currentCourse={currentCourse}
+          websiteRegister={websiteRegister}
+          defaultImage={data.defaultImage}
+          
+        />
 
-            {/* Blob 1 - niebieski, pływa w lewo-górę */}
-            <div
-              className="absolute w-[800px] h-[800px] rounded-full opacity-40 blur-[140px] animate-pulse hero-blob"
-              style={{
-                background:
-                  "radial-gradient(circle, #0077FF 0%, transparent 70%)",
-                top: "-10%",
-                left: "-15%",
-                animation:
-                  "pulse 4s ease-in-out infinite, float 20s ease-in-out infinite",
-              }}
-            />
-
-            {/* Blob 2 - turkusowy, pływa w prawo-dół */}
-            <div
-              className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-[120px] animate-pulse hero-blob"
-              style={{
-                background:
-                  "radial-gradient(circle, #00C6FF 0%, transparent 70%)",
-                bottom: "-15%",
-                right: "-10%",
-                animation:
-                  "pulse 5s ease-in-out infinite, drift 25s ease-in-out infinite reverse",
-                animationDelay: "1s, 0s",
-              }}
-            />
-
-            {/* Blob 3 - zielony, pływa centralnie */}
-            <div
-              className="absolute w-[600px] h-[600px] rounded-full opacity-25 blur-[100px] animate-pulse hero-blob"
-              style={{
-                background:
-                  "radial-gradient(circle, #00C896 0%, transparent 70%)",
-                top: "40%",
-                left: "50%",
-                animation:
-                  "pulse 6s ease-in-out infinite, drift 22s ease-in-out infinite",
-                animationDelay: "2s, 0s",
-              }}
-            />
-
-            {/* Blob 4 - fioletowy akcent */}
-            <div
-              className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[110px] animate-pulse hero-blob"
-              style={{
-                background:
-                  "radial-gradient(circle, #6366f1 0%, transparent 70%)",
-                top: "20%",
-                right: "30%",
-                animation:
-                  "pulse 7s ease-in-out infinite, float 18s ease-in-out infinite",
-                animationDelay: "3s, 5s",
-              }}
-            />
-
-            {/* Center glow - subtelne światło w centrum */}
-            <div
-              className="absolute w-[400px] h-[400px] rounded-full opacity-20 blur-[80px] hero-blob"
-              style={{
-                background:
-                  "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                animation: "pulse-glow 8s ease-in-out infinite",
-              }}
-            />
-
-            {/* Siatka dla struktury */}
-            <div
-              className="absolute inset-0 opacity-[0.025]"
-              style={{
-                backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-                backgroundSize: "40px 40px",
-              }}
-            />
-
-            {/* Winietowanie - ciemniejsze brzegi */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%)",
-              }}
-            />
-          </div>
-
-          {/* 🔹 Overlay: lekki, bo gradient mesh jest ciemny z natury */}
-          <div className="absolute inset-0 w-full h-full bg-black/30" />
-          {/* Przyciemnienie góry pod menu */}
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent" />
-          {/* Fade na dół pod falę */}
-          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/40 to-transparent" />
-
-          {/* 🔹 Dekoracyjna fala SVG */}
-          <svg
-            className="absolute bottom-0 left-0 w-full"
-            viewBox="0 0 1430 300"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="headerWaveLight" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#F1F5F9" />
-                <stop offset="100%" stopColor="#F1F5F9" />
-              </linearGradient>
-              <linearGradient id="headerWaveDark" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stopColor="#10172A" />
-                <stop offset="100%" stopColor="#10172A" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M0,224L60,197.3C120,171,240,117,360,122.7C480,128,600,192,720,208C840,224,960,192,1080,197.3C1200,203,1320,245,1380,266.7L1440,288V320H0Z"
-              fill="url(#headerWaveLight)"
-              className="dark:fill-[url(#headerWaveDark)]"
-            />
-          </svg>
-
-          {/* 🔹 Zawartość */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 min-h-[90vh] flex items-center">
-            <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
-              {/* Lewa kolumna: tekst */}
-              <motion.div
-                className="lg:col-span-6 flex flex-col justify-center text-white space-y-6"
-                initial={{ opacity: 0, x: -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
+        {/* Heritage strip */}
+        <section
+          className="overflow-x-hidden bg-[#F7F4EF] dark:bg-slate-900 px-4 sm:px-6 lg:px-8 py-8 sm:py-10"
+          aria-label="Ośrodek CEEA"
+        >
+          <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-3">
+            {HERITAGE.map(item => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_12px_28px_rgba(11,31,58,0.08),0_2px_0_rgba(232,163,23,0.35)] dark:border-slate-700 dark:bg-slate-800 dark:shadow-none"
+                style={{ transform: "perspective(700px) rotateX(1.5deg)" }}
               >
-                {currentCourse?.available && (
-                  <div className="flex">
-                    <div className="inline-block bg-[#00C896] dark:bg-[#00A07A] text-white text-sm font-semibold tracking-wider uppercase py-2 px-4 rounded-full shadow-lg dark:shadow-xl transition-colors duration-300">
-                      Kurs już dostępny
-                    </div>
-                  </div>
-                )}
-
-                <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold leading-[1.1] drop-shadow-xl">
-                  {currentCourse?.title || "Centrum Edukacji CEEA"}
-                </h1>
-
-                <p className="text-xl text-gray-100 font-medium drop-shadow-md">
-                  {currentCourse?.date_label
-                    ? `Data kursu: ${currentCourse.date_label}`
-                    : "Nowa edycja kursów CEEA już wkrótce!"}
+                <h2 className="font-bold text-[#002C7C] dark:text-sky-300 text-base">
+                  {item.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {item.text}
                 </p>
-
-                <p className="text-gray-200 max-w-lg leading-relaxed text-lg drop-shadow-md">
-                  {currentCourse?.home_description ||
-                    "Dołącz do najnowszej edycji naszego kursu CEEA i rozwijaj swoje kompetencje w nowoczesny, praktyczny sposób. Wiedza, doświadczenie i inspiracja w jednym miejscu."}
-                </p>
-
-                {currentCourse && (
-                  <motion.div whileHover={{ scale: 1.05 }} className="pt-2">
-                    <Link
-                      to={websiteRegister}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#0077FF] to-[#00C6FF] text-white font-bold py-4 px-8 rounded-full shadow-[0_10px_40px_rgba(0,123,255,0.4)] hover:shadow-[0_15px_50px_rgba(0,123,255,0.6)] transition-all duration-300 text-lg dark:from-[#3fa7d6] dark:to-[#257ca3] dark:hover:from-[#257ca3] dark:hover:to-[#3fa7d6] dark:shadow-[#1e293b]/60"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 12h14m-7-7l7 7-7 7"
-                        />
-                      </svg>
-                      Zapisz się na kurs
-                    </Link>
-                  </motion.div>
-                )}
-              </motion.div>
-
-              {/* Prawa kolumna: obrazek kursu */}
-              <motion.div
-                className="lg:col-span-6 relative max-lg:hidden flex items-center justify-center"
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-              >
-                <div className="relative w-full max-w-2xl">
-                  <div className="absolute -inset-4 bg-gradient-to-r from-[#0077FF]/20 to-[#00C6FF]/20 rounded-[3rem] blur-2xl opacity-60" />
-
-                  <motion.div className="relative group">
-                    {currentCourse?.image_url ? (
-                      <img
-                        src={cld(currentCourse.image_url, 800)}
-                        alt={currentCourse.title || "CEEA kurs"}
-                        className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 w-full aspect-[4/3] object-cover"
-                      />
-                    ) : (
-                      <div className="rounded-[2.5rem] shadow-2xl shadow-black/40 border border-white/10 overflow-hidden aspect-[4/3] w-full">
-                        <GatsbyImage
-                          image={getImage(data.defaultImage)}
-                          alt="CEEA kurs"
-                          className="w-full h-full"
-                          imgClassName="object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-black/20 via-transparent to-transparent" />
-                    <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10" />
-                  </motion.div>
-                </div>
-              </motion.div>
-            </div>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* === NADCHODZĄCE KURSY === */}
-        <section className="py-24 bg-slate-100 dark:bg-slate-900">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold mb-12 text-[#002C7C] dark:text-sky-300">
+        {/* Nadchodzące kursy — CSS 3D tilt */}
+        <section className="overflow-x-hidden bg-slate-100 py-16 sm:py-24 dark:bg-slate-900">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
+            <h2 className="mb-10 sm:mb-12 text-3xl sm:text-4xl font-bold text-[#002C7C] dark:text-sky-300">
               Nadchodzące kursy i szkolenia
             </h2>
             <div
-              className={`
-                grid gap-10
-                ${
-                  futureCourses.length === 1
-                    ? "grid-cols-1 max-w-xl mx-auto"
-                    : futureCourses.length === 2
-                    ? "md:grid-cols-2 sm:grid-cols-1 justify-items-center"
-                    : "md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-1"
-                }
-              `}
+              className={`grid gap-8 ${
+                futureCourses.length === 1
+                  ? "grid-cols-1 max-w-xl mx-auto"
+                  : futureCourses.length === 2
+                  ? "md:grid-cols-2"
+                  : "md:grid-cols-2 lg:grid-cols-3"
+              }`}
+              style={{ perspective: "1000px" }}
             >
               {futureCourses.map((course, i) => (
-                <motion.div
+                <motion.article
                   key={course.course_id}
-                  className="bg-white dark:bg-slate-700 rounded-3xl shadow-lg hover:shadow-2xl w-full overflow-hidden"
-                  initial={{ opacity: 0, y: 50 }}
+                  className="group w-full overflow-hidden rounded-3xl bg-white text-left shadow-lg transition duration-300 hover:-translate-y-2 hover:shadow-2xl dark:bg-slate-800"
+                  style={{ transformStyle: "preserve-3d" }}
+                  initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: i * 0.15,
-                    ease: "easeOut",
-                  }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.55, delay: i * 0.12 }}
+                  whileHover={{ rotateY: -3 }}
                 >
                   {course.image_url ? (
                     <img
                       src={cld(course.image_url, 600)}
                       alt={course.title}
-                      className="rounded-t-3xl h-56 w-full object-cover"
+                      className="h-52 w-full object-cover sm:h-56"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="rounded-t-3xl h-56 w-full bg-gradient-to-br from-[#016ABA] to-[#00C6FF] flex items-center justify-center">
+                    <div className="flex h-52 w-full items-center justify-center bg-gradient-to-br from-[#016ABA] to-[#00C896] sm:h-56">
                       <span className="text-5xl font-bold text-white">
                         {(course.title || "C").charAt(0)}
                       </span>
                     </div>
                   )}
-                  <div className="p-6 text-left">
-                    <h3 className="h-16 text-xl font-semibold text-[#016ABA] dark:text-sky-400 mb-3 line-clamp-2">
+                  <div className="p-5 sm:p-6">
+                    <h3 className="mb-4 min-h-[3rem] text-xl font-semibold text-[#016ABA] dark:text-sky-400 line-clamp-2">
                       {course.title}
                     </h3>
-                    <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                      <li className="flex items-center">
-                        <span className="text-lg px-2">#️⃣</span>
-                        <span>
-                          Numer kursu:{" "}
-                          <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.course_number ?? "Brak numeru"}
-                          </span>
-                        </span>
-                      </li>
-                      <li className="flex items-center">
-                        <span className="text-lg px-2">📅</span>
-                        <span>
-                          Data:{" "}
-                          <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.date_label || "Data wkrótce"}
-                          </span>
-                        </span>
-                      </li>
-                      <li className="flex items-center">
-                        <span className="text-lg px-2">🌐</span>
-                        <span>
-                          Język:{" "}
-                          <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.language === "en" ? "EN" : "PL"}
-                          </span>
-                        </span>
-                      </li>
-                      <li className="flex items-center">
-                        <span className="text-lg px-2">🖥</span>
-                        <span>
-                          Tryb:{" "}
-                          <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {course?.is_online ? "Online" : "Stacjonarny"}
-                          </span>
-                        </span>
-                      </li>
-                    </ul>
+                    <dl className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                      <div>
+                        <dt className="inline font-semibold text-[#0B1F3A] dark:text-sky-200">
+                          Numer:
+                        </dt>{" "}
+                        <dd className="inline">
+                          {course?.course_number ?? "Brak numeru"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="inline font-semibold text-[#0B1F3A] dark:text-sky-200">
+                          Data:
+                        </dt>{" "}
+                        <dd className="inline">
+                          {course?.date_label || "Data wkrótce"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="inline font-semibold text-[#0B1F3A] dark:text-sky-200">
+                          Język:
+                        </dt>{" "}
+                        <dd className="inline">
+                          {course?.language === "en" ? "EN" : "PL"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="inline font-semibold text-[#0B1F3A] dark:text-sky-200">
+                          Tryb:
+                        </dt>{" "}
+                        <dd className="inline">
+                          {course?.is_online ? "Online" : "Stacjonarny"}
+                        </dd>
+                      </div>
+                    </dl>
                   </div>
-                </motion.div>
+                </motion.article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* === KRÓTKA INFORMACJA O NADCHODZĄCYM KURSIE === */}
+        {/* Pas CTA */}
         {currentCourse?.available && (
-          <section className="bg-[#016ABA] dark:bg-sky-900 py-20 text-white">
-            <div className="max-w-6xl mx-auto text-center px-6">
-              <motion.h2
-                className="text-3xl font-bold mb-4"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-              >
-                Kurs już dostępny
-              </motion.h2>
-
-              <motion.p
-                className="text-lg mb-6"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-              >
+          <section className="relative overflow-hidden px-4 py-16 sm:py-20 text-center text-white">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 18% 30%, rgba(232,163,23,0.28), transparent 42%), radial-gradient(circle at 88% 70%, rgba(0,200,150,0.28), transparent 45%), linear-gradient(120deg, #0b1f3a 0%, #0c6478 55%, #023e8a 100%)",
+              }}
+              aria-hidden="true"
+            />
+            <div className="relative mx-auto max-w-3xl">
+              <h2 className="text-3xl font-bold">Kurs już dostępny</h2>
+              <p className="mt-4 text-lg text-white/90">
                 Rejestracja otwarta! Zdobądź praktyczną wiedzę, doświadczenie i
                 certyfikat CEEA.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+              </p>
+              <Link
+                to={websiteRegister}
+                className="mt-8 inline-flex rounded-xl bg-white px-8 py-3.5 font-semibold text-[#016ABA] shadow-[0_12px_30px_rgba(0,0,0,0.28),0_0_0_1px_rgba(232,163,23,0.4)] transition hover:scale-[1.03]"
               >
-                <Link
-                  to={websiteRegister}
-                  className="bg-white text-[#016ABA] font-semibold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition"
-                >
-                  Zarejestruj się teraz
-                </Link>
-              </motion.div>
+                Zarejestruj się teraz
+              </Link>
             </div>
           </section>
         )}
 
-        {/* === SPONSORZY === */}
         <Suspense fallback={null}>
           <SponsorsSection />
         </Suspense>
 
         {currentCourse?.available && !!currentCourse?.info_description && (
-          <section className="relative py-24 bg-gradient-to-b from-[#F0F8FF] via-[#E8F1FF] to-white dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 text-center overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(2,132,199,0.15),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(14,165,233,0.15),transparent_70%)]"></div>
-
-            <div className="relative max-w-5xl mx-auto px-6">
-              <motion.h2
-                className="text-3xl font-bold mb-12 text-[#002C7C] dark:text-sky-300"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-              >
+          <section className="relative overflow-hidden bg-[#F7F4EF] py-16 sm:py-24 text-center dark:bg-slate-900">
+            <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
+              <h2 className="mb-8 text-3xl font-bold text-[#002C7C] dark:text-sky-300">
                 Dodatkowe informacje o kursie
-              </motion.h2>
-
-              <motion.p
-                className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-              >
+              </h2>
+              <p className="mb-8 text-lg leading-relaxed text-slate-700 dark:text-slate-300">
                 {currentCourse.info_description}
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+              </p>
+              <Link
+                to={`/kursy/${getYearFromDate(
+                  currentCourse.start_date || currentCourse.date_label
+                )}/${slugify(currentCourse.title)}/szczegoly`}
+                className="inline-flex items-center gap-2 rounded-full bg-[#016ABA] px-8 py-3 font-semibold text-white shadow-lg transition hover:bg-[#0157A1]"
               >
-                <Link
-                  to={`/kursy/${getYearFromDate(
-                    currentCourse.start_date || currentCourse.date_label
-                  )}/${slugify(currentCourse.title)}/szczegoly`}
-                  className="inline-flex items-center gap-2 bg-[#016ABA] hover:bg-[#0157A1] text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Przejdź do strony kursu
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 12h14m-7-7l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </motion.div>
+                Przejdź do strony kursu
+              </Link>
             </div>
           </section>
         )}
 
-        {/* === DLACZEGO WARTO === */}
-        <section className="py-24 bg-sky-50 dark:bg-gradient-to-b dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <motion.h2
-              className="text-4xl font-bold mb-4 text-[#002C7C] dark:text-sky-400"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6 }}
+        {/* Jak wygląda kurs */}
+        <section className="bg-white py-16 sm:py-24 dark:bg-slate-950">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <h2 className="text-center text-3xl sm:text-4xl font-bold text-[#002C7C] dark:text-sky-300">
+              Jak wygląda kurs CEEA
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600 dark:text-slate-300">
+              Trzy warstwy programu — układ istniejącego charakteru szkoleń.
+            </p>
+            <div
+              className="mt-12 grid gap-6 md:grid-cols-3"
+              style={{ perspective: "1100px" }}
             >
-              Dlaczego warto wziąć udział w kursach CEEA?
-            </motion.h2>
-
-            <motion.span
-              className="text-darkBlueGreen dark:text-sky-300 block max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-            >
-              Jesteśmy pierwszym w Polsce ośrodkiem CEEA, który od 1995 roku
-              wyszkolił dziesiątki polskich anestezjologów.
-            </motion.span>
-
-            <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-10 mt-16">
-              {[
-                {
-                  icon: "🤝",
-                  title: "Wymiana doświadczeń między praktykami i ekspertami",
-                  desc: "Każdorazowo w kursach CEEA uczestniczy grono kilkudziesięciu lekarzy – znakomitych ekspertów, doświadczonych praktyków a także początkujących rezydentów. Podczas wielu sesji wykładowych wywiązują się interesujące dyskusje i konfrontacje różnych doświadczeń i punktów widzenia.",
-                },
-                {
-                  icon: "💡",
-                  title:
-                    "Aktualna wiedza medyczna oparta o EBM oraz doświadczenie",
-                  desc: "Wierzymy, że u podstaw nowoczesnej anestezjologii i intensywnej terapii stoją dowody naukowe wskazujące na skuteczność naszego postępowania, dlatego przedstawiana wiedza opiera się na aktualnych wytycznych i rekomendacjach, uzupełniona praktycznymi wskazówkami budowanymi na latach doświadczeń klinicznych naszych wykładowców.",
-                },
-                {
-                  icon: "🎓",
-                  title: "Warsztaty praktyczne",
-                  desc: "W programie bogatym w sesje teoretycznym musi znaleźć się miejsce na aspekt praktyczny. Podczas każdego kursu odbywa się spotkanie warsztatowe, np. poświęcone wykorzystaniu ultrasonografii w anestezji regionalnej wybranych okolic ciała. Z uwagi na ograniczone możliwości czasowe liczba miejsc na udział w warsztatach jest ograniczona.",
-                },
-              ].map((item, i) => (
+              {PROCESS_STEPS.map((step, i) => (
                 <motion.div
-                  key={i}
-                  className="bg-white dark:bg-slate-800/70 backdrop-blur-sm p-10 rounded-3xl shadow-lg  transform hover:-translate-y-2 transition-all duration-300 border border-slate-200 dark:border-slate-700"
-                  initial={{ opacity: 0, y: 0 }}
+                  key={step.n}
+                  className="rounded-2xl border border-slate-200 bg-[#F7F4EF] p-6 sm:p-7 dark:border-slate-700 dark:bg-slate-900"
+                  style={{
+                    borderTop: `3px solid ${step.accent}`,
+                    boxShadow:
+                      i === 1
+                        ? "-8px 20px 0 rgba(11,31,58,0.06), 0 22px 40px rgba(11,31,58,0.1)"
+                        : "-12px 16px 0 rgba(11,31,58,0.05), 0 18px 36px rgba(11,31,58,0.08)",
+                    transform:
+                      i === 0
+                        ? "rotateY(-5deg)"
+                        : i === 2
+                        ? "rotateY(5deg)"
+                        : "translateY(-8px)",
+                  }}
+                  initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  transition={{ duration: 0.6, delay: 0.2 + i * 0.15 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
                 >
-                  <div className="text-5xl mb-4">{item.icon}</div>
-                  <h3 className="text-2xl font-semibold text-[#016ABA] dark:text-sky-400 mb-3">
-                    {item.title}
+                  <div
+                    className="text-2xl font-extrabold"
+                    style={{ color: step.accent }}
+                  >
+                    {step.n}
+                  </div>
+                  <h3 className="mt-3 text-lg font-semibold text-[#0B1F3A] dark:text-white">
+                    {step.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {item.desc}
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    {step.text}
                   </p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
+
+        {/* Dlaczego CEEA — zdjęcia zamiast emoji */}
+        <section className="bg-[#F7F4EF] py-16 sm:py-24 dark:bg-slate-900">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#002C7C] dark:text-sky-300">
+              Dlaczego warto wziąć udział w kursach CEEA?
+            </h2>
+            <p className="mx-auto mt-4 max-w-3xl text-slate-600 dark:text-slate-300">
+              Jesteśmy pierwszym w Polsce ośrodkiem CEEA, który od 1995 roku
+              wyszkolił dziesiątki polskich anestezjologów.
+            </p>
+            <div className="mt-14 grid gap-8 lg:grid-cols-3">
+              {WHY_ITEMS.map((item, i) => {
+                const img = homeImages[item.key]
+                return (
+                  <motion.article
+                    key={item.title}
+                    className="overflow-hidden rounded-2xl bg-white text-left shadow-[0_18px_40px_rgba(11,31,58,0.1)] dark:bg-slate-800"
+                    style={{ transform: "perspective(900px) rotateX(2deg)" }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 * i }}
+                    whileHover={{ y: -8, rotateX: 0 }}
+                  >
+                    {img ? (
+                      <GatsbyImage
+                        image={img}
+                        alt={item.title}
+                        className="h-44 w-full"
+                        imgClassName="object-cover"
+                      />
+                    ) : (
+                      <div className="h-44 w-full bg-gradient-to-br from-[#016ABA] to-[#00C896]" />
+                    )}
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-[#016ABA] dark:text-sky-400">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Mostek książki */}
+        <section className="bg-white py-14 sm:py-20 dark:bg-slate-950">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div
+              className="rounded-3xl border border-slate-200 bg-gradient-to-br from-[#F7F4EF] via-white to-[#e8f6f2] p-8 sm:p-10 dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800"
+              style={{
+                transform: "perspective(900px) rotateX(1deg)",
+                boxShadow:
+                  "0 20px 50px rgba(11,31,58,0.1), 0 2px 0 rgba(232,163,23,0.35)",
+              }}
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#E8A317]">
+                Skrypty CEEA
+              </p>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+                Książki i materiały z kursów
+              </h2>
+              <p className="mt-4 max-w-2xl text-slate-600 dark:text-slate-300 leading-relaxed">
+                Niezmiennie od wielu lat każdy kurs CEEA znajduje swoje
+                podsumowanie pod postacią skryptu, który otrzymuje każdy
+                uczestnik w ramach pakietu powitalnego. Jeśli są Państwo
+                zainteresowani nabyciem naszych książek, zapraszamy do kontaktu.
+              </p>
+              <Link
+                to="/ksiazki/"
+                className="mt-6 inline-flex rounded-full bg-[#0B1F3A] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#002C7C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+              >
+                Przejdź do książek
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
-      {/* Mobile: wyłącz ciężkie animacje blur (hero zabija wątek/GPU, menu muli) */}
-      <style>{`
-        @media (max-width: 1023px) {
-          .hero-blob { animation: none !important; filter: blur(50px) !important; opacity: .22 !important; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .hero-blob { animation: none !important; }
-        }
-      `}</style>
     </>
   )
 }
 
-// GraphQL zostaje TYLKO dla lokalnych plików (Home/ + onas3.jpg).
-// allDatoCmsCourse / activeCourse / datoCmsDetailedInformationAboutTheCourse
-// wyleciały – kursy idą z /courses.
 export const query = graphql`
-  query ImageQuery {
+  query Home2ImageQuery {
     allFile(filter: { relativeDirectory: { eq: "Home" } }) {
       edges {
         node {
@@ -591,4 +447,4 @@ export const query = graphql`
 
 export const Head = () => <Seo title="Strona główna" />
 
-export default IndexPage
+export default Home2Page

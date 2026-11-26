@@ -49,19 +49,19 @@ const Courses2 = () => {
         subtitle="Regionalne Centrum CEEA w Poznaniu"
         description="Aktualna oferta szkoleń dla lekarzy specjalistów oraz rezydentów anestezjologii i intensywnej terapii — w europejskim formacie CME."
         crumbs={[
-          { label: "Strona główna", to: "/home2/" },
+          { label: "Strona główna", to: "/" },
           { label: "Kursy" },
         ]}
         actions={
           <>
             <Link
-              to="/archiwum_kursow2/"
+              to="/archiwum_kursow/"
               className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
             >
               Archiwum kursów
             </Link>
             <Link
-              to="/kontakt2/"
+              to="/kontakt/"
               className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
             >
               Kontakt
@@ -118,7 +118,7 @@ const Courses2 = () => {
                       aria-hidden="true"
                     />
                     <Link
-                      to={`/kursy2/${year}/${courseSlug}`}
+                      to={`/kursy/${year}/${courseSlug}`}
                       className="relative z-10 flex h-full w-full flex-col justify-between gap-6 p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                     >
                       <div>
@@ -161,7 +161,7 @@ const Courses2 = () => {
             </p>
           </div>
           <Link
-            to="/kontakt2/"
+            to="/kontakt/"
             className="inline-flex shrink-0 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
           >
             Przejdź do kontaktu
@@ -172,5 +172,5 @@ const Courses2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Kursy — wariant 2" />
+export const Head = () => <Seo title="Kursy" />
 export default Courses2

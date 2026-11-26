@@ -9,7 +9,7 @@ const cld = (url, w) =>
     : url
 
 /**
- * Alternatywny hero (używany na /home2).
+ * Hero parallax na stronie głównej.
  * Nie zmienia Header/Footer — tylko sekcja pod nawigacją.
  */
 const HeroParallax = ({

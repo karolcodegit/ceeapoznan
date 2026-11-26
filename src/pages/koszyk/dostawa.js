@@ -1,30 +1,31 @@
 import React, { useRef } from "react"
 import { navigate } from "gatsby"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import ParcelLockerMap from "../../ParcelLockerMap/ParcelMockerMap"
-import CheckoutProgress from "../../components/CheckoutProgress/CheckoutProgress"
-import Title from "../../components/Title/Title"
+import CheckoutShellV2 from "../../components/CheckoutShellV2/CheckoutShellV2"
 import Form from "../../components/Form/Form"
 import FormField from "../../components/Form/FormField/FormField"
 import FormRadioGroup from "../../components/Form/FormRadioGroup/FormRadioGroup"
 import Button from "../../components/Button/Button"
-import { setParcelLocker } from "../../store/checkout/checkoutSlice"
+import Seo from "../../components/seo"
 
-const Dostawa = () => {
-  const dispatch = useDispatch()
+const Dostawa2 = () => {
   const formRef = useRef()
   const deliveryMethod = useSelector(s => s.checkout.deliveryMethod)
-  const locker = useSelector(s => s.checkout.locker)
 
   const handleNext = () => formRef.current?.submitForm()
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6">
-      <CheckoutProgress currentStep="dostawa" />
-      <div className="mt-4 bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 transition-colors">
-        <Title tag="h4" className="pb-5 text-gray-900 dark:text-gray-100">
+    <CheckoutShellV2
+      title="Dostawa"
+      subtitle="Krok 3 z 4"
+      description="Wybierz paczkomat InPost albo dostawę kurierem."
+      currentStep="dostawa"
+    >
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-8">
+        <h2 className="pb-5 text-xl font-bold text-[#002C7C] dark:text-sky-300">
           Wybierz metodę dostawy
-        </Title>
+        </h2>
 
         <Form
           ref={formRef}
@@ -41,7 +42,7 @@ const Dostawa = () => {
                 "address.postcode",
               ]
             if (deliveryMethod === "Paczkomat")
-              return ["deliveryMethod", "locker.code"] // ← było "locker"
+              return ["deliveryMethod", "locker.code"]
             return []
           }}
         >
@@ -79,15 +80,10 @@ const Dostawa = () => {
             </>
           )}
 
-          {deliveryMethod === "Paczkomat" && (
-            <>
-              <ParcelLockerMap />
-            
-            </>
-          )}
+          {deliveryMethod === "Paczkomat" && <ParcelLockerMap />}
         </Form>
 
-        <div className="flex justify-between mt-6">
+        <div className="mt-6 flex justify-between">
           <Button variant="back" onClick={() => navigate("/koszyk/dane")}>
             Wstecz
           </Button>
@@ -96,8 +92,9 @@ const Dostawa = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </CheckoutShellV2>
   )
 }
 
-export default Dostawa
+export const Head = () => <Seo title="Koszyk — dostawa" />
+export default Dostawa2

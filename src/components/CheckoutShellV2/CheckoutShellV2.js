@@ -17,13 +17,13 @@ const CheckoutShellV2 = ({
         subtitle={subtitle}
         description={description}
         crumbs={[
-          { label: "Strona główna", to: "/home2/" },
-          { label: "Książki", to: "/ksiazki2/" },
+          { label: "Strona główna", to: "/" },
+          { label: "Książki", to: "/ksiazki/" },
           { label: "Koszyk" },
         ]}
         actions={
           <Link
-            to="/ksiazki2/"
+            to="/ksiazki/"
             className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
           >
             Wróć do książek

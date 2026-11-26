@@ -1,50 +1,76 @@
-// src/pages/koszyk/wyslane.js — potwierdzenie zamówienia (transfer | tpay)
 import React from "react"
 import { Link } from "gatsby"
-import Title from "../../components/Title/Title"
-import Paragraph from "../../components/Paragraph/Paragraph"
+import PageHeroV2 from "../../components/PageHeroV2/PageHeroV2"
+import Seo from "../../components/seo"
 
-const Wyslane = ({ location }) => {
+const Wyslane2 = ({ location }) => {
   const params = new URLSearchParams(location?.search || "")
-  const method = params.get("metoda") // 'tpay' | 'transfer'
+  const method = params.get("metoda")
   const order = params.get("zamowienie")
   const isOnline = method === "tpay"
 
   return (
-    <div className="max-w-2xl mx-auto text-center py-16 px-4">
-      <div className="w-16 h-16 mx-auto rounded-full bg-green-100 dark:bg-green-500/15 flex items-center justify-center mb-6">
-        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-        </svg>
-      </div>
+    <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
+      <PageHeroV2
+        title={isOnline ? "Płatność potwierdzona" : "Dziękujemy"}
+        subtitle="Zamówienie przyjęte"
+        description={
+          isOnline
+            ? "Twoja płatność została zaksięgowana. Potwierdzenie wysyłki otrzymasz mailem."
+            : "Zamówienie przyjęte. Dane do przelewu wysłaliśmy e-mailem — sprawdź także spam."
+        }
+        crumbs={[
+          { label: "Strona główna", to: "/" },
+          { label: "Koszyk", to: "/koszyk/" },
+          { label: "Potwierdzenie" },
+        ]}
+      />
 
-      <Title tag="h1" className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-        {isOnline ? "Płatność potwierdzona!" : "Dziękujemy za zamówienie!"}
-      </Title>
+      <section className="mx-auto max-w-2xl px-4 py-12 text-center sm:px-6 sm:py-16">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
+          <svg
+            className="h-8 w-8 text-emerald-600"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 12.75l6 6 9-13.5"
+            />
+          </svg>
+        </div>
 
-      {order && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Numer zamówienia:{" "}
-          <span className="font-semibold text-gray-800 dark:text-gray-200">{order}</span>
-        </p>
-      )}
+        {order && (
+          <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
+            Numer zamówienia:{" "}
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
+              {order}
+            </span>
+          </p>
+        )}
 
-      <Paragraph className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-        {isOnline
-          ? "Twoja płatność została zaksięgowana. Książki wyślemy najszybciej, jak to możliwe – potwierdzenie wysyłki otrzymasz mailem."
-          : "Twoje zamówienie zostało przyjęte. Na Twój adres email wysłaliśmy dane do przelewu – po zaksięgowaniu wpłaty przystępujemy do wysyłki. Sprawdź także folder spam."}
-      </Paragraph>
-
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link to="/" className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 transition-colors">
-          Strona główna
-        </Link>
-        <Link to="/ksiazki" className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-200 font-medium hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-          Kontynuuj przeglądanie
-        </Link>
-      </div>
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link
+            to="/"
+            className="inline-flex items-center justify-center rounded-full bg-[#002C7C] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0C6478] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+          >
+            Strona główna
+          </Link>
+          <Link
+            to="/ksiazki/"
+            className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0C6478] dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            Kontynuuj przeglądanie
+          </Link>
+        </div>
+      </section>
     </div>
   )
 }
 
-export default Wyslane
+export const Head = () => <Seo title="Zamówienie wysłane" />
+export default Wyslane2

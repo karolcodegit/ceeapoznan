@@ -1,51 +1,16 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { Link } from "gatsby"
 import { motion, AnimatePresence } from "framer-motion"
+
 import Book from "../components/Book/Book"
+import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import Seo from "../components/seo"
-import Input from "../components/Input/Input"
-import Label from "../components/Label/Label"
 
-// --- Animacje (bez zmian) ---
-
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-}
-
-const slideDown = {
-  hidden: { opacity: 0, y: -20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-}
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-}
-
-const bookItem = {
-  hidden: { opacity: 0, y: 30, scale: 0.97 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
-  exit: { opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.3 } },
-}
-
-const emptyState = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
-  exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } },
-}
-
-// --- API ---
-
-const API_URL =
-  process.env.GATSBY_REGISTER_ENDPOINT
+const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
 const PLACEHOLDER_IMG =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3E%3C/svg%3E"
 
-// Mapowanie wiersza Supabase -> props komponentu Book
 function mapProduct(p) {
   return {
     originalId: p.datocms_id,
@@ -64,9 +29,17 @@ function mapProduct(p) {
   }
 }
 
-// --- Komponent ---
+const bookItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.25 } },
+}
 
-const Books = () => {
+const Books2 = () => {
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -74,7 +47,6 @@ const Books = () => {
 
   useEffect(() => {
     let cancelled = false
-
     const load = () =>
       fetch(`${API_URL}/products`)
         .then(r => {
@@ -92,86 +64,128 @@ const Books = () => {
         })
 
     load()
-    // odświeżanie stanu co 60 s – wyczerpany stan szybko znika ze strony
     const t = setInterval(load, 60_000)
-    return () => { cancelled = true; clearInterval(t) }
+    return () => {
+      cancelled = true
+      clearInterval(t)
+    }
   }, [])
-
-  const handleInputChange = e => setInputValue(e.target.value)
 
   const filteredBooks = books.filter(b =>
     b.title.toLowerCase().includes(inputValue.toLowerCase())
   )
 
   return (
-    <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-      {/* Sekcja wyszukiwarki */}
-      <motion.div className="flex justify-end py-20" variants={slideDown}>
-        <div className="mr-4">
-          <Label name="Wyszukiwarka: " />
+    <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
+      <PageHeroV2
+        title="Książki"
+        subtitle="Skrypty i publikacje CEEA"
+        description="Każdy kurs CEEA znajduje podsumowanie w skrypcie dla uczestników. Poniżej oferta książek dostępnych także poza pakietem kursowym."
+        crumbs={[
+          { label: "Strona główna", to: "/" },
+          { label: "Książki" },
+        ]}
+        actions={
+          <>
+            <Link
+              to="/koszyk/"
+              className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+            >
+              Koszyk
+            </Link>
+            <Link
+              to="/kontakt/"
+              className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+            >
+              Zapytaj o dostępność
+            </Link>
+          </>
+        }
+      />
+
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#002C7C] dark:text-sky-300 sm:text-2xl">
+              Katalog
+            </h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Wyszukaj tytuł po nazwie publikacji.
+            </p>
+          </div>
+          <label className="block w-full sm:max-w-xs">
+            <span className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              Wyszukiwarka
+            </span>
+            <input
+              type="search"
+              name="book-search"
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              placeholder="np. anestezjologia…"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#0C6478] focus:ring-2 focus:ring-[#0C6478]/30 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+            />
+          </label>
         </div>
-        <motion.div whileFocus={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-          <Input
-            label="Wyszukiwarka:"
-            type="text"
-            name="name"
-            value={inputValue}
-            onChange={handleInputChange}
-          />
-        </motion.div>
-      </motion.div>
 
-      {/* Stany: ładowanie / błąd */}
-      {loading && (
-        <p className="text-center py-16 text-gray-500 dark:text-gray-400">
-          Ładowanie książek…
-        </p>
-      )}
-      {!loading && error && (
-        <p className="text-center py-16 text-red-600 dark:text-red-400">{error}</p>
-      )}
+        {loading && (
+          <div className="flex items-center justify-center py-20" role="status">
+            <div
+              className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent"
+              aria-hidden="true"
+            />
+            <span className="ml-3 text-slate-600 dark:text-slate-400">
+              Ładowanie książek…
+            </span>
+          </div>
+        )}
 
-      {/* Lista książek z animacją filtrowania */}
-      {!loading && !error && (
-        <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+        {!loading && error && (
+          <p className="py-16 text-center text-rose-700 dark:text-rose-400">
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && (
           <AnimatePresence mode="popLayout">
             {filteredBooks.length > 0 ? (
-              filteredBooks.map(book => (
-                <motion.div
-                  key={book.originalId}
-                  variants={bookItem}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
-                  <Book {...book} />
-                </motion.div>
-              ))
+              <ul className="space-y-4">
+                {filteredBooks.map(book => (
+                  <motion.li
+                    key={book.originalId}
+                    variants={bookItem}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                    className="rounded-2xl border border-slate-200 bg-slate-50/80 p-2 dark:border-slate-700 dark:bg-slate-900/60 sm:p-3"
+                  >
+                    <Book {...book} />
+                  </motion.li>
+                ))}
+              </ul>
             ) : (
               <motion.div
                 key="empty"
-                className="text-center py-16 text-gray-500 dark:text-gray-400"
-                variants={emptyState}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="rounded-2xl border border-dashed border-slate-300 bg-[#F7F4EF] px-6 py-16 text-center dark:border-slate-600 dark:bg-slate-900"
               >
-                <motion.p className="text-lg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                <p className="text-lg font-medium text-slate-700 dark:text-slate-200">
                   Nie znaleziono książek pasujących do wyszukiwania.
-                </motion.p>
-                <motion.p className="text-sm mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                </p>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                   Spróbuj wpisać inną frazę.
-                </motion.p>
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
-      )}
-    </motion.div>
+        )}
+      </section>
+    </div>
   )
 }
 
 export const Head = () => <Seo title="Książki" />
-
-export default Books
+export default Books2

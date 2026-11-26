@@ -1,83 +1,46 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { Link } from "gatsby"
 import { motion } from "framer-motion"
+
 import ContactBox from "../components/ContactBox/ContactBox"
 import ContactForm from "../components/Form/ContactForm"
+import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import Seo from "../components/seo"
-import Title from "../components/Title/Title"
-
-// --- API ---
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-}
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-}
-
-const slideUp = {
-  hidden: { opacity: 0, y: 40 },
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.55, ease: "easeOut" },
   },
 }
 
-const slideLeft = {
-  hidden: { opacity: 0, x: -40 },
+const stagger = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
   },
 }
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-}
-
-const separatorLine = {
-  hidden: { scaleX: 0, opacity: 0 },
-  visible: {
-    scaleX: 1,
-    opacity: 1,
-    transition: { duration: 0.8, ease: "easeInOut" },
-  },
-}
-
-// --- Komponent ---
-
-const Contact = () => {
-  // Dane firmy + pracownicy ze Supabase (GraphQL wyleciało całkowicie)
+const Contact2 = () => {
   const [company, setCompany] = useState(null)
   const [employees, setEmployees] = useState([])
 
   useEffect(() => {
     let cancelled = false
+    if (!API_URL) return undefined
 
     fetch(`${API_URL}/company`)
       .then(r => {
         if (!r.ok) throw new Error("company")
         return r.json()
       })
-      .then(({ company }) => {
-        if (!cancelled) setCompany(company)
+      .then(({ company: data }) => {
+        if (!cancelled) setCompany(data)
       })
       .catch(() => {})
 
@@ -86,137 +49,147 @@ const Contact = () => {
         if (!r.ok) throw new Error("employees")
         return r.json()
       })
-      .then(({ employees }) => {
-        if (!cancelled) setEmployees(employees || [])
+      .then(({ employees: list }) => {
+        if (!cancelled) setEmployees(list || [])
       })
       .catch(() => {})
 
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  const onSubmit = (formData) => {
-    //console.log("Formularz wysłany:", formData);
-  };
-
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={fadeIn}
-    >
-      {/* Sekcja: Skontaktuj się z nami + Pracownicy */}
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-20 mx-auto py-24 border-b"
-        variants={staggerContainer}
-      >
-        {/* Lewa kolumna - tytuł + opis */}
-        <motion.div className="flex flex-col gap-4" variants={slideLeft}>
-          <Title tag="h2">Skontaktuj się z nami</Title>
-          <motion.span
-            className="text-sm font-normal dark:text-gray-300"
-            variants={slideUp}
+    <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
+      <PageHeroV2
+        title="Kontakt"
+        subtitle="Jesteśmy do Twojej dyspozycji"
+        description="Masz pytania o kursy, zapisy lub książki? Napisz lub zadzwoń — odpowiemy możliwie szybko."
+        crumbs={[
+          { label: "Strona główna", to: "/" },
+          { label: "Kontakt" },
+        ]}
+        actions={
+          <Link
+            to="/faq/"
+            className="inline-flex rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
           >
-            Jeżeli nurtują Cię jakiekolwiek wątpliwości, z radością odpowiemy na
-            Twoje pytania. Skontaktuj się z nami bez wahania.
-          </motion.span>
-        </motion.div>
+            Zobacz FAQ
+          </Link>
+        }
+      />
 
-        {/* Prawa kolumna - pracownicy */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 col-span-2"
-          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={stagger}
+          className="grid gap-10 lg:grid-cols-12"
         >
-          {employees.map((employee, index) => (
-            <motion.div
-              key={employee.surname + index}
-              variants={scaleIn}
-              whileHover={{
-                scale: 1.02,
-                transition: { duration: 0.2 },
-              }}
-            >
-              <ContactBox
-                name={`${employee.name} ${employee.surname}`}
-                phone={employee.phone}
-                secondPhone={employee.second_phone}
-                email={employee.email}
-                degree={employee.degree}
-              />
+          <motion.div variants={fadeUp} className="lg:col-span-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+              Skontaktuj się z nami
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
+              Jeżeli nurtują Cię jakiekolwiek wątpliwości, z radością odpowiemy
+              na Twoje pytania.
+            </p>
+          </motion.div>
+          <motion.div
+            variants={stagger}
+            className="grid gap-5 sm:grid-cols-2 lg:col-span-8"
+          >
+            {employees.map((employee, index) => (
+              <motion.div
+                key={`${employee.surname}-${index}`}
+                variants={fadeUp}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-1 dark:border-slate-700 dark:bg-slate-900"
+              >
+                <ContactBox
+                  name={`${employee.name} ${employee.surname}`}
+                  phone={employee.phone}
+                  secondPhone={employee.second_phone}
+                  email={employee.email}
+                  degree={employee.degree}
+                />
+              </motion.div>
+            ))}
+            {employees.length === 0 && (
+              <p className="text-slate-500 dark:text-slate-400 sm:col-span-2">
+                Ładowanie danych kontaktowych…
+              </p>
+            )}
+          </motion.div>
+        </motion.div>
+      </section>
+
+      <section className="bg-slate-100 dark:bg-slate-900/80 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={stagger}
+            className="grid gap-10 lg:grid-cols-12"
+          >
+            <motion.div variants={fadeUp} className="lg:col-span-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+                {company?.name_company || "Dane fundacji"}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                Adres korespondencyjny oraz dane rejestrowe ośrodka.
+              </p>
             </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-
-      {/* Separator z animacją */}
-      <motion.div
-        className="border-b origin-left"
-        variants={separatorLine}
-      />
-
-      {/* Sekcja: Dane firmy + Adres / Konto bankowe */}
-      <motion.div
-        className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-10 mx-auto py-20 px-4 border-b"
-        variants={staggerContainer}
-      >
-        {/* Lewa kolumna - nazwa firmy */}
-        <motion.div variants={slideLeft}>
-          <Title tag="h2">{company?.name_company || ""}</Title>
-        </motion.div>
-
-        {/* Prawa kolumna - adres + dane firmy */}
-        <motion.div
-          className="grid md:grid-cols-2 gap-8 col-span-2 items-start"
-          variants={staggerContainer}
-        >
-          <motion.div
-            variants={slideUp}
-            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-          >
-            <ContactBox
-              place={`${company?.street || ""} ${company?.number_home || ""}`}
-              place2={`${company?.zip_code || ""} ${company?.city || ""}`}
-              email={company?.email}
-            />
+            <motion.div
+              variants={stagger}
+              className="grid gap-5 sm:grid-cols-2 lg:col-span-8"
+            >
+              <motion.div
+                variants={fadeUp}
+                className="rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
+              >
+                <ContactBox
+                  place={`${company?.street || ""} ${
+                    company?.number_home || ""
+                  }`}
+                  place2={`${company?.zip_code || ""} ${company?.city || ""}`}
+                  email={company?.email}
+                />
+              </motion.div>
+              <motion.div
+                variants={fadeUp}
+                className="rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
+              >
+                <ContactBox
+                  name={company?.name_company}
+                  account={company?.bank_account}
+                  regon={company?.regon}
+                  nip={company?.nip}
+                  krs={company?.krs}
+                />
+              </motion.div>
+            </motion.div>
           </motion.div>
+        </div>
+      </section>
 
-          <motion.div
-            variants={slideUp}
-            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-          >
-            <ContactBox
-              name={company?.name_company}
-              account={company?.bank_account}
-              regon={company?.regon}
-              nip={company?.nip}
-              krs={company?.krs}
-            />
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Separator z animacją */}
-      <motion.div
-        className="border-b origin-left"
-        variants={separatorLine}
-      />
-
-      {/* Sekcja: Formularz kontaktowy */}
-      <motion.div
-        className="grid grid-cols-1 gap-x-20 gap-y-10 mx-auto py-10 px-4 items-center"
-        variants={staggerContainer}
-      >
-        <motion.div
-          className="flex-1"
-          variants={slideUp}
-        >
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="mb-8 max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#002C7C] dark:text-sky-300">
+            Formularz kontaktowy
+          </h2>
+          <p className="mt-3 text-slate-600 dark:text-slate-300">
+            Wyślij wiadomość — odezwiemy się na wskazany adres e-mail.
+          </p>
+        </div>
+        <div className="rounded-3xl border border-slate-200 bg-[#F7F4EF] p-4 sm:p-8 dark:border-slate-700 dark:bg-slate-900">
           <ContactForm />
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        </div>
+      </section>
+    </div>
   )
 }
 
-// GraphQL całkowicie usunięte – dane firmy i pracownicy lecą z Cloud Run.
 export const Head = () => <Seo title="Kontakt" />
-
-export default Contact
+export default Contact2

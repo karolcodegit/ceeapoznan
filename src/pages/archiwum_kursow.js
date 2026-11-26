@@ -1,121 +1,136 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
-import Title from "../components/Title/Title"
+import { motion } from "framer-motion"
+
 import Seo from "../components/seo"
+import PageHeroV2 from "../components/PageHeroV2/PageHeroV2"
 import { slugify } from "../utils/slugify"
 import { getYearFromDate } from "../utils/getYearFromDate"
 
-// --- API ---
-
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
 
-const ArchiwumKursow = () => {
-  const [windowWidth, setWindowWidth] = useState(0)
-  const [courses, setCourses] = useState(null) // null = ładowanie
+const ArchiwumKursow2 = () => {
+  const [courses, setCourses] = useState(null)
 
   useEffect(() => {
-    if (typeof window === "undefined") return
     let cancelled = false
-    let t
-    const handleResize = () => {
-      clearTimeout(t)
-      t = setTimeout(() => setWindowWidth(window.innerWidth), 150)
-    }
-    setWindowWidth(window.innerWidth)
-    window.addEventListener("resize", handleResize)
-
-    // ── Archiwum z Supabase ──
     fetch(`${API_URL}/courses`)
       .then(r => {
         if (!r.ok) throw new Error("courses")
         return r.json()
       })
-      .then(({ courses }) => {
+      .then(({ courses: list }) => {
         if (!cancelled) {
-          setCourses((courses || []).filter(c => c.is_archive === true))
+          setCourses((list || []).filter(c => c.is_archive === true))
         }
       })
-      .catch(err => {
-        console.error("[archiwum] fetch error:", err.message)
+      .catch(() => {
         if (!cancelled) setCourses([])
       })
-
     return () => {
-      window.removeEventListener("resize", handleResize)
-      clearTimeout(t)
+      cancelled = true
     }
   }, [])
 
-  if (courses === null) {
-    return <div className="py-24 text-center text-gray-400">Ładowanie…</div>
-  }
-
-  const sortedCourses = courses
-
   return (
-    <div>
-      <div
-        className="grid gap-4 py-24 relative"
-        style={{
-          gridTemplateColumns: `${
-            windowWidth < 840
-              ? "1fr"
-              : windowWidth < 1024
-              ? `repeat(${Math.min(sortedCourses.length, 2)}, 1fr)`
-              : `repeat(${Math.min(sortedCourses.length, 3)}, 1fr)`
-          }`,
-        }}
-      >
-        {sortedCourses.map(course => {
-          const courseSlug = slugify(course.title)
-          return (
-            <div
-              key={course.course_id}
-              className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition duration-500 ease-in-out transform lg:hover:scale-110 hover:z-10 z-0"
-              style={{
-                backgroundImage: course.image_url ? `url(${course.image_url})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <Link to={`/kursy/${getYearFromDate(course.start_date || course.date_label)}/${courseSlug}`}>
-                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-md" />
-                <div className="relative z-10 flex flex-col h-full gap-6">
-                  {/* Tytuł kursu */}
-                  <Title white tag="h5" className="text-white dark:text-gray-300">
-                    Kurs nr {course.course_number ?? "—"}
-                  </Title>
-                  <Title white tag="h4" className="text-white dark:text-gray-200">
-                    {course.title}
-                  </Title>
+    <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
+      <PageHeroV2
+        title="Archiwum kursów"
+        subtitle="Historia szkoleń CEEA Poznań"
+        description="Przegląd wcześniejszych edycji kursów Regionalnego Centrum CEEA — skarbnica tematów i doświadczeń ośrodka."
+        crumbs={[
+          { label: "Strona główna", to: "/" },
+          { label: "Kursy", to: "/kursy/" },
+          { label: "Archiwum kursów" },
+        ]}
+        actions={
+          <Link
+            to="/kursy/"
+            className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#002C7C] transition hover:bg-sky-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
+          >
+            Aktualne kursy
+          </Link>
+        }
+      />
 
-                  {/* Informacje o kursie */}
-                  <div className="flex justify-between mt-auto text-white dark:text-gray-300">
-                    <p className="text-white dark:text-gray-400">
-                      {course.date_label || "Brak daty"}
-                    </p>
-                    <span
-                      className={`px-2 items-center inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        course.available
-                          ? "bg-green-100 dark:bg-green-600 text-green-800 dark:text-green-200"
-                          : "bg-red-100 dark:bg-red-600 text-red-800 dark:text-red-200"
-                      }`}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        {courses === null && (
+          <div className="flex items-center justify-center py-20" role="status">
+            <div
+              className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent"
+              aria-hidden="true"
+            />
+            <span className="ml-3 text-slate-600 dark:text-slate-400">
+              Ładowanie archiwum…
+            </span>
+          </div>
+        )}
+
+        {courses !== null && courses.length === 0 && (
+          <p className="py-16 text-center text-slate-500 dark:text-slate-400">
+            Brak kursów w archiwum.
+          </p>
+        )}
+
+        {courses !== null && courses.length > 0 && (
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course, index) => {
+              const courseSlug = slugify(course.title)
+              const year = getYearFromDate(
+                course.start_date || course.date_label
+              )
+              return (
+                <li key={course.course_id}>
+                  <motion.article
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5, delay: index * 0.04 }}
+                    className="group relative flex h-full min-h-[260px] overflow-hidden rounded-2xl border border-slate-200 shadow-sm dark:border-slate-700"
+                    style={{
+                      backgroundImage: course.image_url
+                        ? `url(${course.image_url})`
+                        : undefined,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundColor: "#0b1f3a",
+                    }}
+                  >
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-[#0b1f3a]/95 via-[#0b1f3a]/60 to-[#0b1f3a]/30"
+                      aria-hidden="true"
+                    />
+                    <Link
+                      to={`/kursy/${year}/${courseSlug}`}
+                      className="relative z-10 flex h-full w-full flex-col justify-between gap-6 p-6 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E8A317]"
                     >
-                      {course.available ? "Dostępne" : "Niedostępne"}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          )
-        })}
-      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-[#E8A317]">
+                          Kurs nr {course.course_number ?? "—"}
+                        </p>
+                        <h2 className="mt-2 text-xl font-bold leading-snug sm:text-2xl">
+                          {course.title}
+                        </h2>
+                      </div>
+                      <div className="flex items-end justify-between gap-3">
+                        <p className="text-sm text-white/90">
+                          {course.date_label || "Brak daty"}
+                        </p>
+                        <span className="inline-flex shrink-0 items-center rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold text-white ring-1 ring-white/30">
+                          Archiwum
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.article>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </section>
     </div>
   )
 }
 
-// GraphQL usunięte – archiwum z /courses (filtr is_archive po stronie klienta)
 export const Head = () => <Seo title="Archiwum kursów" />
-
-export default ArchiwumKursow
+export default ArchiwumKursow2

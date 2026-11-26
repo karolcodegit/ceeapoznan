@@ -15,7 +15,7 @@ import Seo from "../../components/seo"
 import CourseDetails from "../../components/CourseDetails/CourseDetails"
 
 const API_URL = process.env.GATSBY_REGISTER_ENDPOINT
-const BASE = "/kursy2"
+const BASE = "/kursy"
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -56,7 +56,7 @@ const viewportSettings = { once: true, margin: "-60px" }
 
 const CourseClient2 = ({ location }) => {
   const segments = location.pathname.split("/").filter(Boolean)
-  // ["kursy2", rok, slug, sub?, ...]
+  // ["kursy", rok, slug, sub?, ...]
   const slug = segments[2] || ""
   const yearSeg = segments[1] || ""
   const last = (segments[segments.length - 1] || "").toLowerCase()
@@ -103,7 +103,7 @@ const CourseClient2 = ({ location }) => {
           title="Kurs"
           subtitle="Ładowanie…"
           crumbs={[
-            { label: "Strona główna", to: "/home2/" },
+            { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
             { label: "…" },
           ]}
@@ -126,7 +126,7 @@ const CourseClient2 = ({ location }) => {
           subtitle="Brak w bazie"
           description={`Adres ${location.pathname} nie wskazuje na istniejący kurs.`}
           crumbs={[
-            { label: "Strona główna", to: "/home2/" },
+            { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
             { label: "Brak" },
           ]}
@@ -149,13 +149,13 @@ const CourseClient2 = ({ location }) => {
   if (sub === "szczegoly") {
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title={`${course.title} — szczegóły — wariant 2`} />
+        <Seo title={`${course.title} — szczegóły`} />
         <PageHeroV2
           title="Szczegóły kursu"
           subtitle={course.title}
           description={course.date_label || ""}
           crumbs={[
-            { label: "Strona główna", to: "/home2/" },
+            { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
             { label: course.title, to: courseBase },
             { label: "Szczegóły" },
@@ -203,13 +203,13 @@ const CourseClient2 = ({ location }) => {
 
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title={`Rejestracja — ${course.title} — wariant 2`} />
+        <Seo title={`Rejestracja — ${course.title}`} />
         <PageHeroV2
           title="Rejestracja"
           subtitle={course.title}
           description="Wypełnij formularz zapisu na kurs CEEA."
           crumbs={[
-            { label: "Strona główna", to: "/home2/" },
+            { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
             { label: course.title, to: courseBase },
             { label: "Rejestracja" },
@@ -228,13 +228,13 @@ const CourseClient2 = ({ location }) => {
   if (sub === "formularz-wyslany") {
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title="Formularz wysłany — wariant 2" />
+        <Seo title="Formularz wysłany" />
         <PageHeroV2
           title="Formularz wysłany"
           subtitle="Dziękujemy za rejestrację"
           description={`Potwierdzenie oraz dane do płatności dla kursu „${course.title}” otrzymasz mailem.`}
           crumbs={[
-            { label: "Strona główna", to: "/home2/" },
+            { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
             { label: "Potwierdzenie" },
           ]}
@@ -255,7 +255,7 @@ const CourseClient2 = ({ location }) => {
 
   return (
     <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-      <Seo title={`${course.title} — wariant 2`} />
+      <Seo title={`${course.title}`} />
       <PageHeroV2
         title={course.title}
         subtitle={
@@ -265,7 +265,7 @@ const CourseClient2 = ({ location }) => {
         }
         description={course.date_label || ""}
         crumbs={[
-          { label: "Strona główna", to: "/home2/" },
+          { label: "Strona główna", to: "/" },
           { label: "Kursy", to: `${BASE}/` },
           { label: course.title },
         ]}

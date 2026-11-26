@@ -15,28 +15,29 @@ import Cart from "../components/Shop/Cart"
 const MainLayout = ({ children }) => {
   const [title, setTitle] = useState("")
   const location = useLocation()
-  // full-bleed (bez TopHeader / max-w): home + warianty *2
+  // full-bleed (bez TopHeader / max-w): odświeżone strony marketingowe + checkout
   const normalizedPath = (location.pathname || "/").replace(/\/+$/, "") || "/"
-  const isV2Page =
-    normalizedPath === "/home2" ||
-    normalizedPath === "/o-nas2" ||
-    normalizedPath === "/faq2" ||
-    normalizedPath === "/ksiazki2" ||
-    normalizedPath === "/archiwum_kursow2" ||
-    normalizedPath === "/polityka-prywatnosci2" ||
-    normalizedPath === "/platnosc-status2" ||
-    normalizedPath === "/platnosc-test2" ||
-    normalizedPath === "/nie-znaleziono2" ||
-    normalizedPath === "/kursy2" ||
-    normalizedPath.startsWith("/kursy2/") ||
-    normalizedPath === "/kontakt2" ||
-    normalizedPath.startsWith("/kontakt2/") ||
-    normalizedPath === "/koszyk2" ||
-    normalizedPath.startsWith("/koszyk2/")
-  const isHomePage = normalizedPath === "/" || isV2Page
   const currentPath = location.pathname
   const allLinks = [...menuLinks, ...przydatneLinki, ...otherLinks]
   const is404Page = !allLinks.some(link => link.to === currentPath)
+  const isFullBleedPage =
+    normalizedPath === "/" ||
+    normalizedPath === "/o-nas" ||
+    normalizedPath === "/faq" ||
+    normalizedPath === "/ksiazki" ||
+    normalizedPath === "/archiwum_kursow" ||
+    normalizedPath === "/polityka-prywatnosci" ||
+    normalizedPath === "/platnosc-status" ||
+    normalizedPath === "/platnosc-test" ||
+    normalizedPath === "/kursy" ||
+    normalizedPath.startsWith("/kursy/") ||
+    normalizedPath === "/kontakt" ||
+    normalizedPath.startsWith("/kontakt/") ||
+    normalizedPath === "/koszyk" ||
+    normalizedPath.startsWith("/koszyk/") ||
+    is404Page
+  // legacy name used below for padding / max-width branching
+  const isHomePage = isFullBleedPage
   const [isPanelOpen, setPanelOpen] = useState(false)
 
   const togglePanel = () => {
