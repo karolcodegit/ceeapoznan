@@ -110,6 +110,24 @@ const HeroParallax = ({
         className="relative z-10 mx-auto flex min-h-[88vh] sm:min-h-[92vh] lg:min-h-[100vh] max-w-7xl flex-col justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24"
         style={{ opacity: opacityFade }}
       >
+        <motion.p
+          className="mb-6 whitespace-nowrap font-extrabold tracking-tight text-[1.65rem] leading-none sm:text-4xl lg:text-5xl xl:text-6xl"
+          style={{ y: yMid }}
+          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          aria-label="CEEA – Ośrodek Poznański"
+        >
+          <span className="text-[#88C8EB]">C</span>
+          <span className="text-[#47AEE6]">E</span>
+          <span className="text-[#7EC8EB]">E</span>
+          <span className="text-white">A</span>
+          <span className="mx-2 text-white/75 sm:mx-2.5" aria-hidden="true">
+            –
+          </span>
+          <span className="text-white">Ośrodek Poznański</span>
+        </motion.p>
+
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
           <motion.div
             className="lg:col-span-6"
@@ -118,18 +136,6 @@ const HeroParallax = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <p className="mb-4 font-extrabold tracking-tight">
-              <span className="text-3xl sm:text-4xl lg:text-5xl">
-                <span className="text-[#88C8EB]">C</span>
-                <span className="text-[#47AEE6]">E</span>
-                <span className="text-[#7EC8EB]">E</span>
-                <span className="text-white">A</span>
-              </span>
-              <span className="mt-1 block text-sm sm:text-base font-semibold text-white/80">
-                Ośrodek Poznański
-              </span>
-            </p>
-
             {currentCourse?.available && (
               <span className="mb-4 inline-flex rounded-full bg-[#00C896] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg">
                 Kurs już dostępny
