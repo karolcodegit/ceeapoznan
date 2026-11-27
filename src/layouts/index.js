@@ -40,11 +40,6 @@ const MainLayout = ({ children }) => {
     is404Page
   // legacy name used below for padding / max-width branching
   const isHomePage = isFullBleedPage
-  const [isPanelOpen, setPanelOpen] = useState(false)
-
-  const togglePanel = () => {
-    setPanelOpen(!isPanelOpen)
-  }
   const [darkMode, setDarkMode] = useState(false)
   const [fontSize, setFontSize] = useState("text-base")
 

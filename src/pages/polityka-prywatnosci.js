@@ -115,5 +115,11 @@ const PolitykaPrywatnosci2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Polityka prywatności" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Polityka prywatności"
+    description="Polityka prywatności ceea.org.pl — zasady przetwarzania danych osobowych zgodnie z RODO w Regionalnym Centrum CEEA w Poznaniu."
+    pathname={location?.pathname || "/polityka-prywatnosci/"}
+  />
+)
 export default PolitykaPrywatnosci2

@@ -132,5 +132,12 @@ const PlatnoscTest2 = ({ location }) => {
   )
 }
 
-export const Head = () => <Seo title="Test płatności" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Test płatności"
+    description="Strona testowa płatności CEEA Poznań — niedostępna w indeksie."
+    pathname={location?.pathname || "/platnosc-test/"}
+    robots="noindex,nofollow"
+  />
+)
 export default PlatnoscTest2

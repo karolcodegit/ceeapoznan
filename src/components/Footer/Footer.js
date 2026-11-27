@@ -96,12 +96,12 @@ const Footer = () => {
         >
           <defs>
             <linearGradient id="footerWaveLight" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#F1FAFF" />
-              <stop offset="100%" stopColor="#f0f9ff" />
+              <stop offset="0%" stopColor="#fff" />
+              <stop offset="100%" stopColor="#fff" />
             </linearGradient>
             <linearGradient id="footerWaveDark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0f172a" />
-              <stop offset="100%" stopColor="#1e293b" />
+              <stop offset="0%" stopColor="#fff" />
+              <stop offset="100%" stopColor="#fff" />
             </linearGradient>
           </defs>
           <path

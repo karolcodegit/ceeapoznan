@@ -127,14 +127,17 @@ const Books2 = () => {
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center py-20" role="status">
-            <div
-              className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent"
-              aria-hidden="true"
-            />
-            <span className="ml-3 text-slate-600 dark:text-slate-400">
-              Ładowanie książek…
-            </span>
+          <div
+            className="space-y-4 py-6"
+            aria-busy="true"
+            aria-label="Wczytywanie katalogu książek"
+          >
+            {[0, 1, 2].map(i => (
+              <div
+                key={i}
+                className="h-28 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-800"
+              />
+            ))}
           </div>
         )}
 
@@ -185,5 +188,11 @@ const Books2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Książki" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Książki i skrypty"
+    description="Skrypty i publikacje CEEA Poznań do kursów anestezjologii. Książki dostępne także poza pakietem kursowym — katalog Regionalnego Centrum CEEA."
+    pathname={location?.pathname || "/ksiazki/"}
+  />
+)
 export default Books2

@@ -94,12 +94,13 @@ const Header = () => {
                 <Link
                   key={link.title}
                   to={link.to}
-                  activeClassName="text-navyBlue dark:text-[#6b91c0] font-bold"
+                  partiallyActive={link.to !== "/"}
+                  activeClassName="!text-navyBlue dark:!text-navyBlue font-bold before:!opacity-100"
                   className='h-full relative whitespace-nowrap flex-1 text-center px-1 xl:px-3 2xl:px-4 flex items-center font-semibold text-sm xl:text-base 2xl:text-lg justify-center
-                    before:absolute before:content-[""] before:inset-0 
-                    before:bg-gradient-to-r before:from-vividTurquoise before:to-deepTurquoise 
+                    before:absolute before:content-[""] before:inset-0
+                    before:bg-gradient-to-r before:from-vividTurquoise before:to-deepTurquoise
                     before:opacity-0 2xl:before:skew-x-40 xl:before:skew-x-30 md:before:skew-x-20 before:transition-all before:duration-300
-                    hover:before:opacity-100 before:-z-10
+                    hover:before:opacity-100 aria-[current=page]:before:opacity-100 before:-z-10
                     hover:text-white hover:scale-[1.05] transition duration-300 ease-in-out
                     dark:before:from-[#3fa7d6] dark:before:to-[#257ca3]'
                 >

@@ -1,6 +1,11 @@
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
+// Build (production) często nie ma .env.production — doładuj development jako fallback
+require("dotenv").config({
+  path: `.env.development`,
+  override: false,
+})
 
 /**
  * @type {import('gatsby').GatsbyConfig}
@@ -13,14 +18,15 @@ module.exports = {
     author: `Karol Znojkiewicz`,
     lang: `pl`,
     locale: `pl_PL`,
-    siteUrl: process.env.GATSBY_SITE_URL || `https://ceea.org.pl/`,
-    // ── SEO globalne (dawniej DatoCMS globalSeo) ──
-    twitterAccount: ``, // np. `@ceea_poznan`; puste = bez meta twitter:creator
-    ogImage: `/images/og-image.png`, // plik 1200×630 px w katalogu static/
+    // Produkcyjny siteUrl do canonical/OG/sitemap (nie localhost z .env.development)
+    siteUrl: `https://ceea.org.pl`,
+    twitterAccount: ``,
+    ogImage: `/images/og-image.png`,
     organization: {
       name: `CEEA – Centrum Edukacji w Anestezjologii`,
       url: `https://ceea.org.pl/`,
-      logo: `https://ceea.org.pl/logo-ceea.png`,
+      // Prawdziwy asset z gatsby-plugin-manifest (logo-ceea.png to soft 404)
+      logo: `https://ceea.org.pl/icons/icon-512x512.png`,
     },
   },
   plugins: [
@@ -70,13 +76,73 @@ module.exports = {
             }
           }
         `,
-        resolveSiteUrl: ({ site }) => site.siteMetadata.siteUrl,
+        excludes: [
+          `/dev-404-page`,
+          `/404`,
+          `/404.html`,
+          `/offline-plugin-app-shell-fallback`,
+          `/graphql`,
+          `/graphql/`,
+          `/home2`,
+          `/home2/`,
+          `/platnosc-test`,
+          `/platnosc-test/`,
+          `/platnosc-status`,
+          `/platnosc-status/`,
+          `/kontakt/wyslano`,
+          `/kontakt/wyslano/`,
+          `/koszyk`,
+          `/koszyk/`,
+          `/koszyk/**`,
+          `/kursy/[...]`,
+          `/kursy/[...]/`,
+          `/[...]`,
+          `/[...]/`,
+        ],
+        resolveSiteUrl: () => `https://ceea.org.pl`,
+        resolvePages: ({ allSitePage: { nodes: allPages } }) => {
+          const { getCourseSitemapPaths } = require("./src/utils/courseSitemap")
+          const coursePaths = getCourseSitemapPaths()
+          const junk = p => {
+            const path = p || ""
+            return (
+              path.includes("[...]") ||
+              path.includes("graphql") ||
+              path.startsWith("/koszyk") ||
+              path.startsWith("/platnosc-") ||
+              path.startsWith("/home2") ||
+              path.startsWith("/kontakt/wyslano") ||
+              path.startsWith("/dev-404") ||
+              path === "/404" ||
+              path === "/404.html"
+            )
+          }
+          const fromSite = allPages
+            .filter(page => !junk(page.path))
+            .map(page => ({ ...page }))
+          const extras = coursePaths.map(path => ({
+            path,
+            pageContext: {
+              changefreq: `weekly`,
+              priority: 0.8,
+            },
+          }))
+          return [...fromSite, ...extras]
+        },
         serialize: ({ path, pageContext }) => {
+          let priority = pageContext?.priority
+          if (priority == null) {
+            if (path === `/`) priority = 1.0
+            else if (path === `/kursy/` || path === `/kursy`) priority = 0.9
+            else if (path.startsWith(`/kursy/`)) priority = 0.8
+            else if (path === `/o-nas/` || path === `/o-nas`) priority = 0.8
+            else priority = 0.7
+          }
           return {
             url: path,
             lastmod: pageContext?.lastmod,
             changefreq: pageContext?.changefreq || `weekly`,
-            priority: pageContext?.priority || 0.7,
+            priority,
           }
         },
       },
@@ -84,7 +150,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-robots-txt`,
       options: {
-        host: `https://ceea.org.pl/`,
+        host: `https://ceea.org.pl`,
         sitemap: `https://ceea.org.pl/sitemap-index.xml`,
         policy: [
           {
@@ -102,6 +168,11 @@ module.exports = {
               `/*?from=192.168.1.19:9090`,
               `/feed/`,
               `/contact/`,
+              `/graphql/`,
+              `/platnosc-test/`,
+              `/koszyk/`,
+              `/kursy/*/rejestracja/`,
+              `/kursy/*/formularz-wyslany/`,
             ],
           },
         ],
@@ -142,16 +213,14 @@ module.exports = {
     {
       resolve: `gatsby-plugin-canonical-urls`,
       options: {
-        siteUrl: `https://ceea.org.pl/`,
+        siteUrl: `https://ceea.org.pl`,
         stripQueryString: true,
       },
     },
     {
       resolve: `gatsby-plugin-google-gtag`,
       options: {
-        trackingIds: [
-          process.env.GATSBY_GA_MEASUREMENT_ID,
-        ].filter(Boolean),
+        trackingIds: [process.env.GATSBY_GA_MEASUREMENT_ID].filter(Boolean),
         gtagConfig: {
           anonymize_ip: true,
         },

@@ -64,14 +64,17 @@ const Faq2 = () => {
 
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {loading && (
-          <div className="flex items-center justify-center py-20" role="status">
-            <div
-              className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent"
-              aria-hidden="true"
-            />
-            <span className="ml-3 text-slate-600 dark:text-slate-400">
-              Ładowanie…
-            </span>
+          <div
+            className="space-y-3 py-6"
+            aria-busy="true"
+            aria-label="Wczytywanie FAQ"
+          >
+            {[0, 1, 2, 3].map(i => (
+              <div
+                key={i}
+                className="h-16 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-800"
+              />
+            ))}
           </div>
         )}
 
@@ -125,5 +128,11 @@ const Faq2 = () => {
   )
 }
 
-export const Head = () => <Seo title="FAQ" />
+export const Head = ({ location }) => (
+  <Seo
+    title="FAQ – pytania o kursy"
+    description="Najczęstsze pytania o kursy CEEA Poznań: zapisy, organizacja szkoleń, certyfikaty CME i formalności. Szybkie odpowiedzi przed rejestracją."
+    pathname={location?.pathname || "/faq/"}
+  />
+)
 export default Faq2

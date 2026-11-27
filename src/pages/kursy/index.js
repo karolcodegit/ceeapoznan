@@ -72,15 +72,26 @@ const Courses2 = () => {
       />
 
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        {/* Statyczny lead SEO — zawsze w SSR (bez słowa „Loading/Ładowanie”). */}
+        <p className="mb-8 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300">
+          Regionalne Centrum CEEA w Poznaniu prowadzi certyfikowane kursy
+          anestezjologii i medycyny okołooperacyjnej w europejskim formacie CME.
+          Poniżej aktualna oferta szkoleń dla lekarzy specjalistów oraz
+          rezydentów.
+        </p>
+
         {courses === null && (
-          <div className="flex items-center justify-center py-20" role="status">
-            <div
-              className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent"
-              aria-hidden="true"
-            />
-            <span className="ml-3 text-slate-600 dark:text-slate-400">
-              Ładowanie kursów…
-            </span>
+          <div
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            aria-busy="true"
+            aria-label="Wczytywanie listy kursów"
+          >
+            {[0, 1, 2].map(i => (
+              <div
+                key={i}
+                className="min-h-[280px] animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-800"
+              />
+            ))}
           </div>
         )}
 
@@ -178,5 +189,11 @@ const Courses2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Kursy" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Kursy anestezjologii"
+    description="Aktualna oferta kursów CEEA Poznań dla anestezjologów i rezydentów — medycyna okołooperacyjna, neurologia, znieczulenie regionalne. Europejski format CME."
+    pathname={location?.pathname || "/kursy/"}
+  />
+)
 export default Courses2

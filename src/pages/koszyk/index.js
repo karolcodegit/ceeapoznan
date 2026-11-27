@@ -165,5 +165,12 @@ const Koszyk2Page = () => {
   )
 }
 
-export const Head = () => <Seo title="Koszyk" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Koszyk"
+    description="Koszyk zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/koszyk/"}
+    robots="noindex,nofollow"
+  />
+)
 export default Koszyk2Page

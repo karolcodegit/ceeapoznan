@@ -132,6 +132,7 @@ const SponsorsSection = () => {
         ) : (
           /* ── Karuzela: 4+ sponsorów ── */
           <div
+            role="presentation"
             className="relative opacity-80 select-none"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}

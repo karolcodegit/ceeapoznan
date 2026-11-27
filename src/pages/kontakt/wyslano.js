@@ -64,5 +64,12 @@ const Wyslano2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Formularz wysłany" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Formularz wysłany"
+    description="Potwierdzenie wysłania formularza kontaktowego CEEA Poznań."
+    pathname={location?.pathname || "/kontakt/wyslano/"}
+    robots="noindex,follow"
+  />
+)
 export default Wyslano2

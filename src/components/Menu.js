@@ -63,12 +63,7 @@ export const otherLinks = [
   // },
   {
     title: "Sitemap",
-    to: "/sitemap-index.xml/",
-    description: "Dowiedz się więcej o naszym uniwersytecie.",
-  },
-  {
-    title: "Rejestracja",
-    to: "/*/rejestracja/",
-    description: "Dowiedz się więcej o naszym uniwersytecie.",
+    to: "/sitemap-index.xml",
+    description: "Mapa strony CEEA Poznań (XML).",
   },
 ]

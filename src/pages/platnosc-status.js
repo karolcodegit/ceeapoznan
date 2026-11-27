@@ -200,5 +200,12 @@ const PlatnoscStatus2 = ({ location }) => {
   )
 }
 
-export const Head = () => <Seo title="Status płatności" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Status płatności"
+    description="Status transakcji kursu lub zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/platnosc-status/"}
+    robots="noindex,nofollow"
+  />
+)
 export default PlatnoscStatus2

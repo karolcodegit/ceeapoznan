@@ -147,5 +147,12 @@ const Dane2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Koszyk — dane" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Koszyk — dane"
+    description="Dane do zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/koszyk/dane/"}
+    robots="noindex,nofollow"
+  />
+)
 export default Dane2

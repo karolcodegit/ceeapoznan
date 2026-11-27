@@ -362,5 +362,11 @@ const AboutUs2 = () => {
   )
 }
 
-export const Head = () => <Seo title="O nas" />
+export const Head = ({ location }) => (
+  <Seo
+    title="O nas – Regionalne Centrum CEEA"
+    description="Ośrodek Poznański CEEA od 1995 roku — pierwszy ośrodek CEEA w Polsce. Historia FEEA→CEEA, fundacja, dyrekcja i kursy powiązane z ESAIC w Poznaniu."
+    pathname={location?.pathname || "/o-nas/"}
+  />
+)
 export default AboutUs2

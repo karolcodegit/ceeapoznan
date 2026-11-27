@@ -96,5 +96,12 @@ const Dostawa2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Koszyk — dostawa" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Koszyk — dostawa"
+    description="Wybór dostawy zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/koszyk/dostawa/"}
+    robots="noindex,nofollow"
+  />
+)
 export default Dostawa2

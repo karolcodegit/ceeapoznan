@@ -74,5 +74,12 @@ const NieZnaleziono2 = () => (
   </div>
 )
 
-export const Head = () => <Seo title="Nie znaleziono strony | CEEA" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Nie znaleziono strony"
+    description="Strona nie istnieje w serwisie CEEA Poznań. Wróć do strony głównej lub listy kursów."
+    pathname={location?.pathname || "/404/"}
+    robots="noindex,follow"
+  />
+)
 export default NieZnaleziono2

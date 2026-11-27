@@ -216,5 +216,12 @@ const Podsumowanie2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Koszyk — podsumowanie" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Koszyk — podsumowanie"
+    description="Podsumowanie zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/koszyk/podsumowanie/"}
+    robots="noindex,nofollow"
+  />
+)
 export default Podsumowanie2

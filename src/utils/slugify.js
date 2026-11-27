@@ -9,8 +9,6 @@ const slugify = (text) => {
     'ś': 's',
     'ź': 'z',
     'ż': 'z',
-    'ś': 's',
-    'ń': 'n'
   };
 
     return (text || "")

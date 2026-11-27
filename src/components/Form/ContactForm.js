@@ -87,7 +87,7 @@ const ContactForm = ({ buttonText = "Wyślij wiadomość" }) => {
         required
         formSliceKey="contact"
         margin="mt-4"
-        rows={6}
+        rows={15}
         placeholder="W czym możemy pomóc?"
       />
     </Form>

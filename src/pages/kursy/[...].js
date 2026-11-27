@@ -13,6 +13,14 @@ import CourseProgram from "../../templates/CourseProgram"
 import FormRegister from "../../components/Form/FormRegister"
 import Seo from "../../components/seo"
 import CourseDetails from "../../components/CourseDetails/CourseDetails"
+
+function courseDocumentTitle(course, sub) {
+  if (!course?.title) return null
+  if (sub === "szczegoly") return `${course.title} — szczegóły | CEEA Poznań`
+  if (sub === "rejestracja") return `Rejestracja — ${course.title} | CEEA Poznań`
+  if (sub === "formularz-wyslany") return `Formularz wysłany | CEEA Poznań`
+  return `${course.title} | CEEA Poznań`
+}
 import {
   fadeUp,
   staggerContainer as staggerBase,
@@ -93,23 +101,36 @@ const CourseClient2 = ({ location }) => {
     }
   }, [slug])
 
+  useEffect(() => {
+    if (!course?.title || typeof document === "undefined") return
+    const next = courseDocumentTitle(course, sub)
+    if (next) document.title = next
+  }, [course, sub])
+
   if (course === undefined) {
     return (
       <div className="w-full bg-white dark:bg-slate-950">
         <PageHeroV2
-          title="Kurs"
-          subtitle="Ładowanie…"
+          title="Kurs CEEA Poznań"
+          subtitle="Regionalne Centrum CEEA"
+          description="Szczegóły szkolenia anestezjologii w Regionalnym Centrum CEEA w Poznaniu — program, terminy i zapisy."
           crumbs={[
             { label: "Strona główna", to: "/" },
             { label: "Kursy", to: `${BASE}/` },
-            { label: "…" },
+            { label: "Kurs" },
           ]}
         />
-        <div className="flex items-center justify-center py-24" role="status">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#0C6478] border-t-transparent" />
-          <span className="ml-3 text-slate-600 dark:text-slate-400">
-            Ładowanie…
-          </span>
+        <div
+          className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8"
+          aria-busy="true"
+          aria-label="Wczytywanie szczegółów kursu"
+        >
+          <div className="space-y-4">
+            <div className="h-8 w-2/3 max-w-xl animate-pulse rounded-lg bg-slate-200 dark:bg-slate-800" />
+            <div className="h-4 w-full max-w-2xl animate-pulse rounded bg-slate-200/80 dark:bg-slate-800" />
+            <div className="h-4 w-5/6 max-w-2xl animate-pulse rounded bg-slate-200/80 dark:bg-slate-800" />
+            <div className="mt-8 h-48 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-800" />
+          </div>
         </div>
       </div>
     )
@@ -146,7 +167,6 @@ const CourseClient2 = ({ location }) => {
   if (sub === "szczegoly") {
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title={`${course.title} — szczegóły`} />
         <PageHeroV2
           title="Szczegóły kursu"
           subtitle={course.title}
@@ -200,7 +220,6 @@ const CourseClient2 = ({ location }) => {
 
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title={`Rejestracja — ${course.title}`} />
         <PageHeroV2
           title="Rejestracja"
           subtitle={course.title}
@@ -225,7 +244,6 @@ const CourseClient2 = ({ location }) => {
   if (sub === "formularz-wyslany") {
     return (
       <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-        <Seo title="Formularz wysłany" />
         <PageHeroV2
           title="Formularz wysłany"
           subtitle="Dziękujemy za rejestrację"
@@ -252,7 +270,6 @@ const CourseClient2 = ({ location }) => {
 
   return (
     <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
-      <Seo title={`${course.title}`} />
       <PageHeroV2
         title={course.title}
         subtitle={
@@ -435,6 +452,23 @@ const CourseClient2 = ({ location }) => {
         </motion.div>
       </motion.div>
     </div>
+  )
+}
+
+export const Head = ({ location }) => {
+  const path = location?.pathname || "/kursy/"
+  const isPrivate = /\/(rejestracja|formularz-wyslany)\/?$/i.test(path)
+  return (
+    <Seo
+      title={isPrivate ? "Rejestracja na kurs" : "Kurs CEEA Poznań"}
+      description={
+        isPrivate
+          ? "Formularz zapisu na kurs Regionalnego Centrum CEEA w Poznaniu."
+          : "Kurs anestezjologii Regionalnego Centrum CEEA w Poznaniu — program, terminy i zapisy dla lekarzy specjalistów oraz rezydentów."
+      }
+      pathname={path}
+      robots={isPrivate ? "noindex,nofollow" : "index,follow"}
+    />
   )
 }
 

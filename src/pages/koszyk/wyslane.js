@@ -72,5 +72,12 @@ const Wyslane2 = ({ location }) => {
   )
 }
 
-export const Head = () => <Seo title="Zamówienie wysłane" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Zamówienie wysłane"
+    description="Potwierdzenie zamówienia książek CEEA Poznań."
+    pathname={location?.pathname || "/koszyk/wyslane/"}
+    robots="noindex,nofollow"
+  />
+)
 export default Wyslane2

@@ -249,10 +249,10 @@ const FormRegister = ({
             />
           )}
 
-          <div className="pt-5">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mt-3 mb-3">
+          <fieldset className="pt-5 border-0 min-w-0">
+            <legend className="block text-sm font-medium text-gray-700 dark:text-gray-200 mt-3 mb-3 px-0">
               Dodatkowe opcje
-            </label>
+            </legend>
             {checkboxFields.map(field => (
               <CheckboxOption
                 key={field.id}
@@ -262,7 +262,7 @@ const FormRegister = ({
                 formSliceKey="formRegister"
               />
             ))}
-          </div>
+          </fieldset>
 
           <PaymentMethodSelector
             name="paymentMethod"

@@ -125,12 +125,18 @@ const Contact2 = () => {
 
           <div className="grid gap-3 sm:grid-cols-2 lg:col-span-8">
             {peopleStatus === "loading" && (
-              <p
-                className="text-sm text-slate-500 dark:text-slate-400 sm:col-span-2"
-                role="status"
+              <div
+                className="grid gap-3 sm:col-span-2 sm:grid-cols-2"
+                aria-busy="true"
+                aria-label="Wczytywanie osób kontaktowych"
               >
-                Ładowanie osób kontaktowych…
-              </p>
+                {[0, 1].map(i => (
+                  <div
+                    key={i}
+                    className="h-28 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-800"
+                  />
+                ))}
+              </div>
             )}
             {peopleStatus === "error" && (
               <p
@@ -236,5 +242,11 @@ const Contact2 = () => {
   )
 }
 
-export const Head = () => <Seo title="Kontakt" />
+export const Head = ({ location }) => (
+  <Seo
+    title="Kontakt"
+    description="Kontakt CEEA Poznań — pytania o kursy, zapisy i książki. Napisz lub zadzwoń do Regionalnego Centrum CEEA w Poznaniu."
+    pathname={location?.pathname || "/kontakt/"}
+  />
+)
 export default Contact2

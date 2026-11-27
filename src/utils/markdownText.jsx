@@ -125,20 +125,20 @@ export const MarkdownText = ({ text, components: externalComponents = {} }) => {
       <li {...props} className="leading-7" />
     ),
     
-    h1: ({ node, ...props }) => (
-      <h1 {...props} className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100" />
+    h1: ({ node, children, ...props }) => (
+      <h1 {...props} className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">{children}</h1>
     ),
     
-    h2: ({ node, ...props }) => (
-      <h2 {...props} className="text-2xl font-semibold mb-3 text-gray-900 dark:text-gray-100" />
+    h2: ({ node, children, ...props }) => (
+      <h2 {...props} className="text-2xl font-semibold mb-3 text-gray-900 dark:text-gray-100">{children}</h2>
     ),
     
-    h3: ({ node, ...props }) => (
-      <h3 {...props} className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100" />
+    h3: ({ node, children, ...props }) => (
+      <h3 {...props} className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{children}</h3>
     ),
     
-    h4: ({ node, ...props }) => (
-      <h4 {...props} className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100" />
+    h4: ({ node, children, ...props }) => (
+      <h4 {...props} className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">{children}</h4>
     ),
     
     strong: ({ node, ...props }) => (
