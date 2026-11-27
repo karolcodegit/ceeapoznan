@@ -1,0 +1,214 @@
+/* Motywy sezonowe — pas tytułu + ozdoby logo */
+
+html[data-seasonal] {
+  --seasonal-header-line: transparent;
+  --seasonal-glow: transparent;
+}
+
+html[data-seasonal="christmas"] {
+  --seasonal-header-line: linear-gradient(
+    90deg,
+    transparent 0%,
+    #0f6b4c 15%,
+    #d4a017 50%,
+    #c41e3a 85%,
+    transparent 100%
+  );
+}
+
+html[data-seasonal="nye"] {
+  --seasonal-header-line: linear-gradient(
+    90deg,
+    transparent 0%,
+    #e8c872 20%,
+    #f5e6a3 50%,
+    #e8c872 80%,
+    transparent 100%
+  );
+}
+
+.seasonal-header-accent {
+  position: fixed;
+  top: 7rem;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 49;
+  pointer-events: none;
+  background: var(--seasonal-header-line);
+  opacity: 0.9;
+}
+
+/* ─── Efekty w niebieskim pasie ─── */
+.seasonal-band-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.seasonal-snowflake {
+  position: absolute;
+  top: -12px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+  opacity: 0.9;
+  animation-name: seasonal-snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes seasonal-snow-fall {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  100% {
+    /* px — % liczyłoby się od rozmiaru płatka (2–6px), stąd „niewidoczny” śnieg */
+    transform: translate3d(var(--snow-drift, 10px), 280px, 0);
+    opacity: 0.2;
+  }
+}
+
+.seasonal-firework {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--fw-hue, 42), 90%, 65%);
+  box-shadow:
+    0 0 0 0 hsl(var(--fw-hue, 42), 90%, 70%),
+    0 0 12px 2px hsl(var(--fw-hue, 42), 95%, 60%);
+  animation: seasonal-firework-burst 2.8s ease-out infinite;
+  opacity: 0;
+}
+
+.seasonal-firework::before,
+.seasonal-firework::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--fw-hue, 42), 85%, 70%);
+  opacity: 0.7;
+  animation: seasonal-firework-ring 2.8s ease-out infinite;
+  animation-delay: inherit;
+}
+
+.seasonal-firework::after {
+  inset: -8px;
+  border-width: 1px;
+  opacity: 0.45;
+}
+
+@keyframes seasonal-firework-burst {
+  0%,
+  15% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  55% {
+    opacity: 0.85;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@keyframes seasonal-firework-ring {
+  0%,
+  20% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+/* ─── Logo accents ─── */
+.seasonal-logo-accent {
+  z-index: 2;
+}
+
+.seasonal-logo-accent--hat {
+  top: -0.95rem;
+  left: -0.35rem;
+  transform-origin: bottom left;
+}
+
+.seasonal-logo-accent--champagne {
+  /* nad lewym rogiem marki CEEA, nie na tekście ESAIC */
+  top: -1.1rem;
+  left: -0.15rem;
+  right: auto;
+  transform-origin: bottom center;
+}
+
+@media (max-width: 1023px) {
+  .seasonal-logo-accent--champagne {
+    top: -0.95rem;
+    left: -0.1rem;
+  }
+  .seasonal-logo-accent--hat {
+    top: -0.8rem;
+    left: -0.25rem;
+  }
+}
+
+/* ─── Footer ornaments (tylko christmas/nye) ─── */
+.seasonal-footer-ornament {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+.seasonal-footer-ornament--tl {
+  top: 4rem;
+  left: 0.5rem;
+}
+
+.seasonal-footer-ornament--br {
+  bottom: 1rem;
+  right: 0.5rem;
+  transform: rotate(180deg);
+}
+
+html[data-seasonal="christmas"] .seasonal-footer-ornament {
+  background: radial-gradient(circle at 30% 30%, #d4a017 0%, transparent 55%),
+    radial-gradient(circle at 70% 60%, #0f6b4c 0%, transparent 50%);
+}
+
+html[data-seasonal="nye"] .seasonal-footer-ornament {
+  background: radial-gradient(circle at 40% 40%, #f5e6a3 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, #e8c872 0%, transparent 45%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seasonal-snowflake,
+  .seasonal-firework,
+  .seasonal-firework::before,
+  .seasonal-firework::after {
+    animation: none !important;
+    opacity: 0.4;
+  }
+}

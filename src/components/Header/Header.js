@@ -19,6 +19,7 @@ import { menuLinks } from "../Menu"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
 import { useHomeCourses } from "../../context/HomeCoursesContext"
+import SeasonalLogoAccent from "../SeasonalTheme/SeasonalLogoAccent"
 
 const linkIcons = {
   "Strona główna": HomeIcon,
@@ -68,13 +69,16 @@ const Header = () => {
         className="absolute max-lg:hidden top-0 left-0 h-36 w-[400px] xl:w-[460px] 2xl:w-[520px] bg-gradient-to-br from-[#152a45] via-[#1e4a72] to-[#2a628f] dark:from-slate-900 dark:via-slate-800 dark:to-slate-700 flex items-center justify-center z-50"
         style={{ clipPath: "polygon(0 0, 80% 0, 100% 100%, 0% 100%)" }}
       >
-        <Link to="/" className="flex items-center p-1.5">
+        <Link to="/" className="relative flex items-center p-1.5">
           <span className="sr-only">CEEA - Ośrodek Poznański</span>
-          <img
-            className="w-auto h-8 xl:h-9 2xl:h-10 mr-10 object-contain"
-            src={Logo}
-            alt="Logo CEEA"
-          />
+          <span className="relative inline-flex">
+            <img
+              className="w-auto h-8 xl:h-9 2xl:h-10 mr-10 object-contain"
+              src={Logo}
+              alt="Logo CEEA"
+            />
+            <SeasonalLogoAccent size="md" />
+          </span>
         </Link>
       </div>
 
@@ -137,13 +141,16 @@ const Header = () => {
             ========================================================= */}
         <div className="lg:hidden flex justify-between h-full items-center px-6 sm:px-8 xl:px-10 max-lg:py-9">
           <div className="z-50">
-            <Link to="/" className="-m-1.5 p-1.5 flex">
+            <Link to="/" className="-m-1.5 p-1.5 relative flex">
               <span className="sr-only">CEEA - Ośrodek Poznański</span>
-              <img
-                className="w-auto h-8 max-sm:h-7 object-contain"
-                src={Logo}
-                alt="Logo CEEA"
-              />
+              <span className="relative inline-flex">
+                <img
+                  className="w-auto h-8 max-sm:h-7 object-contain"
+                  src={Logo}
+                  alt="Logo CEEA"
+                />
+                <SeasonalLogoAccent size="sm" />
+              </span>
             </Link>
           </div>
 

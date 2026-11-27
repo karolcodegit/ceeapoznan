@@ -2,6 +2,7 @@ import React from "react"
 import { Provider } from "react-redux"
 import { store } from "./src/store/index"
 import "./src/styles/global.css"
+import "./src/styles/seasonal.css"
 import "react-toastify/dist/ReactToastify.css"
 import MaintenanceGate from "./src/components/MaintenanceGate";
 

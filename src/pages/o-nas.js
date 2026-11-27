@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import { OfficialLetterKrzysztofKusza } from "../components/OfficialLetter/OfficialLetterKrzysztofKusza"
 import { OfficialLetterAnnaKluzik } from "../components/OfficialLetter/OfficialLetterAnnaKluzik"
 import Seo from "../components/seo"
+import SeasonalBandEffects from "../components/SeasonalTheme/SeasonalBandEffects"
 import {
   fadeUp,
   staggerContainer,
@@ -105,7 +106,7 @@ const AboutUs2 = () => {
   return (
     <div className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-gray-100">
       {/* Intro full-bleed: breadcrumbs + h1 „O nas” w gradiencie */}
-      <section className="relative w-full overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+      <section className="seasonal-subpage-band relative w-full overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
         <div
           className="absolute inset-0 bg-gradient-to-br from-[#0b1f3a] via-[#0c6478] to-[#023e8a]"
           aria-hidden="true"
@@ -118,7 +119,8 @@ const AboutUs2 = () => {
           className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-[#00C896]/15 blur-3xl"
           aria-hidden="true"
         />
-        <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <SeasonalBandEffects />
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           <motion.div
             initial="hidden"
             animate="visible"

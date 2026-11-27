@@ -15,6 +15,7 @@ import { menuLinks, przydatneLinki } from "../Menu"
 import CopyToClipboardWithNotification from "../CopyToClipboardWithNotification/CopyToClipboardWithNotification"
 import { slugify } from "../../utils/slugify"
 import { getYearFromDate } from "../../utils/getYearFromDate"
+import { SeasonalFooterOrnaments } from "../SeasonalTheme/SeasonalOverlays"
 
 // --- API ---
 
@@ -76,6 +77,7 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-gradient-to-br from-[#152a45] via-[#1a4d6e] to-[#0a5566] dark:bg-gradient-to-b dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 text-gray-100 overflow-hidden transition-colors duration-500">
+      <SeasonalFooterOrnaments />
       {/* Soft depth — jak header, bez płaskiej plamy */}
       <div
         className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-[#2a628f]/25 blur-3xl dark:bg-sky-900/20"

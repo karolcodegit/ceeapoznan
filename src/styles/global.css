@@ -135,3 +135,17 @@ p, span, small, .description {
     margin-left: auto;
     margin-right: auto;
   }
+/* CEEA logo loading */
+@keyframes ceea-logo-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.88; }
+  50% { transform: scale(1.045); opacity: 1; }
+}
+@keyframes ceea-logo-glow {
+  0%, 100% { opacity: 0.25; transform: scale(0.92); }
+  50% { opacity: 0.55; transform: scale(1.08); }
+}
+.ceea-logo-loading__mark { animation: ceea-logo-breathe 1.6s ease-in-out infinite; }
+.ceea-logo-loading__glow { animation: ceea-logo-glow 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .ceea-logo-loading__mark, .ceea-logo-loading__glow { animation: none !important; }
+}

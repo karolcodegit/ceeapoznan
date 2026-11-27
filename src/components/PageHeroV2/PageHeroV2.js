@@ -6,6 +6,7 @@ import {
   staggerContainer,
   withReducedMotion,
 } from "../../utils/motionVariants"
+import SeasonalBandEffects from "../SeasonalTheme/SeasonalBandEffects"
 
 /**
  * Full-bleed gradient intro used by marketing / checkout pages.
@@ -23,7 +24,7 @@ const PageHeroV2 = ({
   const container = withReducedMotion(staggerContainer, reduceMotion)
 
   return (
-    <section className="relative w-full overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+    <section className="seasonal-subpage-band relative w-full overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
       <div
         className="absolute inset-0 bg-gradient-to-br from-[#0b1f3a] via-[#0c6478] to-[#023e8a]"
         aria-hidden="true"
@@ -36,7 +37,8 @@ const PageHeroV2 = ({
         className="pointer-events-none absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-[#00C896]/15 blur-3xl"
         aria-hidden="true"
       />
-      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20">
+      <SeasonalBandEffects />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20">
         <motion.div
           initial="hidden"
           animate="visible"
